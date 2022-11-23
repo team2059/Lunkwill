@@ -23,7 +23,16 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
     gyro = new AHRS(SPI.Port.kMXP);
-    zeroGyro();
+
+    // wait 1 second for navX to calibrate
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        zeroGyro();
+      } catch (Exception e) {
+      }
+
+    }).start();
 
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());
 
@@ -81,7 +90,6 @@ public class Swerve extends SubsystemBase {
   }
 
   public void zeroGyro() {
-    gyro.resetDisplacement();
     gyro.reset();
   }
 
