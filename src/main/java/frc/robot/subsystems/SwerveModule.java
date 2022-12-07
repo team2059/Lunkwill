@@ -26,6 +26,10 @@ public class SwerveModule {
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
 
+  public CANSparkMax getDriveMotor() {
+    return driveMotor;
+  }
+
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
   private CANCoder angleEncoder;
@@ -33,13 +37,15 @@ public class SwerveModule {
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
 
-  SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(
-          Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
+  private boolean driveInvert;
 
-  public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+      Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
+
+  public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean driveInvert) {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
+    this.driveInvert = driveInvert;
 
     /* Angle Encoder Config */
     angleEncoder = new CANCoder(moduleConstants.cancoderID);
@@ -61,10 +67,9 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    desiredState =
-        OnboardModuleState.optimize(
-            desiredState,
-            getState().angle); // Custom optimize command, since default WPILib optimize assumes
+    desiredState = OnboardModuleState.optimize(
+        desiredState,
+        getState().angle); // Custom optimize command, since default WPILib optimize assumes
     // continuous controller which REV and CTRE are not
 
     if (isOpenLoop) {
@@ -78,11 +83,10 @@ public class SwerveModule {
           feedforward.calculate(desiredState.speedMetersPerSecond));
     }
 
-    double angle =
-        (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
-            ? lastAngle
-            : desiredState.angle
-                .getDegrees(); // Prevent rotating module if speed is less then 1%. Prevents
+    double angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+        ? lastAngle
+        : desiredState.angle
+            .getDegrees(); // Prevent rotating module if speed is less then 1%. Prevents
     // Jittering.
     angleController.setReference(angle, ControlType.kPosition);
     lastAngle = angle;
@@ -118,7 +122,7 @@ public class SwerveModule {
     driveMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kVelocityOnly);
     driveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
-    driveMotor.setInverted(Constants.Swerve.driveInvert);
+    driveMotor.setInverted(driveInvert);
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveController.setP(Constants.Swerve.angleKP);

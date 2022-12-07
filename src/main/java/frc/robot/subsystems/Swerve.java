@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,10 +36,10 @@ public class Swerve extends SubsystemBase {
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());
 
     mSwerveMods = new SwerveModule[] {
-        new SwerveModule(0, Constants.Swerve.Mod0.constants),
-        new SwerveModule(1, Constants.Swerve.Mod1.constants),
-        new SwerveModule(2, Constants.Swerve.Mod2.constants),
-        new SwerveModule(3, Constants.Swerve.Mod3.constants)
+        new SwerveModule(0, Constants.Swerve.Mod0.constants, true),
+        new SwerveModule(1, Constants.Swerve.Mod1.constants, true),
+        new SwerveModule(2, Constants.Swerve.Mod2.constants, true),
+        new SwerveModule(3, Constants.Swerve.Mod3.constants, false)
     };
   }
 
@@ -95,7 +94,7 @@ public class Swerve extends SubsystemBase {
 
   public Rotation2d getYaw() {
     return (Constants.Swerve.invertGyro)
-        ? Rotation2d.fromDegrees(- gyro.getYaw())
+        ? Rotation2d.fromDegrees(-gyro.getYaw())
         : Rotation2d.fromDegrees(gyro.getYaw());
   }
 
@@ -104,11 +103,21 @@ public class Swerve extends SubsystemBase {
     swerveOdometry.update(getYaw(), getStates());
     SmartDashboard.putNumber("navX yaw", getYaw().getDegrees());
 
+    // mSwerveMods[0].getDriveMotor().set(0.05);
+    // mSwerveMods[1].getDriveMotor().set(0.05);
+    // mSwerveMods[2].getDriveMotor().set(0.05);
+    // mSwerveMods[3].getDriveMotor().set(0.05);
+
+    // mSwerveMods[0].getDriveMotor().set(-0.05);
+    // mSwerveMods[1].getDriveMotor().set(-0.05);
+    // mSwerveMods[2].getDriveMotor().set(-0.05);
+    // mSwerveMods[3].getDriveMotor().set(-0.05);
+
     for (SwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
       SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
+          "Mod " + mod.moduleNumber + " Integrated angle", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
