@@ -42,7 +42,7 @@ public final class Constants {
         /* Angle Motor PID Values */
         public static final double angleKP = 0.01;
         public static final double angleKI = 0.0;
-        public static final double angleKD = 0.005;
+        public static final double angleKD = 0.0;
         public static final double angleKFF = 0.0;
 
         /* Drive Motor Characterization Values */
@@ -59,8 +59,8 @@ public final class Constants {
         public static final double maxAngularVelocity = 11.5;
 
         /* Neutral Modes */
-        public static final IdleMode angleNeutralMode = IdleMode.kBrake;
-        public static final IdleMode driveNeutralMode = IdleMode.kBrake;
+        public static final IdleMode angleNeutralMode = IdleMode.kCoast;
+        public static final IdleMode driveNeutralMode = IdleMode.kCoast;
 
         /* Motor Inverts */
         public static final boolean driveInvert = false;
@@ -74,7 +74,7 @@ public final class Constants {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 12;
-            public static final double angleOffset = 286.259;
+            public static final double angleOffset = 105.732;
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
@@ -84,7 +84,7 @@ public final class Constants {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 9;
-            public static final double angleOffset = 232.47;
+            public static final double angleOffset = 52.47;
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }

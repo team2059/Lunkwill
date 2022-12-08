@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -36,6 +37,10 @@ public class TeleopSwerve extends CommandBase {
     double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
     double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
     double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
+    
+    SmartDashboard.putNumber("translationVal", translationVal);
+    SmartDashboard.putNumber("strafeVal", strafeVal);
+    SmartDashboard.putNumber("rotationVal", rotationVal);
 
     /* Drive */
     s_Swerve.drive(
