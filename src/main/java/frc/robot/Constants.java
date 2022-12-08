@@ -40,16 +40,16 @@ public final class Constants {
         public static final int driveContinuousCurrentLimit = 80;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = 0.01;
+        public static final double angleKP = 1;
         public static final double angleKI = 0.0;
-        public static final double angleKD = 0.005;
+        public static final double angleKD = 0.5;
         public static final double angleKFF = 0.0;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.0;
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
-        public static final double driveKFF = 0.0;
+      //  public static final double driveKP = 0.0;
+        //public static final double driveKI = 0.0;
+        //public static final double driveKD = 0.0;
+        //public static final double driveKFF = 0.0;
 
         /* Drive Motor Characterization Values */
         public static final double driveKS = 0.667;
