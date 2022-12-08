@@ -37,15 +37,12 @@ public class SwerveModule {
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
 
-  private boolean driveInvert;
-
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
       Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
-  public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, boolean driveInvert) {
+  public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
-    this.driveInvert = driveInvert;
 
     /* Angle Encoder Config */
     angleEncoder = new CANCoder(moduleConstants.cancoderID);
@@ -122,7 +119,7 @@ public class SwerveModule {
     driveMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kVelocityOnly);
     driveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
-    driveMotor.setInverted(driveInvert);
+    driveMotor.setInverted(Constants.Swerve.driveInvert);
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveController.setP(Constants.Swerve.angleKP);
