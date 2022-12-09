@@ -33,9 +33,11 @@ public class CANCoderUtil {
     } else if (usage == CCUsage.kFaultsOnly) {
       cancoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 255);
       cancoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 10);
+
+      //only get new data ever 0.25 seconds, in closed loop, use faster loop like 20ms on roborio
     } else if (usage == CCUsage.kMinimal) {
-      cancoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 255);
-      cancoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 255);
+      cancoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100);
+      cancoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 100);
     }
   }
 }
