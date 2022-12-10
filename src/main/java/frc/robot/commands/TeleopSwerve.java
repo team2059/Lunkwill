@@ -5,7 +5,8 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveBase;
+import frc.robot.subsystems.SwerveModule;
 
 public class TeleopSwerve extends CommandBase {
 
@@ -15,7 +16,7 @@ public class TeleopSwerve extends CommandBase {
    * (deadband, square, etc.)
    */
 
-  private final Swerve drive;
+  private final SwerveBase drive;
 
   /**
    * Joysticks return DoubleSuppliers when the get methods are called
@@ -30,7 +31,7 @@ public class TeleopSwerve extends CommandBase {
   private final boolean isFieldRelative;
 
   public TeleopSwerve(
-      Swerve subsystem,
+      SwerveBase subsystem,
       DoubleSupplier fwdX,
       DoubleSupplier fwdY,
       DoubleSupplier rot,

@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -13,6 +15,8 @@ public final class Constants {
         public static final double teleopTurnRateDegPerSec = 360.0; // Rate the robot will spin with full rotation
                                                                     // command
         public static final double stickDeadband = 0.1;
+
+        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254, 0.137);
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
@@ -28,7 +32,7 @@ public final class Constants {
         public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
         public static final double angleGearRatio = ((150.0 / 7.0) / 1.0); // 150/7:1
 
-        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+        public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
                 new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
@@ -71,8 +75,25 @@ public final class Constants {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
+        public static final int frontLeftRotationMotorId = 5;
+        public static final int frontLeftDriveMotorId = 6;
+
+        public static final int frontRightRotationMotorId = 7;
+        public static final int frontRightDriveMotorId = 8;
+
+        public static final int rearLeftRotationMotorId = 3;
+        public static final int rearLeftDriveMotorId = 4;
+
+        public static final int rearRightRotationMotorId = 1;
+        public static final int rearRightDriveMotorId = 2;
+
+        public static final int frontLeftRotationEncoderId = 11;
+        public static final int frontRightRotationEncoderId = 12;
+        public static final int rearLeftRotationEncoderId = 10;
+        public static final int rearRightRotationEncoderId = 9;
+
         /* Module Specific Constants */
-        /* Front Left Module - Module 0 */
+        /* Front Left Module - Module */
         public static final class Mod0 {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;

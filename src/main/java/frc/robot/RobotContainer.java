@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.auto.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -28,10 +27,10 @@ public class RobotContainer {
   private final Joystick driver = new Joystick(0);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  private final SwerveBase swerveBase = new SwerveBase();
 
-  public Swerve getSwerveSubsytem() {
-    return s_Swerve;
+  public SwerveBase getSwerveSubsytem() {
+    return swerveBase;
   }
 
   /* Drive Controls */
@@ -47,9 +46,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    s_Swerve.setDefaultCommand(
+    swerveBase.setDefaultCommand(
         new TeleopSwerve(
-            s_Swerve,
+            swerveBase,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
             () -> -driver.getRawAxis(rotationAxis),
@@ -57,11 +56,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-  }
-
-  /** Actions that we want to do when the robot is disabled. */
-  public void disabledActions() {
-    s_Swerve.resetModuleZeros();
   }
 
   /**
@@ -74,7 +68,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.resetImu()));
   }
 
   /**
@@ -82,8 +76,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new exampleAuto(s_Swerve);
-  }
+  // public Command getAutonomousCommand() {
+  // // An ExampleCommand will run in autonomous
+  // return new exampleAuto(swerveBase);
+  // }
 }
