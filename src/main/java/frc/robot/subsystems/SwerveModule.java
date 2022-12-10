@@ -24,6 +24,11 @@ public class SwerveModule {
   private double lastAngle;
 
   private CANSparkMax angleMotor;
+
+  public CANSparkMax getAngleMotor() {
+    return angleMotor;
+  }
+
   private CANSparkMax driveMotor;
 
   public CANSparkMax getDriveMotor() {

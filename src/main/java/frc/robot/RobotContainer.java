@@ -25,7 +25,14 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver = new Joystick(1);
+  private final Joystick driver = new Joystick(0);
+
+  /* Subsystems */
+  private final Swerve s_Swerve = new Swerve();
+
+  public Swerve getSwerveSubsytem() {
+    return s_Swerve;
+  }
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -35,9 +42,6 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
-  /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

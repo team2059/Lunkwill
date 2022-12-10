@@ -103,10 +103,15 @@ public class Swerve extends SubsystemBase {
     swerveOdometry.update(getYaw(), getStates());
     SmartDashboard.putNumber("navX yaw", getYaw().getDegrees());
 
-    // mSwerveMods[0].getDriveMotor().set(0.05);
-    // mSwerveMods[1].getDriveMotor().set(0.05);
-    // mSwerveMods[2].getDriveMotor().set(0.05);
-    // mSwerveMods[3].getDriveMotor().set(0.05);
+    // mSwerveMods[0].getDriveMotor().set(0.1);
+    // mSwerveMods[1].getDriveMotor().set(0.1);
+    // mSwerveMods[2].getDriveMotor().set(0.1);
+    // mSwerveMods[3].getDriveMotor().set(0.1);
+
+    // mSwerveMods[0].getAngleMotor().set(0.50);
+    // mSwerveMods[1].getAngleMotor().set(0.50);
+    // mSwerveMods[2].getAngleMotor().set(0.50);
+    // mSwerveMods[3].getAngleMotor().set(0.50);
 
     // mSwerveMods[0].getDriveMotor().set(-0.05);
     // mSwerveMods[1].getDriveMotor().set(-0.05);
