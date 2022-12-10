@@ -20,6 +20,13 @@ public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
   public AHRS gyro;
 
+  // commanded values from the joysticks and field relative value to use in
+  // AlignWithTargetVision and AlignWithGyro
+  public double commandedForward = 0;
+  public double commandedStrafe = 0;
+  public double commandedRotation = 0;
+  public boolean isCommandedFieldRelative = false;
+
   public Swerve() {
     gyro = new AHRS(SPI.Port.kMXP);
 
@@ -43,18 +50,62 @@ public class Swerve extends SubsystemBase {
     };
   }
 
-  public void drive(
-      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(), translation.getY(), rotation, getYaw())
-            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+  // public void drive(
+  // Translation2d translation, double rotation, boolean fieldRelative, boolean
+  // isOpenLoop) {
+  // SwerveModuleState[] swerveModuleStates =
+  // Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+  // fieldRelative
+  // ? ChassisSpeeds.fromFieldRelativeSpeeds(
+  // translation.getX(), translation.getY(), rotation, getYaw())
+  // : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+  // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
+  // Constants.Swerve.maxSpeed);
 
-    for (SwerveModule mod : mSwerveMods) {
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
+  // for (SwerveModule mod : mSwerveMods) {
+  // mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+  // }
+  // }
+
+  /**
+   * method for driving the robot
+   * Parameters:
+   * forward linear value
+   * sideways linear value
+   * rotation value
+   * if the control is field relative or robot relative
+   */
+  public void drive(double forward, double strafe, double rotation, boolean isFieldRelative) {
+
+    // update the drive inputs for use in AlignWithGyro and AlignWithTargetVision
+    // control
+    commandedForward = forward;
+    commandedStrafe = strafe;
+    commandedRotation = rotation;
+
+    isCommandedFieldRelative = isFieldRelative;
+
+    /**
+     * ChassisSpeeds object to represent the overall state of the robot
+     * ChassisSpeeds takes a forward and sideways linear value and a rotational
+     * value
+     * 
+     * speeds is set to field relative or default (robot relative) based on
+     * parameter
+     */
+    ChassisSpeeds speeds = isFieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            forward, strafe, rotation, getYaw())
+        : new ChassisSpeeds(forward, strafe, rotation);
+
+    // use kinematics (wheel placements) to convert overall robot state to array of
+    // individual module states
+    SwerveModuleState[] states = Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+
+    // make sure the wheels don't try to spin faster than the maximum speed possible
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.maxSpeed);
+
+    setModuleStates(states);
   }
 
   /* Used by SwerveControllerCommand in Auto */

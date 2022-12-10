@@ -10,6 +10,8 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
     public static final class Swerve {
+        public static final double teleopTurnRateDegPerSec = 360.0; // Rate the robot will spin with full rotation
+                                                                    // command
         public static final double stickDeadband = 0.1;
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
@@ -59,11 +61,11 @@ public final class Constants {
         public static final double maxAngularVelocity = 11.5;
 
         /* Neutral Modes */
-        public static final IdleMode angleNeutralMode = IdleMode.kBrake;
-        public static final IdleMode driveNeutralMode = IdleMode.kBrake;
+        public static final IdleMode angleNeutralMode = IdleMode.kCoast;
+        public static final IdleMode driveNeutralMode = IdleMode.kCoast;
 
         /* Motor Inverts */
-        public static final boolean driveInvert = true;
+        public static final boolean driveInvert = false;
         public static final boolean angleInvert = false;
 
         /* Angle Encoder Invert */

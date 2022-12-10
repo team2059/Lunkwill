@@ -22,6 +22,7 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private boolean runningAuton = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -67,7 +68,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-
+    if (!runningAuton) {
+      m_robotContainer.disabledActions();
+    }
   }
 
   /**
@@ -76,6 +79,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    runningAuton = true;
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -92,8 +96,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
-    //m_robotContainer.getSwerveSubsytem().resetModuleZeros();
+    runningAuton = false;
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

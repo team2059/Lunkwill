@@ -1,52 +1,90 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 public class TeleopSwerve extends CommandBase {
-  private Swerve s_Swerve;
-  private DoubleSupplier translationSup;
-  private DoubleSupplier strafeSup;
-  private DoubleSupplier rotationSup;
-  private BooleanSupplier robotCentricSup;
+
+  /**
+   * Command to allow for driver input in teleop
+   * Can't be inlined efficiently if we want to edit the inputs in any way
+   * (deadband, square, etc.)
+   */
+
+  private final Swerve drive;
+
+  /**
+   * Joysticks return DoubleSuppliers when the get methods are called
+   * This is so that joystick getter methods can be passed in as a parameter but
+   * will continuously update,
+   * versus using a double which would only update when the constructor is called
+   */
+  private final DoubleSupplier forwardX;
+  private final DoubleSupplier forwardY;
+  private final DoubleSupplier rotation;
+
+  private final boolean isFieldRelative;
 
   public TeleopSwerve(
-      Swerve s_Swerve,
-      DoubleSupplier translationSup,
-      DoubleSupplier strafeSup,
-      DoubleSupplier rotationSup,
-      BooleanSupplier robotCentricSup) {
-    this.s_Swerve = s_Swerve;
-    addRequirements(s_Swerve);
+      Swerve subsystem,
+      DoubleSupplier fwdX,
+      DoubleSupplier fwdY,
+      DoubleSupplier rot,
+      boolean fieldRelative) {
 
-    this.translationSup = translationSup;
-    this.strafeSup = strafeSup;
-    this.rotationSup = rotationSup;
-    this.robotCentricSup = robotCentricSup;
+    drive = subsystem;
+    forwardX = fwdX;
+    forwardY = fwdY;
+    rotation = rot;
+
+    isFieldRelative = fieldRelative;
+
+    addRequirements(subsystem);
+
   }
 
   @Override
   public void execute() {
-    /* Get Values, Deadband */
-    double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
-    double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
-    double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.25;
-    
-    SmartDashboard.putNumber("translationVal", translationVal);
-    SmartDashboard.putNumber("strafeVal", strafeVal);
-    SmartDashboard.putNumber("rotationVal", rotationVal);
 
-    /* Drive */
-    s_Swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity,
-        !robotCentricSup.getAsBoolean(),
-        true);
+    /**
+     * Units are given in meters per second radians per second
+     * Since joysticks give output from -1 to 1, we multiply the outputs by the max
+     * speed
+     * Otherwise, our max speed would be 1 meter per second and 1 radian per second
+     */
+
+    double fwdX = forwardX.getAsDouble();
+    fwdX = Math.copySign(fwdX, fwdX);
+    fwdX = deadbandInputs(fwdX) * Units.feetToMeters(Constants.Swerve.maxSpeed);
+
+    double fwdY = forwardY.getAsDouble();
+    fwdY = Math.copySign(fwdY, fwdY);
+    fwdY = deadbandInputs(fwdY) * Units.feetToMeters(Constants.Swerve.maxSpeed);
+
+    double rot = rotation.getAsDouble();
+    rot = Math.copySign(rot * rot, rot);
+    rot = deadbandInputs(rot) * Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
+
+    drive.drive(
+        -fwdX,
+        -fwdY,
+        -rot,
+        isFieldRelative);
+
   }
+
+  // method to deadband inputs to eliminate tiny unwanted values from the
+  // joysticks
+  public double deadbandInputs(double input) {
+
+    if (Math.abs(input) < 0.035)
+      return 0.0;
+    return input;
+
+  }
+
 }
