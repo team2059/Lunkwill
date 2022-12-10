@@ -25,7 +25,7 @@ public class SwerveModule extends SubsystemBase {
    * for both rotation and linear movement
    */
 
-  private static final double rotationkP = 1;
+  private static final double rotationkP = 0.5;
   private static final double rotationkD = 0.5;
 
   private static final double drivekP = 0.01;

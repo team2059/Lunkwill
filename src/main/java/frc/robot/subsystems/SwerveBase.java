@@ -27,10 +27,10 @@ public class SwerveBase extends SubsystemBase {
    * 180 degrees added to offset values to invert one side of the robot so that it
    * doesn't spin in place
    */
-  private static final double frontLeftAngleOffset = Units.degreesToRadians(239.5);
-  private static final double frontRightAngleOffset = Units.degreesToRadians(256.7 + 180);
-  private static final double rearLeftAngleOffset = Units.degreesToRadians(322.8);
-  private static final double rearRightAngleOffset = Units.degreesToRadians(180.0 + 180);
+  private static final double frontLeftAngleOffset = Units.degreesToRadians(284);
+  private static final double frontRightAngleOffset = Units.degreesToRadians(105 + 180);
+  private static final double rearLeftAngleOffset = Units.degreesToRadians(7);
+  private static final double rearRightAngleOffset = Units.degreesToRadians(53 + 180);
 
   /**
    * SwerveModule objects
@@ -111,6 +111,11 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("heading", getHeading().getDegrees());
     SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
+
+    SmartDashboard.putNumber("Front left", frontLeft.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("Front right", frontRight.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("Rear left", rearLeft.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("Rear right", rearRight.getCanCoderAngle().getDegrees());
 
   }
 

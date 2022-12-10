@@ -45,17 +45,6 @@ public final class Constants {
         public static final int angleContinuousCurrentLimit = 20;
         public static final int driveContinuousCurrentLimit = 80;
 
-        /* Angle Motor PID Values */
-        public static final double angleKP = 0.01;
-        public static final double angleKI = 0.0;
-        public static final double angleKD = 0.0;
-        public static final double angleKFF = 0.0;
-
-        /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.0;
-        public static final double driveKV = 0.0;
-        public static final double driveKA = 0.0;
-
         /* Drive Motor Conversion Factors */
         public static final double driveConversionVelocityFactor = ((wheelDiameter * Math.PI) / driveGearRatio) / 60.0;
         public static final double angleConversionFactor = 360.0 / 12.8;
