@@ -25,13 +25,57 @@ public class SwerveModule extends SubsystemBase {
    * for both rotation and linear movement
    */
 
-  private static final double rotationkP = 1;
-  private static final double rotationkD = 0.0;
+  private static final double rotationkP = 0.75;
+  private static final double rotationkD = 0.33;
 
   private static final double drivekP = 0.01;
 
   private final CANSparkMax driveMotor;
   private final CANSparkMax rotationMotor;
+
+  public static double getRotationkp() {
+    return rotationkP;
+  }
+
+  public static double getRotationkd() {
+    return rotationkD;
+  }
+
+  public static double getDrivekp() {
+    return drivekP;
+  }
+
+  public CANSparkMax getDriveMotor() {
+    return driveMotor;
+  }
+
+  public CANSparkMax getRotationMotor() {
+    return rotationMotor;
+  }
+
+  public RelativeEncoder getDriveEncoder() {
+    return driveEncoder;
+  }
+
+  public RelativeEncoder getRotationEncoder() {
+    return rotationEncoder;
+  }
+
+  public CANCoder getCanCoder() {
+    return canCoder;
+  }
+
+  public Rotation2d getOffset() {
+    return offset;
+  }
+
+  public SparkMaxPIDController getRotationController() {
+    return rotationController;
+  }
+
+  public SparkMaxPIDController getDriveController() {
+    return driveController;
+  }
 
   private final RelativeEncoder driveEncoder;
   private final RelativeEncoder rotationEncoder;
@@ -157,8 +201,6 @@ public class SwerveModule extends SubsystemBase {
   // initialize the integrated CANCoder to offset measurement by the CANCoder
   // reading
   public void initRotationOffset() {
-
-    System.out.println("resetting offsetts!");
 
     rotationEncoder.setPosition(getCanCoderAngle().getRadians());
 

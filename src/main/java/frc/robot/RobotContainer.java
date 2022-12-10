@@ -40,7 +40,7 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton isFieldRelative = new JoystickButton(driver, 5);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -50,9 +50,9 @@ public class RobotContainer {
         new TeleopSwerve(
             swerveBase,
             () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
+            () -> driver.getRawAxis(strafeAxis),
             () -> -driver.getRawAxis(rotationAxis),
-            true));
+            !isFieldRelative.get()));
 
     // Configure the button bindings
     configureButtonBindings();

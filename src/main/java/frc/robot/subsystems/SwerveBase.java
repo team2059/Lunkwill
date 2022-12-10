@@ -27,10 +27,10 @@ public class SwerveBase extends SubsystemBase {
    * 180 degrees added to offset values to invert one side of the robot so that it
    * doesn't spin in place
    */
-  private static final double frontLeftAngleOffset = Units.degreesToRadians(284);
-  private static final double frontRightAngleOffset = Units.degreesToRadians(105 + 180);
-  private static final double rearLeftAngleOffset = Units.degreesToRadians(7);
-  private static final double rearRightAngleOffset = Units.degreesToRadians(53 + 180);
+  private static final double frontLeftAngleOffset = Units.degreesToRadians(285.117);
+  private static final double frontRightAngleOffset = Units.degreesToRadians(285.996);
+  private static final double rearLeftAngleOffset = Units.degreesToRadians(275);
+  private static final double rearRightAngleOffset = Units.degreesToRadians(232.229);
 
   /**
    * SwerveModule objects
@@ -46,6 +46,38 @@ public class SwerveBase extends SubsystemBase {
       Swerve.frontLeftRotationMotorId,
       Swerve.frontLeftRotationEncoderId,
       frontLeftAngleOffset);
+
+  public static double getFrontleftangleoffset() {
+    return frontLeftAngleOffset;
+  }
+
+  public static double getFrontrightangleoffset() {
+    return frontRightAngleOffset;
+  }
+
+  public static double getRearleftangleoffset() {
+    return rearLeftAngleOffset;
+  }
+
+  public static double getRearrightangleoffset() {
+    return rearRightAngleOffset;
+  }
+
+  public SwerveModule getFrontLeft() {
+    return frontLeft;
+  }
+
+  public SwerveModule getFrontRight() {
+    return frontRight;
+  }
+
+  public SwerveModule getRearLeft() {
+    return rearLeft;
+  }
+
+  public SwerveModule getRearRight() {
+    return rearRight;
+  }
 
   private final SwerveModule frontRight = new SwerveModule(
       Swerve.frontRightDriveMotorId,
@@ -129,6 +161,11 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("SPARK FR", frontRight.getIntegratedAngle().getDegrees());
     SmartDashboard.putNumber("SPARK RL", rearLeft.getIntegratedAngle().getDegrees());
     SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
+
+    SmartDashboard.putNumber("SPARK FL", frontLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK FR", frontRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK RL", rearLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK RR", rearRight.getCurrentVelocityMetersPerSecond());
 
   }
 
