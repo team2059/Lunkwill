@@ -25,8 +25,8 @@ public class SwerveModule extends SubsystemBase {
    * for both rotation and linear movement
    */
 
-  private static final double rotationkP = 0.5;
-  private static final double rotationkD = 0.5;
+  private static final double rotationkP = 1;
+  private static final double rotationkD = 0.0;
 
   private static final double drivekP = 0.01;
 
@@ -111,7 +111,7 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
-  public Rotation2d getCanEncoderAngle() {
+  public Rotation2d getIntegratedAngle() {
 
     double unsignedAngle = rotationEncoder.getPosition() % (2 * Math.PI);
 
@@ -157,6 +157,8 @@ public class SwerveModule extends SubsystemBase {
   // initialize the integrated CANCoder to offset measurement by the CANCoder
   // reading
   public void initRotationOffset() {
+
+    System.out.println("resetting offsetts!");
 
     rotationEncoder.setPosition(getCanCoderAngle().getRadians());
 

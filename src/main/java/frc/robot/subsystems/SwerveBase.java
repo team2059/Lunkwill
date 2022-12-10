@@ -86,7 +86,15 @@ public class SwerveBase extends SubsystemBase {
 
   public SwerveBase() {
 
-    navX.reset();
+    // wait 1 second for navX to calibrate
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        resetImu();
+      } catch (Exception e) {
+      }
+
+    }).start();
 
     // initialize the rotation offsets for the CANCoders
     frontLeft.initRotationOffset();
@@ -112,10 +120,15 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
 
-    SmartDashboard.putNumber("Front left", frontLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("Front right", frontRight.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("Rear left", rearLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("Rear right", rearRight.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN FL", frontLeft.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN FR", frontRight.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN RR", rearRight.getCanCoderAngle().getDegrees());
+
+    SmartDashboard.putNumber("SPARK FL", frontLeft.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK FR", frontRight.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK RL", rearLeft.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
 
   }
 
@@ -179,10 +192,10 @@ public class SwerveBase extends SubsystemBase {
   public SwerveModuleState[] getModuleStates() {
 
     SwerveModuleState[] states = {
-        new SwerveModuleState(frontRight.getCurrentVelocityMetersPerSecond(), frontRight.getCanEncoderAngle()),
-        new SwerveModuleState(rearRight.getCurrentVelocityMetersPerSecond(), rearRight.getCanEncoderAngle()),
-        new SwerveModuleState(frontLeft.getCurrentVelocityMetersPerSecond(), frontLeft.getCanEncoderAngle()),
-        new SwerveModuleState(rearLeft.getCurrentVelocityMetersPerSecond(), rearLeft.getCanEncoderAngle())
+        new SwerveModuleState(frontRight.getCurrentVelocityMetersPerSecond(), frontRight.getIntegratedAngle()),
+        new SwerveModuleState(rearRight.getCurrentVelocityMetersPerSecond(), rearRight.getIntegratedAngle()),
+        new SwerveModuleState(frontLeft.getCurrentVelocityMetersPerSecond(), frontLeft.getIntegratedAngle()),
+        new SwerveModuleState(rearLeft.getCurrentVelocityMetersPerSecond(), rearLeft.getIntegratedAngle())
     };
 
     return states;
