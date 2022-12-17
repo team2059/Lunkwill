@@ -12,6 +12,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
@@ -24,6 +26,12 @@ public class SwerveModule extends SubsystemBase {
    * integrated CANEncoder for relative position
    * for both rotation and linear movement
    */
+
+  double shuffleboardTarget = 0;
+
+  public double getNewTarget() {
+    return shuffleboardTarget;
+  }
 
   private static final double rotationkP = 0.75;
   private static final double rotationkD = 0.33;
@@ -194,15 +202,20 @@ public class SwerveModule extends SubsystemBase {
     else if (targetAngle - modAngle < -Math.PI)
       newTarget += 2.0 * Math.PI;
 
+    shuffleboardTarget = modAngle;
+
     return newTarget;
 
   }
 
-  // initialize the integrated CANCoder to offset measurement by the CANCoder
-  // reading
+
+
+
+  // initialize the integrated NEO encoder to the offset (relative to home position) 
+  // measured by the CANCoder
   public void initRotationOffset() {
 
-    rotationEncoder.setPosition(getCanCoderAngle().getRadians());
+    rotationEncoder.setPosition(-getCanCoderAngle().getRadians());
 
   }
 
