@@ -27,9 +27,9 @@ public class SwerveBase extends SubsystemBase {
    * 180 degrees added to offset values to invert one side of the robot so that it
    * doesn't spin in place
    */
-  private static final double frontLeftAngleOffset = Units.degreesToRadians(285.117);
+  private static final double frontLeftAngleOffset = Units.degreesToRadians(284.117);
   private static final double frontRightAngleOffset = Units.degreesToRadians(285.996);
-  private static final double rearLeftAngleOffset = Units.degreesToRadians(275);
+  private static final double rearLeftAngleOffset = Units.degreesToRadians(273);
   private static final double rearRightAngleOffset = Units.degreesToRadians(232.229);
 
   /**
@@ -162,10 +162,19 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("SPARK RL", rearLeft.getIntegratedAngle().getDegrees());
     SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
 
-    SmartDashboard.putNumber("SPARK FL", frontLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK FR", frontRight.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK RL", rearLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK RR", rearRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
+    SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
+    SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
+    SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
+
+    // SmartDashboard.putNumber("SPARK FL",
+    // frontLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("SPARK FR",
+    // frontRight.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("SPARK RL",
+    // rearLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("SPARK RR",
+    // rearRight.getCurrentVelocityMetersPerSecond());
 
   }
 
