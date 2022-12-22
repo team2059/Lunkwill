@@ -28,9 +28,14 @@ public class SwerveBase extends SubsystemBase {
    * doesn't spin in place
    */
   private static final double frontLeftAngleOffset = Units.degreesToRadians(284.117);
-  private static final double frontRightAngleOffset = Units.degreesToRadians(285.996);
-  private static final double rearLeftAngleOffset = Units.degreesToRadians(137);
-  private static final double rearRightAngleOffset = Units.degreesToRadians(232.229);
+  private static final double frontRightAngleOffset = Units.degreesToRadians(227.996);
+  private static final double rearLeftAngleOffset = Units.degreesToRadians(271.7);
+  private static final double rearRightAngleOffset = Units.degreesToRadians(231.229);
+  // private static final double frontLeftAngleOffset = Units.degreesToRadians(284.238);
+  // private static final double frontRightAngleOffset = Units.degreesToRadians(224.209);
+  // private static final double rearLeftAngleOffset = Units.degreesToRadians(91.7);
+  // private static final double rearRightAngleOffset = Units.degreesToRadians(233.965);
+
 
   /**
    * SwerveModule objects

@@ -21,8 +21,8 @@ public final class Constants {
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(16.5);
-        public static final double wheelBase = Units.inchesToMeters(19.5);
+        public static final double trackWidth = Units.inchesToMeters(19.5); // should be 19.5
+        public static final double wheelBase = Units.inchesToMeters(16.5); // should be 16.5
         public static final double wheelDiameter = Units.inchesToMeters(4.0);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 

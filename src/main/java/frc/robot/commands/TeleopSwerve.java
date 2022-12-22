@@ -71,9 +71,9 @@ public class TeleopSwerve extends CommandBase {
     rot = deadbandInputs(rot) * Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
 
     drive.drive(
-        -fwdX * 2,
-        -fwdY * 2,
-        rot*0.75,
+        -fwdX*0.5,
+        -fwdY*0.5,
+        rot * 0.66,
         isFieldRelative);
 
   }
@@ -82,7 +82,7 @@ public class TeleopSwerve extends CommandBase {
   // joysticks
   public double deadbandInputs(double input) {
 
-    if (Math.abs(input) < 0.075)
+    if (Math.abs(input) < 0.775)
       return 0.0;
     return input;
 
