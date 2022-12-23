@@ -16,7 +16,7 @@ public final class Constants {
                                                                     // command
         public static final double stickDeadband = 0.1;
 
-        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254, 0.137);
+        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1624, 2.64,0.2725);
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
