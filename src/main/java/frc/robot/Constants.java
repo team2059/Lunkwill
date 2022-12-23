@@ -16,7 +16,7 @@ public final class Constants {
                                                                     // command
         public static final double stickDeadband = 0.1;
 
-        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1624, 2.64,0.2725);
+        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1624, 2.64, 0.2725);
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
@@ -33,11 +33,11 @@ public final class Constants {
         public static final double angleGearRatio = ((150.0 / 7.0) / 1.0); // 150/7:1
 
         public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-                new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-                new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
-
+                new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // front left
+                new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // front right
+                new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // rear left
+                new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // rear right
+        );
         /* Swerve Compensation */
         public static final double voltageComp = 12.0;
 
