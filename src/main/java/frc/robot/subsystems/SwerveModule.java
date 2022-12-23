@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.math.OnboardModuleState;
 import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 
@@ -114,7 +115,7 @@ public class SwerveModule extends SubsystemBase {
     offset = new Rotation2d(measuredOffsetRadians);
 
     driveMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.setIdleMode(IdleMode.kCoast);
+    rotationMotor.setIdleMode(IdleMode.kBrake);
 
     rotationController = rotationMotor.getPIDController();
     driveController = driveMotor.getPIDController();
@@ -208,10 +209,8 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
-
-
-
-  // initialize the integrated NEO encoder to the offset (relative to home position) 
+  // initialize the integrated NEO encoder to the offset (relative to home
+  // position)
   // measured by the CANCoder
   public void initRotationOffset() {
 
@@ -227,20 +226,28 @@ public class SwerveModule extends SubsystemBase {
    */
   public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
 
-    SwerveModuleState state = desiredState;
+    SwerveModuleState state = OnboardModuleState.optimize(desiredState, getIntegratedAngle());
+    // rotationController.setReference(
+    // calculateAdjustedAngle(
+    // state.angle.getRadians(),
+    // rotationEncoder.getPosition()),
+    // ControlType.kPosition);
+
     rotationController.setReference(
-        calculateAdjustedAngle(
-            state.angle.getRadians(),
-            rotationEncoder.getPosition()),
+
+        state.angle.getRadians(),
         ControlType.kPosition);
 
-    double speedRadPerSec = desiredState.speedMetersPerSecond / (Swerve.wheelDiameter / 2);
+    // double speedRadPerSec = desiredState.speedMetersPerSecond /
+    // (Swerve.wheelDiameter / 2);
 
-    driveController.setReference(
-        speedRadPerSec,
-        ControlType.kVelocity,
-        0,
-        Swerve.driveFF.calculate(speedRadPerSec));
+    // driveController.setReference(
+    // speedRadPerSec,
+    // ControlType.kVelocity,
+    // 0,
+    // Swerve.driveFF.calculate(speedRadPerSec));
+
+    driveMotor.set(state.speedMetersPerSecond / Swerve.maxSpeed);
 
   }
 
