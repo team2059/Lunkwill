@@ -189,7 +189,7 @@ public class SwerveModule extends SubsystemBase {
 
   // calculate the angle motor setpoint based on the desired angle and the current
   // angle measurement
-  public double calculateAdjustedAngle(double targetAngle, double currentAngle) {
+  public static double placeInAppropriate0To360Scope(double targetAngle, double currentAngle) {
 
     double modAngle = currentAngle % (2.0 * Math.PI);
 
@@ -202,8 +202,6 @@ public class SwerveModule extends SubsystemBase {
       newTarget -= 2.0 * Math.PI;
     else if (targetAngle - modAngle < -Math.PI)
       newTarget += 2.0 * Math.PI;
-
-    shuffleboardTarget = modAngle;
 
     return newTarget;
 
@@ -232,17 +230,15 @@ public class SwerveModule extends SubsystemBase {
       return;
     }
 
-    SwerveModuleState state = OnboardModuleState.optimize(desiredState, getIntegratedAngle());
+    SwerveModuleState optimizedDesiredState = OnboardModuleState.optimize(desiredState, getIntegratedAngle());
     rotationController.setReference(
-    calculateAdjustedAngle(
-    state.angle.getRadians(),
-    rotationEncoder.getPosition()),
-    ControlType.kPosition);
+        placeInAppropriate0To360Scope(optimizedDesiredState.angle.getRadians(), rotationEncoder.getPosition()),
+        ControlType.kPosition);
 
     // rotationController.setReference(
 
-    //     state.angle.getRadians(),
-    //     ControlType.kPosition);
+    // state.angle.getRadians(),
+    // ControlType.kPosition);
 
     // double speedRadPerSec = desiredState.speedMetersPerSecond /
     // (Swerve.wheelDiameter / 2);
@@ -253,7 +249,7 @@ public class SwerveModule extends SubsystemBase {
     // 0,
     // Swerve.driveFF.calculate(speedRadPerSec));
 
-    driveMotor.set(state.speedMetersPerSecond / Swerve.maxSpeed);
+    driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
 
   }
 

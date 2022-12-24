@@ -66,14 +66,14 @@ public class TeleopSwerve extends CommandBase {
     fwdY = Math.copySign(fwdY, fwdY);
     fwdY = deadbandInputs(fwdY) * Units.feetToMeters(Constants.Swerve.maxSpeed);
 
-    double rot = rotation.getAsDouble();
-    rot = Math.copySign(rot * rot, rot);
-    rot = deadbandInputs(rot) * Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
+    double rotationJoystickValue = rotation.getAsDouble();
+    rotationJoystickValue = Math.copySign(rotationJoystickValue * rotationJoystickValue, rotationJoystickValue);
+    rotationJoystickValue = deadbandInputs(rotationJoystickValue) * Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
 
     drive.drive(
         fwdX,
         -fwdY,
-        rot * 0.5,
+        rotationJoystickValue * 0.5,
         true);
 
   }
@@ -82,7 +82,7 @@ public class TeleopSwerve extends CommandBase {
   // joysticks
   public double deadbandInputs(double input) {
 
-    if (Math.abs(input) < 0.1)
+    if (Math.abs(input) < 0.5)
       return 0.0;
     return input;
 
