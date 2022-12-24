@@ -33,8 +33,8 @@ public class SwerveModule extends SubsystemBase {
     return shuffleboardTarget;
   }
 
-  private static final double rotationkP = 0.75;
-  private static final double rotationkD = 0.33;
+  private static final double rotationkP = 1;
+  private static final double rotationkD = 0.0;
 
   private static final double drivekP = 0.01;
 

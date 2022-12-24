@@ -21,8 +21,8 @@ public final class Constants {
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(16.5);
-        public static final double wheelBase = Units.inchesToMeters(19.5);
+        public static final double trackWidth = Units.inchesToMeters(19.5);
+        public static final double wheelBase = Units.inchesToMeters(16.5);
         public static final double wheelDiameter = Units.inchesToMeters(4.0);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -33,11 +33,11 @@ public final class Constants {
         public static final double angleGearRatio = ((150.0 / 7.0) / 1.0); // 150/7:1
 
         public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-                new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-                new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
-
+            new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // front left
+            new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // front right
+            new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // rear left
+            new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // rear right
+);
         /* Swerve Compensation */
         public static final double voltageComp = 12.0;
 

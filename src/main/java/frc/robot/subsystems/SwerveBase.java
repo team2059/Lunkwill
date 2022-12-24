@@ -28,9 +28,9 @@ public class SwerveBase extends SubsystemBase {
    * doesn't spin in place
    */
   private static final double frontLeftAngleOffset = Units.degreesToRadians(284.117);
-  private static final double frontRightAngleOffset = Units.degreesToRadians(285.996);
-  private static final double rearLeftAngleOffset = Units.degreesToRadians(137);
-  private static final double rearRightAngleOffset = Units.degreesToRadians(232.229);
+  private static final double frontRightAngleOffset = Units.degreesToRadians(285.996 - 61);
+  private static final double rearLeftAngleOffset = Units.degreesToRadians(137 + 134);
+  private static final double rearRightAngleOffset = Units.degreesToRadians(232.229 + 2);
 
   /**
    * SwerveModule objects
@@ -152,14 +152,19 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
 
-    SmartDashboard.putNumber("CAN FL", frontLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN FR", frontRight.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN FL",
+        frontLeft.getCanCoderAngle().getDegrees());
+    SmartDashboard.putNumber("CAN FR",
+        frontRight.getCanCoderAngle().getDegrees());
     SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
     SmartDashboard.putNumber("CAN RR", rearRight.getCanCoderAngle().getDegrees());
 
-    SmartDashboard.putNumber("SPARK FL", frontLeft.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK FR", frontRight.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK RL", rearLeft.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK FL",
+        frontLeft.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK FR",
+        frontRight.getIntegratedAngle().getDegrees());
+    SmartDashboard.putNumber("SPARK RL",
+        rearLeft.getIntegratedAngle().getDegrees());
     SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
 
     SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
@@ -167,14 +172,14 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
     SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
-    // SmartDashboard.putNumber("SPARK FL",
-    // frontLeft.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("SPARK FR",
-    // frontRight.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("SPARK RL",
-    // rearLeft.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("SPARK RR",
-    // rearRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK FL",
+        frontLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK FR",
+        frontRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK RL",
+        rearLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("SPARK RR",
+        rearRight.getCurrentVelocityMetersPerSecond());
 
   }
 
@@ -227,9 +232,9 @@ public class SwerveBase extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] moduleStates) {
 
-    frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
-    frontRight.setDesiredStateClosedLoop(moduleStates[1]);
-    rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
+    //frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
+    //frontRight.setDesiredStateClosedLoop(moduleStates[1]);
+    //rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
     rearRight.setDesiredStateClosedLoop(moduleStates[3]);
 
   }
@@ -276,32 +281,34 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
-  // return the average distance driven for each module to get an overall distance
-  // driven by the robot
-  public double getAverageDriveDistanceRadians() {
+  // //return the average distance driven for each module to get an overall
+  // distance
+  // // driven by the robot
+  // public double getAverageDriveDistanceRadians() {
 
-    return ((Math.abs(frontLeft.getDriveDistanceRadians())
-        + Math.abs(frontRight.getDriveDistanceRadians())
-        + Math.abs(rearLeft.getDriveDistanceRadians())
-        + Math.abs(rearRight.getDriveDistanceRadians())) / 4.0);
+  // return
+  // ((Math.abs(frontLeft.getDriveDistanceRadians())
+  // + Math.abs(frontRight.getDriveDistanceRadians())
+  // + Math.abs(rearLeft.getDriveDistanceRadians())
+  // + Math.abs(rearRight.getDriveDistanceRadians()) / 4.0;
 
-  }
+  // }
 
-  // return the average velocity for each module to get an overall velocity for
-  // the robot
-  public double getAverageDriveVelocityRadiansPerSecond() {
+  // // return the average velocity for each module to get an overall velocity for
+  // // the robot
+  // public double getAverageDriveVelocityRadiansPerSecond() {
 
-    return ((Math.abs(frontLeft.getCurrentVelocityRadiansPerSecond())
-        + Math.abs(frontRight.getCurrentVelocityRadiansPerSecond())
-        + Math.abs(rearLeft.getCurrentVelocityRadiansPerSecond())
-        + Math.abs(rearRight.getCurrentVelocityRadiansPerSecond())) / 4.0);
+  // return ((Math.abs(frontLeft.getCurrentVelocityRadiansPerSecond())
+  // + Math.abs(frontRight.getCurrentVelocityRadiansPerSecond())
+  // + Math.abs(rearLeft.getCurrentVelocityRadiansPerSecond())
+  // + Math.abs(rearRight.getCurrentVelocityRadiansPerSecond())) / 4.0);
 
-  }
+  // }
 
   // get the current heading of the robot based on the gyro
   public Rotation2d getHeading() {
 
-    return Rotation2d.fromDegrees(navX.getYaw());
+    return Rotation2d.fromDegrees(-navX.getYaw());
 
   }
 
