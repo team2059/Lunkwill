@@ -226,6 +226,12 @@ public class SwerveModule extends SubsystemBase {
    */
   public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
 
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+      driveMotor.set(0);
+      rotationMotor.set(0);
+      return;
+    }
+
     SwerveModuleState state = OnboardModuleState.optimize(desiredState, getIntegratedAngle());
     // rotationController.setReference(
     // calculateAdjustedAngle(
