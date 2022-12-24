@@ -27,15 +27,18 @@ public class SwerveBase extends SubsystemBase {
    * 180 degrees added to offset values to invert one side of the robot so that it
    * doesn't spin in place
    */
-  private static final double frontLeftAngleOffset = Units.degreesToRadians(284.117);
-  private static final double frontRightAngleOffset = Units.degreesToRadians(227.996);
+  private static final double frontLeftAngleOffset = Units.degreesToRadians(285.117);
+  private static final double frontRightAngleOffset = Units.degreesToRadians(224.996);
   private static final double rearLeftAngleOffset = Units.degreesToRadians(271.7);
-  private static final double rearRightAngleOffset = Units.degreesToRadians(231.229);
-  // private static final double frontLeftAngleOffset = Units.degreesToRadians(284.238);
-  // private static final double frontRightAngleOffset = Units.degreesToRadians(224.209);
-  // private static final double rearLeftAngleOffset = Units.degreesToRadians(91.7);
-  // private static final double rearRightAngleOffset = Units.degreesToRadians(233.965);
-
+  private static final double rearRightAngleOffset = Units.degreesToRadians(234.729);
+  // private static final double frontLeftAngleOffset =
+  // Units.degreesToRadians(284.238);
+  // private static final double frontRightAngleOffset =
+  // Units.degreesToRadians(224.209);
+  // private static final double rearLeftAngleOffset =
+  // Units.degreesToRadians(91.7);
+  // private static final double rearRightAngleOffset =
+  // Units.degreesToRadians(233.965);
 
   /**
    * SwerveModule objects
@@ -167,10 +170,10 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("SPARK RL", rearLeft.getIntegratedAngle().getDegrees());
     SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
 
-    SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
-    SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
-    SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
-    SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
+    SmartDashboard.putNumber("FL velocity", frontLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("FR velocity", frontRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("RL velocity", rearLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("RR velocity", rearRight.getCurrentVelocityMetersPerSecond());
 
     // SmartDashboard.putNumber("SPARK FL",
     // frontLeft.getCurrentVelocityMetersPerSecond());
@@ -285,10 +288,10 @@ public class SwerveBase extends SubsystemBase {
   // driven by the robot
   public double getAverageDriveDistanceRadians() {
 
-    return ((Math.abs(frontLeft.getDriveDistanceRadians())
-        + Math.abs(frontRight.getDriveDistanceRadians())
-        + Math.abs(rearLeft.getDriveDistanceRadians())
-        + Math.abs(rearRight.getDriveDistanceRadians())) / 4.0);
+    return ((Math.abs(frontLeft.getCurrentVelocityMetersPerSecond())
+        + Math.abs(frontRight.getCurrentVelocityMetersPerSecond())
+        + Math.abs(rearLeft.getCurrentVelocityMetersPerSecond())
+        + Math.abs(rearRight.getCurrentVelocityMetersPerSecond())) / 4.0);
 
   }
 

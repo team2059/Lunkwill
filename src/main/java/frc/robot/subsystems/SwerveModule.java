@@ -233,16 +233,16 @@ public class SwerveModule extends SubsystemBase {
     }
 
     SwerveModuleState state = OnboardModuleState.optimize(desiredState, getIntegratedAngle());
-    // rotationController.setReference(
-    // calculateAdjustedAngle(
-    // state.angle.getRadians(),
-    // rotationEncoder.getPosition()),
-    // ControlType.kPosition);
-
     rotationController.setReference(
+    calculateAdjustedAngle(
+    state.angle.getRadians(),
+    rotationEncoder.getPosition()),
+    ControlType.kPosition);
 
-        state.angle.getRadians(),
-        ControlType.kPosition);
+    // rotationController.setReference(
+
+    //     state.angle.getRadians(),
+    //     ControlType.kPosition);
 
     // double speedRadPerSec = desiredState.speedMetersPerSecond /
     // (Swerve.wheelDiameter / 2);
