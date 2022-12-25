@@ -4,14 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import com.pathplanner.lib.*;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -71,13 +75,37 @@ public class RobotContainer {
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.resetImu()));
   }
 
+  // Assuming this method is part of a drivetrain subsystem that provides the
+  // necessary methods
+  // public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+  //   return new SequentialCommandGroup(
+  //       new InstantCommand(() -> {
+  //         // Reset odometry for the first path you run during auto
+  //         if (isFirstPath) {
+  //           this.resetOdometry(traj.getInitialHolonomicPose());
+  //         }
+  //       }),
+  //       new PPSwerveControllerCommand(
+  //           traj,
+  //           this::getPose, // Pose supplier
+  //           this.kinematics, // SwerveDriveKinematics
+  //           new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use
+  //                                       // feedforwards.
+  //           new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+  //           new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will
+  //                                       // only use feedforwards.
+  //           this::setModuleStates, // Module states consumer
+  //           this // Requires this drive subsystem
+  //       ));
+  // }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   // public Command getAutonomousCommand() {
-  // // An ExampleCommand will run in autonomous
-  // return new exampleAuto(swerveBase);
+  //   // An ExampleCommand will run in autonomous
+  //   return new exampleAuto(swerveBase);
   // }
 }
