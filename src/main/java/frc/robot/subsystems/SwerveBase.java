@@ -142,6 +142,7 @@ public class SwerveBase extends SubsystemBase {
 
     rearLeft.getDriveMotor().setInverted(false);
     frontRight.getDriveMotor().setInverted(false);
+    frontLeft.getDriveMotor().setInverted(false);
 
   }
 
@@ -235,7 +236,7 @@ public class SwerveBase extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] moduleStates) {
 
-    // frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
+    frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
     frontRight.setDesiredStateClosedLoop(moduleStates[1]);
     rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
     rearRight.setDesiredStateClosedLoop(moduleStates[3]);
