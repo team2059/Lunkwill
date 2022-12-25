@@ -28,6 +28,23 @@ public class SwerveModule extends SubsystemBase {
    */
 
   double shuffleboardTarget = 0;
+  double desiredVelocityMeters = 0;
+
+  double unoptimizedVelocityMeters;
+
+  public double getUnoptimizedVelocityMeters() {
+    return unoptimizedVelocityMeters;
+  }
+
+  public double getUnoptimizedAngleDegrees() {
+    return unoptimizedAngleDegrees;
+  }
+
+  double unoptimizedAngleDegrees = 0;
+
+  public double getDesiredVelocityMeters() {
+    return desiredVelocityMeters;
+  }
 
   public double getNewTarget() {
     return shuffleboardTarget;
@@ -223,27 +240,30 @@ public class SwerveModule extends SubsystemBase {
    */
   public static SwerveModuleState optimize(
       SwerveModuleState desiredState, Rotation2d currentAngle) {
-    // double targetAngle = placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+    // double targetAngle =
+    // placeInAppropriate0To360Scope(desiredState.angle.getRadians());
     // double targetSpeed = desiredState.speedMetersPerSecond;
-    // double delta = placeInAppropriate0To360Scope(targetAngle - currentAngle.getRadians());
+    // double delta = placeInAppropriate0To360Scope(targetAngle -
+    // currentAngle.getRadians());
     // if (delta > Math.PI / 2) {
-    //   targetSpeed = -targetSpeed;
-    //   targetAngle = placeInAppropriate0To360Scope(targetAngle + Math.PI);
+    // targetSpeed = -targetSpeed;
+    // targetAngle = placeInAppropriate0To360Scope(targetAngle + Math.PI);
     // }
 
     // return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
 
-    double targetAngle =
-    placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+    double targetAngle = placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = (targetAngle - currentAngle.getRadians());
-    if (Math.abs
-    (delta) > Math.PI / 2) {
-    targetSpeed = -targetSpeed;
-    targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle
-    += Math.PI);
+    if (Math.abs(delta) > (Math.PI / 2) * 1.05) {
+      System.out.println("desiredAngle = "
+          + desiredState.angle.getDegrees()
+          + "currentAngle = " + currentAngle.getDegrees() +
+          ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " + Units.radiansToDegrees(delta));
+      targetSpeed = -targetSpeed;
+      targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
     }
-
     return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
   }
 
@@ -258,6 +278,9 @@ public class SwerveModule extends SubsystemBase {
       stop();
       return;
     }
+
+    unoptimizedAngleDegrees = unoptimizedDesiredState.angle.getDegrees();
+    unoptimizedVelocityMeters = unoptimizedDesiredState.speedMetersPerSecond;
 
     SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
 
@@ -278,6 +301,7 @@ public class SwerveModule extends SubsystemBase {
     // ControlType.kVelocity,
     // 0,
     // Swerve.driveFF.calculate(speedRadPerSec));
+    desiredVelocityMeters = optimizedDesiredState.speedMetersPerSecond;
 
     driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
   }
