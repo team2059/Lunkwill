@@ -33,11 +33,11 @@ public final class Constants {
         public static final double angleGearRatio = ((150.0 / 7.0) / 1.0); // 150/7:1
 
         public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-            new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // front left
-            new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // front right
-            new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // rear left
-            new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // rear right
-);
+                new Translation2d(trackWidth / 2.0, wheelBase / 2.0), // front left
+                new Translation2d(trackWidth / 2.0, -wheelBase / 2.0), // front right
+                new Translation2d(-trackWidth / 2.0, wheelBase / 2.0), // rear left
+                new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // rear right
+        );
         /* Swerve Compensation */
         public static final double voltageComp = 12.0;
 
@@ -74,6 +74,7 @@ public final class Constants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 3.5;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+        public static boolean canCoderInvert = false;
 
     }
 
