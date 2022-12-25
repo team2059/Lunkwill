@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -31,6 +32,8 @@ public class SwerveModule extends SubsystemBase {
   double desiredVelocityMeters = 0;
 
   double unoptimizedVelocityMeters;
+
+  public PIDController testRotationController;
 
   public double getUnoptimizedVelocityMeters() {
     return unoptimizedVelocityMeters;
@@ -125,6 +128,8 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder = driveMotor.getEncoder();
     rotationEncoder = rotationMotor.getEncoder();
+    testRotationController = new PIDController(0.5, 0, 0);
+    testRotationController.enableContinuousInput(-Math.PI, Math.PI);
 
     canCoder = new CANCoder(canCoderId);
 
@@ -256,7 +261,7 @@ public class SwerveModule extends SubsystemBase {
 
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = (targetAngle - currentAngle.getRadians());
-    if (Math.abs(delta) > (Math.PI / 2) * 1.05) {
+    if (Math.abs(delta) > (Math.PI / 2)) {
       System.out.println("desiredAngle = "
           + desiredState.angle.getDegrees()
           + "currentAngle = " + currentAngle.getDegrees() +
@@ -289,9 +294,10 @@ public class SwerveModule extends SubsystemBase {
 
     shuffleboardTarget = Units.radiansToDegrees(angularSetPoint);
 
-    rotationController.setReference(
-        angularSetPoint,
-        ControlType.kPosition);
+    rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
+
+    // angularSetPoint,
+    // ControlType.kPosition);
 
     // double speedRadPerSec = optimizedDesiredState.speedMetersPerSecond /
     // (Swerve.wheelDiameter / 2);
