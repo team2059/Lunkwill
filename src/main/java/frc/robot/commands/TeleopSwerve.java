@@ -82,7 +82,7 @@ public class TeleopSwerve extends CommandBase {
   // joysticks
   public double deadbandInputs(double input) {
 
-    if (Math.abs(input) < 0.75)
+    if (Math.abs(input) < 0.05)
       return 0.0;
     return input;
 

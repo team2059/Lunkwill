@@ -114,7 +114,7 @@ public class SwerveModule extends SubsystemBase {
     offset = new Rotation2d(measuredOffsetRadians);
 
     driveMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.setIdleMode(IdleMode.kCoast);
+    rotationMotor.setIdleMode(IdleMode.kBrake);
 
     rotationController = rotationMotor.getPIDController();
     driveController = driveMotor.getPIDController();
