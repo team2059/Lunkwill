@@ -71,9 +71,9 @@ public class TeleopSwerve extends CommandBase {
     rot = deadbandInputs(rot) * Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
 
     drive.drive(
-        -fwdX *0.1,
-        fwdY *0.1,
-        rot*0.1,
+        -fwdX ,
+        fwdY ,
+        rot,
         isFieldRelative);
 
   }

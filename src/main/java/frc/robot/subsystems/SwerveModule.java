@@ -186,38 +186,17 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
-  // calculate the angle motor setpoint based on the desired angle and the current
-  // angle measurement
-  public double calculateAdjustedAngle(double targetAngle, double currentAngle) {
+  // unwraps a target angle to be [0,2π]
+  public static double placeInAppropriate0To360Scope(double unwrappedAngle) {
 
-    double modAngle = targetAngle % (2.0 * Math.PI);
+    double modAngle = unwrappedAngle % (2.0 * Math.PI);
 
     if (modAngle < 0.0)
       modAngle += 2.0 * Math.PI;
 
-    double newTarget = modAngle;
+    double wrappedAngle = modAngle;
 
-    // if (targetAngle - modAngle > Math.PI)
-    // newTarget -= 2.0 * Math.PI;
-    // else if (targetAngle - modAngle < -Math.PI)
-    // newTarget += 2.0 * Math.PI;
-
-    shuffleboardTarget = Units.radiansToDegrees(newTarget);
-
-    // double remainder = (newTarget - targetAngle) % (2.0 * Math.PI);
-    // if (remainder < 0) {
-    // remainder += 2.0 * Math.PI;
-    // }
-    // boolean ok = Math.abs(remainder - 0) < 0.000001 || Math.abs(remainder - 2.0 *
-    // Math.PI) < 0.000001;
-    // if (!ok) {
-    // System.out.println("remainder = " + remainder);
-    // System.out
-    // .println("newTarget = " + newTarget + ", targetAngle = " + targetAngle + ",
-    // currentAngle = " + currentAngle
-    // + " , modAngle = " + modAngle);
-    // }
-    return newTarget;
+    return wrappedAngle;
 
   }
 
@@ -231,34 +210,76 @@ public class SwerveModule extends SubsystemBase {
   }
 
   /**
+   * Minimize the change in heading the desired swerve module state would require
+   * by potentially
+   * reversing the direction the wheel spins. Customized from WPILib's version to
+   * include placing in
+   * appropriate scope for CTRE and REV onboard control as both controllers as of
+   * writing don't have
+   * support for continuous input.
+   *
+   * @param desiredState The desired state.
+   * @param currentAngle The current module angle.
+   */
+  public static SwerveModuleState optimize(
+      SwerveModuleState desiredState, Rotation2d currentAngle) {
+    // double targetAngle = placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+    // double targetSpeed = desiredState.speedMetersPerSecond;
+    // double delta = placeInAppropriate0To360Scope(targetAngle - currentAngle.getRadians());
+    // if (delta > Math.PI / 2) {
+    //   targetSpeed = -targetSpeed;
+    //   targetAngle = placeInAppropriate0To360Scope(targetAngle + Math.PI);
+    // }
+
+    // return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
+
+    double targetAngle =
+    placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+    double targetSpeed = desiredState.speedMetersPerSecond;
+    double delta = (targetAngle - currentAngle.getRadians());
+    if (Math.abs
+    (delta) > Math.PI / 2) {
+    targetSpeed = -targetSpeed;
+    targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle
+    += Math.PI);
+    }
+
+    return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
+  }
+
+  /**
    * Method to set the desired state of the swerve module
    * Parameter:
    * SwerveModuleState object that holds a desired linear and rotational setpoint
    * Uses PID and a feedforward to control the output
    */
-  public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+  public void setDesiredStateClosedLoop(SwerveModuleState unoptimizedDesiredState) {
+    if (Math.abs(unoptimizedDesiredState.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
-    SwerveModuleState state = desiredState;
 
-    double angularSetPoint = calculateAdjustedAngle(
-        state.angle.getRadians(),
-        rotationEncoder.getPosition());
+    SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
+
+    double angularSetPoint = placeInAppropriate0To360Scope(
+        optimizedDesiredState.angle.getRadians());
+
+    shuffleboardTarget = Units.radiansToDegrees(angularSetPoint);
 
     rotationController.setReference(
         angularSetPoint,
         ControlType.kPosition);
 
-    double speedRadPerSec = desiredState.speedMetersPerSecond / (Swerve.wheelDiameter / 2);
+    // double speedRadPerSec = optimizedDesiredState.speedMetersPerSecond /
+    // (Swerve.wheelDiameter / 2);
 
-    driveController.setReference(
-        speedRadPerSec,
-        ControlType.kVelocity,
-        0,
-        Swerve.driveFF.calculate(speedRadPerSec));
+    // driveController.setReference(
+    // speedRadPerSec,
+    // ControlType.kVelocity,
+    // 0,
+    // Swerve.driveFF.calculate(speedRadPerSec));
 
+    driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
   }
 
   public void resetEncoders() {
