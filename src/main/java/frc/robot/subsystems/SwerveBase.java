@@ -140,6 +140,8 @@ public class SwerveBase extends SubsystemBase {
     rearLeft.resetDistance();
     rearRight.resetDistance();
 
+    rearLeft.getDriveMotor().setInverted(false);
+
   }
 
   @Override
@@ -234,7 +236,7 @@ public class SwerveBase extends SubsystemBase {
 
     // frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
     // frontRight.setDesiredStateClosedLoop(moduleStates[1]);
-    // rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
+    rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
     rearRight.setDesiredStateClosedLoop(moduleStates[3]);
 
   }
