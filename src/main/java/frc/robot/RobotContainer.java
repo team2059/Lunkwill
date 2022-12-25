@@ -12,6 +12,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,6 +28,8 @@ import frc.robot.Constants.Swerve;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.pathplanner.lib.*;
@@ -88,33 +93,48 @@ public class RobotContainer {
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.resetImu()));
   }
 
-  // Assuming this method is part of a drivetrain subsystem that provides the
-  // necessary methods
-  // public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean
-  // isFirstPath) {
-  // return new SequentialCommandGroup(
-  // new InstantCommand(() -> {
-  // // Reset odometry for the first path you run during auto
-  // if (isFirstPath) {
-  // this.resetOdometry(traj.getInitialHolonomicPose());
-  // }
-  // }),
-  // new PPSwerveControllerCommand(
-  // traj,
-  // this::getPose, // Pose supplier
-  // this.kinematics, // SwerveDriveKinematics
-  // new PIDController(0, 0, 0), // X controller. Tune these values for your
-  // robot. Leaving them 0 will only use
-  // // feedforwards.
-  // new PIDController(0, 0, 0), // Y controller (usually the same values as X
-  // controller)
-  // new PIDController(0, 0, 0), // Rotation controller. Tune these values for
-  // your robot. Leaving them 0 will
-  // // only use feedforwards.
-  // this::setModuleStates, // Module states consumer
-  // this // Requires this drive subsystem
-  // ));
-  // }
+  public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {
+
+    // Trajectory trajectory;
+
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
+      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      return trajectory;
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + filename, ex.getStackTrace());
+      System.out.println("Unable to read from file " + filename);
+    }
+    return null;
+
+    // Command ramseteCommand = new RamseteCommand(
+    // trajectory,
+    // RobotContainer.getDriveTrainSubsystem()::getPose,
+    // new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+    // new SimpleMotorFeedforward(
+    // DriveConstants.ksVolts,
+    // DriveConstants.kvVoltSecondsPerMeter,
+    // DriveConstants.kaVoltSecondsSquaredPerMeter),
+    // DriveConstants.kDriveKinematics,
+    // RobotContainer.getDriveTrainSubsystem()::getWheelSpeeds,
+    // new PIDController(DriveConstants.kPDriveVel, 0, 0),
+    // new PIDController(DriveConstants.kPDriveVel, 0, 0),
+    // // RamseteCommand passes volts to the callback
+    // RobotContainer.getDriveTrainSubsystem()::tankDriveVolts,
+    // RobotContainer.getDriveTrainSubsystem());
+
+    // Run path following command, then stop at the end.
+    // If told to reset odometry, reset odometry before running path.
+    // if (resetOdometry) {
+    // return new SequentialCommandGroup(
+    // new InstantCommand(() -> RobotContainer.getDriveTrainSubsystem()
+    // .resetOdometry(trajectory.getInitialPose())),
+    // ramseteCommand);
+    // } else {
+    // return ramseteCommand;
+    // }
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -129,13 +149,9 @@ public class RobotContainer {
         .setKinematics(Swerve.kinematics);
 
     // 2. Generate trajectory
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(
-            new Translation2d(1, 0),
-            new Translation2d(1, -1)),
-        new Pose2d(2, -1, Rotation2d.fromDegrees(45)),
-        trajectoryConfig);
+    Trajectory trajectory = jsonToTrajectory(
+        "pathplanner/generatedJSON/straight.wpilib.json",
+        true);
 
     // 3. Define PID controllers for tracking trajectory
     PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
