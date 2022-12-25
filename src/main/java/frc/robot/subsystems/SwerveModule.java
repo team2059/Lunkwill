@@ -237,7 +237,10 @@ public class SwerveModule extends SubsystemBase {
    * Uses PID and a feedforward to control the output
    */
   public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
-
+    if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+      stop();
+      return;
+    }
     SwerveModuleState state = desiredState;
 
     double angularSetPoint = calculateAdjustedAngle(
@@ -265,4 +268,8 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
+  public void stop() {
+    driveMotor.set(0);
+    rotationMotor.set(0);
+  }
 }
