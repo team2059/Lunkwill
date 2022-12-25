@@ -172,13 +172,13 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
     SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
-    SmartDashboard.putNumber("SPARK FL",
+    SmartDashboard.putNumber("vel SPARK FL",
         frontLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK FR",
+    SmartDashboard.putNumber("vel  SPARK FR",
         frontRight.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK RL",
+    SmartDashboard.putNumber("vel SPARK RL",
         rearLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("SPARK RR",
+    SmartDashboard.putNumber("vel SPARK RR",
         rearRight.getCurrentVelocityMetersPerSecond());
 
   }
@@ -232,9 +232,9 @@ public class SwerveBase extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] moduleStates) {
 
-    //frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
-    //frontRight.setDesiredStateClosedLoop(moduleStates[1]);
-    //rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
+    // frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
+    // frontRight.setDesiredStateClosedLoop(moduleStates[1]);
+    // rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
     rearRight.setDesiredStateClosedLoop(moduleStates[3]);
 
   }

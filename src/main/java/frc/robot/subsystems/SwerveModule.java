@@ -202,20 +202,31 @@ public class SwerveModule extends SubsystemBase {
     else if (targetAngle - modAngle < -Math.PI)
       newTarget += 2.0 * Math.PI;
 
-    shuffleboardTarget = modAngle;
+    shuffleboardTarget = Units.radiansToDegrees(newTarget);
 
+    // double remainder = (newTarget - targetAngle) % (2.0 * Math.PI);
+    // if (remainder < 0) {
+    // remainder += 2.0 * Math.PI;
+    // }
+    // boolean ok = Math.abs(remainder - 0) < 0.000001 || Math.abs(remainder - 2.0 *
+    // Math.PI) < 0.000001;
+    // if (!ok) {
+    // System.out.println("remainder = " + remainder);
+    // System.out
+    // .println("newTarget = " + newTarget + ", targetAngle = " + targetAngle + ",
+    // currentAngle = " + currentAngle
+    // + " , modAngle = " + modAngle);
+    // }
     return newTarget;
 
   }
 
-
-
-
-  // initialize the integrated NEO encoder to the offset (relative to home position) 
+  // initialize the integrated NEO encoder to the offset (relative to home
+  // position)
   // measured by the CANCoder
   public void initRotationOffset() {
 
-    rotationEncoder.setPosition(-getCanCoderAngle().getRadians());
+    rotationEncoder.setPosition(getCanCoderAngle().getRadians());
 
   }
 
@@ -228,10 +239,13 @@ public class SwerveModule extends SubsystemBase {
   public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
 
     SwerveModuleState state = desiredState;
+
+    double angularSetPoint = calculateAdjustedAngle(
+        state.angle.getRadians(),
+        rotationEncoder.getPosition());
+
     rotationController.setReference(
-        calculateAdjustedAngle(
-            state.angle.getRadians(),
-            rotationEncoder.getPosition()),
+        angularSetPoint,
         ControlType.kPosition);
 
     double speedRadPerSec = desiredState.speedMetersPerSecond / (Swerve.wheelDiameter / 2);
