@@ -110,8 +110,8 @@ public class TeleopSwerve extends CommandBase {
         * Swerve.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
     drive.drive(
-        -fwdX*2,
-        fwdY*2,
+        -fwdX,
+        fwdY,
         rot,
         isFieldRelative);
 
