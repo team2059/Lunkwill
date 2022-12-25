@@ -190,17 +190,17 @@ public class SwerveModule extends SubsystemBase {
   // angle measurement
   public double calculateAdjustedAngle(double targetAngle, double currentAngle) {
 
-    double modAngle = currentAngle % (2.0 * Math.PI);
+    double modAngle = targetAngle % (2.0 * Math.PI);
 
     if (modAngle < 0.0)
       modAngle += 2.0 * Math.PI;
 
-    double newTarget = targetAngle + currentAngle - modAngle;
+    double newTarget = modAngle;
 
-    if (targetAngle - modAngle > Math.PI)
-      newTarget -= 2.0 * Math.PI;
-    else if (targetAngle - modAngle < -Math.PI)
-      newTarget += 2.0 * Math.PI;
+    // if (targetAngle - modAngle > Math.PI)
+    // newTarget -= 2.0 * Math.PI;
+    // else if (targetAngle - modAngle < -Math.PI)
+    // newTarget += 2.0 * Math.PI;
 
     shuffleboardTarget = Units.radiansToDegrees(newTarget);
 
