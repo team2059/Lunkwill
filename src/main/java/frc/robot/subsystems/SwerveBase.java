@@ -158,46 +158,50 @@ public class SwerveBase extends SubsystemBase {
     // update the odometry every 20ms
     odometry.update(getHeading(), getModuleStates());
 
-    SmartDashboard.putNumber("heading", getHeading().getDegrees());
-    SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
+    // SmartDashboard.putNumber("heading", getHeading().getDegrees());
+    // SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
+    // SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
+    SmartDashboard.putString("Robot pose", getPose().getTranslation().toString());
+    SmartDashboard.putString("Heading", getPose().getRotation().toString());
 
-    SmartDashboard.putNumber("CAN FL",
-        frontLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN FR",
-        frontRight.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN RR", rearRight.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN FL",
+    // frontLeft.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN FR",
+    // frontRight.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN RR",
+    // rearRight.getCanCoderAngle().getDegrees());
 
-    SmartDashboard.putNumber("SPARK FL",
-        frontLeft.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK FR",
-        frontRight.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK RL",
-        rearLeft.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK FL",
+    // frontLeft.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK FR",
+    // frontRight.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK RL",
+    // rearLeft.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK RR",
+    // rearRight.getIntegratedAngle().getDegrees());
 
-    SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
-    SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
-    SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
-    SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
+    // SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
+    // SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
+    // SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
+    // SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
-    SmartDashboard.putNumber("vel SPARK FL",
-        frontLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("vel  SPARK FR",
-        frontRight.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("vel SPARK RL",
-        rearLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("actual vel SPARK RR meters ",
-        rearRight.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK FL",
+    // frontLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK FR",
+    // frontRight.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK RL",
+    // rearLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("actual vel SPARK RR meters ",
+    // rearRight.getCurrentVelocityMetersPerSecond());
 
-    SmartDashboard.putNumber("desired vel SPARK RR meters ",
-        rearRight.getDesiredVelocityMeters());
+    // SmartDashboard.putNumber("desired vel SPARK RR meters ",
+    // rearRight.getDesiredVelocityMeters());
 
-    SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
-        rearRight.getUnoptimizedVelocityMeters());
-    SmartDashboard.putNumber("unoptimized desired angle degrees SPARK RR",
-        rearRight.getUnoptimizedAngleDegrees());
+    // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
+    // rearRight.getUnoptimizedVelocityMeters());
+    // SmartDashboard.putNumber("unoptimized desired angle degrees SPARK RR",
+    // rearRight.getUnoptimizedAngleDegrees());
 
   }
 
@@ -283,9 +287,8 @@ public class SwerveBase extends SubsystemBase {
   }
 
   // reset the current pose to a desired pose
-  public void resetPose(Pose2d pose) {
+  public void resetOdometry(Pose2d pose) {
 
-    navX.reset();
     odometry.resetPosition(pose, getHeading());
 
   }
@@ -349,6 +352,13 @@ public class SwerveBase extends SubsystemBase {
 
     navX.reset();
 
+  }
+
+  public void stopModules() {
+    frontLeft.stop();
+    frontRight.stop();
+    rearRight.stop();
+    rearLeft.stop();
   }
 
 }
