@@ -140,9 +140,15 @@ public class SwerveBase extends SubsystemBase {
     rearLeft.resetDistance();
     rearRight.resetDistance();
 
+    rearRight.getDriveMotor().setInverted(false);
     rearLeft.getDriveMotor().setInverted(false);
     frontRight.getDriveMotor().setInverted(false);
     frontLeft.getDriveMotor().setInverted(false);
+
+    rearRight.getRotationMotor().setInverted(true);
+    rearLeft.getRotationMotor().setInverted(true);
+    frontRight.getRotationMotor().setInverted(true);
+    frontLeft.getRotationMotor().setInverted(true);
 
   }
 
