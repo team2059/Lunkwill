@@ -112,7 +112,7 @@ public class TeleopSwerve extends CommandBase {
     drive.drive(
         -fwdX,
         fwdY,
-        rot,
+        -rot,
         isFieldRelative);
 
   }
