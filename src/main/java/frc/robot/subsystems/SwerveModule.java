@@ -128,7 +128,7 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder = driveMotor.getEncoder();
     rotationEncoder = rotationMotor.getEncoder();
-    testRotationController = new PIDController(0.5, 0, 0);
+    testRotationController = new PIDController(0.5, 0, 0.01);
     testRotationController.enableContinuousInput(-Math.PI, Math.PI);
 
     canCoder = new CANCoder(canCoderId);
@@ -262,10 +262,10 @@ public class SwerveModule extends SubsystemBase {
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = (targetAngle - currentAngle.getRadians());
     if (Math.abs(delta) > (Math.PI / 2)) {
-      System.out.println("desiredAngle = "
-          + desiredState.angle.getDegrees()
-          + "currentAngle = " + currentAngle.getDegrees() +
-          ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " + Units.radiansToDegrees(delta));
+      // System.out.println("desiredAngle = "
+      //     + desiredState.angle.getDegrees()
+      //     + "currentAngle = " + currentAngle.getDegrees() +
+      //     ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " + Units.radiansToDegrees(delta));
       targetSpeed = -targetSpeed;
       targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
     }

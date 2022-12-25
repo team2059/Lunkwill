@@ -81,6 +81,12 @@ public final class Constants {
         public static final int rearLeftRotationEncoderId = 10;
         public static final int rearRightRotationEncoderId = 9;
 
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = 5 / 4;
+        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
+        Math.PI;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+
         /* Module Specific Constants */
         /* Front Left Module - Module */
         public static final class Mod0 {
