@@ -225,20 +225,20 @@ public class RobotContainer {
     // swerveBase // Requires this drive subsystem
     // );
     PathPlannerTrajectory trajectory = getPathPlannerTrajectory("straight", 1, 2);
-    System.out.println(trajectory.getInitialPose().getRotation().getDegrees());
+    System.out.println("degrees pose trajectory = " + trajectory.getInitialPose().getRotation().getDegrees());
     Command ppCommand = getPathPlannerCommand(trajectory);
 
     // Pose2d offsetPose = trajectory.getInitialPose();
     // offsetPose= offsetPose.plus(new Transform2d(new Translation2d(0,0),new
     // Rotation2d(Math.PI)));
-    // Pose2d offsetedPose = new Pose2d(trajectory.getInitialPose().getX(), trajectory.getInitialPose().getY(),
-    //     trajectory.getInitialPose().getRotation().rotateBy(new Rotation2d(Math.PI)));
+    // Pose2d offsetedPose = new Pose2d(trajectory.getInitialPose().getX(),
+    // trajectory.getInitialPose().getY(),
+    // trajectory.getInitialPose().getRotation().rotateBy(new Rotation2d(Math.PI)));
     // 5. Add some init and wrap-up, and return everything
     return new SequentialCommandGroup(
 
-        new InstantCommand(() ->
-         swerveBase.resetOdometry(trajectory.getInitialPose())),
-      //  new InstantCommand(() -> swerveBase.resetOdometry(offsetedPose)),
+        new InstantCommand(() -> swerveBase.resetOdometry(trajectory.getInitialPose())),
+        // new InstantCommand(() -> swerveBase.resetOdometry(offsetedPose)),
         ppCommand,
         new InstantCommand(() -> swerveBase.stopModules()));
 
