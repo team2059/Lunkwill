@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
   private static final double rotationkP = 1;
   private static final double rotationkD = 0.0;
 
-  private static final double drivekP = 0.01;
+  private static final double drivekP = 0.035;
 
   private final CANSparkMax driveMotor;
   private final CANSparkMax rotationMotor;
@@ -263,9 +264,10 @@ public class SwerveModule extends SubsystemBase {
     double delta = (targetAngle - currentAngle.getRadians());
     if (Math.abs(delta) > (Math.PI / 2)) {
       // System.out.println("desiredAngle = "
-      //     + desiredState.angle.getDegrees()
-      //     + "currentAngle = " + currentAngle.getDegrees() +
-      //     ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " + Units.radiansToDegrees(delta));
+      // + desiredState.angle.getDegrees()
+      // + "currentAngle = " + currentAngle.getDegrees() +
+      // ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " +
+      // Units.radiansToDegrees(delta));
       targetSpeed = -targetSpeed;
       targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
     }
@@ -295,21 +297,22 @@ public class SwerveModule extends SubsystemBase {
     shuffleboardTarget = Units.radiansToDegrees(angularSetPoint);
 
     rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
-
-    // angularSetPoint,
-    // ControlType.kPosition);
-
-    // double speedRadPerSec = optimizedDesiredState.speedMetersPerSecond /
-    // (Swerve.wheelDiameter / 2);
-
-    // driveController.setReference(
-    // speedRadPerSec,
-    // ControlType.kVelocity,
-    // 0,
-    // Swerve.driveFF.calculate(speedRadPerSec));
     desiredVelocityMeters = optimizedDesiredState.speedMetersPerSecond;
+    if (RobotState.isAutonomous()) {
 
-    driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
+      double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
+          (Swerve.wheelDiameter / 2);
+
+      driveController.setReference(
+          angularVelolictySetpoint,
+          ControlType.kVelocity,
+          0,
+          Swerve.driveFF.calculate(angularVelolictySetpoint));
+
+    } else {
+
+      driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
+    }
   }
 
   public void resetEncoders() {

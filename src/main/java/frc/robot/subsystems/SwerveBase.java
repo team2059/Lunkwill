@@ -200,11 +200,11 @@ public class SwerveBase extends SubsystemBase {
     // frontRight.getCurrentVelocityMetersPerSecond());
     // SmartDashboard.putNumber("vel SPARK RL",
     // rearLeft.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("actual vel SPARK RR meters ",
-    // rearRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("actual vel SPARK RR meters ",
+    rearRight.getCurrentVelocityMetersPerSecond());
 
-    // SmartDashboard.putNumber("desired vel SPARK RR meters ",
-    // rearRight.getDesiredVelocityMeters());
+    SmartDashboard.putNumber("desired vel SPARK RR meters ",
+    rearRight.getDesiredVelocityMeters());
 
     // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
     // rearRight.getUnoptimizedVelocityMeters());

@@ -138,17 +138,17 @@ public class RobotContainer {
 
   public PathPlannerTrajectory getPathPlannerTrajectory(String pathName, double maxVelocity, double maxAcceleration) {
     PathConstraints constraints = new PathConstraints(maxVelocity, maxAcceleration);
-    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints);
+    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints, true);
     return examplPathPlannerTrajectory;
   }
 
   public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    PIDController xController = new PIDController(3.1, 0, 0);
-    PIDController yController = new PIDController(3.1, 0, 0);
+    PIDController xController = new PIDController(3, 0, 0);
+    PIDController yController = new PIDController(3, 0, 0);
     PIDController thetaController = new PIDController(
-        0.1 , 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
-   thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        0.01, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
         trajectory,
