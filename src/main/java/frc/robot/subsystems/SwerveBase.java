@@ -120,21 +120,19 @@ public class SwerveBase extends SubsystemBase {
    * rotational motion
    * Takes in kinematics and robot angle for parameters
    */
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      Swerve.kinematics,
-      new Rotation2d(getHeading().getRadians()));
+  private final SwerveDriveOdometry odometry;
+
+  public SwerveDriveOdometry getOdometry() {
+    return odometry;
+  }
 
   public SwerveBase() {
 
-    // wait 1 second for navX to calibrate
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000);
-        resetImu();
-      } catch (Exception e) {
-      }
-
-    }).start();
+    navX.reset();
+    odometry = new SwerveDriveOdometry(
+        Swerve.kinematics,
+        new Rotation2d(getHeading().getRadians()));
+      //  odometry.resetPosition(new Pose2d());
 
     // initialize the rotation offsets for the CANCoders
     frontLeft.initRotationOffset();
@@ -166,11 +164,13 @@ public class SwerveBase extends SubsystemBase {
     // update the odometry every 20ms
     odometry.update(getHeading(), getModuleStates());
 
-    // SmartDashboard.putNumber("heading", getHeading().getDegrees());
-    // SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
-    // SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
-    SmartDashboard.putString("Robot pose", getPose().getTranslation().toString());
-    SmartDashboard.putString("Heading", getPose().getRotation().toString());
+    SmartDashboard.putNumber("Odometry heading", odometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
+    // SmartDashboard.putString("Robot pose",
+    // getPose().getTranslation().toString());
+    SmartDashboard.putNumber("navX Heading",
+        getHeading().getDegrees());
 
     // SmartDashboard.putNumber("CAN FL",
     // frontLeft.getCanCoderAngle().getDegrees());
@@ -194,17 +194,17 @@ public class SwerveBase extends SubsystemBase {
     // SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
     // SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
-    // SmartDashboard.putNumber("vel SPARK FL",
-    // frontLeft.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("vel SPARK FR",
-    // frontRight.getCurrentVelocityMetersPerSecond());
-    // SmartDashboard.putNumber("vel SPARK RL",
-    // rearLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("vel SPARK FL",
+        frontLeft.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("vel SPARK FR",
+        frontRight.getCurrentVelocityMetersPerSecond());
+    SmartDashboard.putNumber("vel SPARK RL",
+        rearLeft.getCurrentVelocityMetersPerSecond());
     SmartDashboard.putNumber("actual vel SPARK RR meters ",
-    rearRight.getCurrentVelocityMetersPerSecond());
+        rearRight.getCurrentVelocityMetersPerSecond());
 
     SmartDashboard.putNumber("desired vel SPARK RR meters ",
-    rearRight.getDesiredVelocityMeters());
+        rearRight.getDesiredVelocityMeters());
 
     // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
     // rearRight.getUnoptimizedVelocityMeters());
@@ -342,8 +342,6 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
-  
-
   public double[] getCommandedDriveValues() {
 
     double[] values = { commandedForward, commandedStrafe, commandedRotation };
@@ -362,6 +360,10 @@ public class SwerveBase extends SubsystemBase {
 
     navX.reset();
 
+  }
+
+  public AHRS getNavX() {
+    return navX;
   }
 
   public void stopModules() {

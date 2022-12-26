@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -32,8 +33,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.pathplanner.lib.*;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import org.opencv.core.Mat;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
+// import com.pathplanner.lib.*;
+// import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -90,7 +97,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.resetImu()));
+    zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
   }
 
   public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {
@@ -138,7 +145,7 @@ public class RobotContainer {
 
   public PathPlannerTrajectory getPathPlannerTrajectory(String pathName, double maxVelocity, double maxAcceleration) {
     PathConstraints constraints = new PathConstraints(maxVelocity, maxAcceleration);
-    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints, true);
+    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints, false);
     return examplPathPlannerTrajectory;
   }
 
@@ -218,11 +225,20 @@ public class RobotContainer {
     // swerveBase // Requires this drive subsystem
     // );
     PathPlannerTrajectory trajectory = getPathPlannerTrajectory("straight", 1, 2);
-
+    System.out.println(trajectory.getInitialPose().getRotation().getDegrees());
     Command ppCommand = getPathPlannerCommand(trajectory);
+
+    // Pose2d offsetPose = trajectory.getInitialPose();
+    // offsetPose= offsetPose.plus(new Transform2d(new Translation2d(0,0),new
+    // Rotation2d(Math.PI)));
+    // Pose2d offsetedPose = new Pose2d(trajectory.getInitialPose().getX(), trajectory.getInitialPose().getY(),
+    //     trajectory.getInitialPose().getRotation().rotateBy(new Rotation2d(Math.PI)));
     // 5. Add some init and wrap-up, and return everything
     return new SequentialCommandGroup(
-        new InstantCommand(() -> swerveBase.resetOdometry(trajectory.getInitialPose())),
+
+        new InstantCommand(() ->
+         swerveBase.resetOdometry(trajectory.getInitialPose())),
+      //  new InstantCommand(() -> swerveBase.resetOdometry(offsetedPose)),
         ppCommand,
         new InstantCommand(() -> swerveBase.stopModules()));
 
