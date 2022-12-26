@@ -136,32 +136,21 @@ public class RobotContainer {
 
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // 1. Create trajectory settings
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        .setKinematics(Swerve.kinematics);
+  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName, double maxVelocity, double maxAcceleration) {
+    PathConstraints constraints = new PathConstraints(maxVelocity, maxAcceleration);
+    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints);
+    return examplPathPlannerTrajectory;
+  }
 
-    // 2. Generate trajectory
-    Trajectory trajectory = jsonToTrajectory(
-        "pathplanner/generatedJSON/straight.wpilib.json",
-        true);
+  public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    PIDController xController = new PIDController(0.1, 0, 0);
+    PIDController yController = new PIDController(0.1, 0, 0);
+    PIDController thetaController = new PIDController(
+        0.5, 0, 0);// AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    // 4. Construct command to follow trajectory
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
         trajectory,
         swerveBase::getPose,
         Swerve.kinematics,
@@ -171,10 +160,70 @@ public class RobotContainer {
         swerveBase::setModuleStates,
         swerveBase);
 
+    return command;
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // 1. Create trajectory settings
+    // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+    // AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    // .setKinematics(Swerve.kinematics);
+
+    // 2. Generate trajectory
+    // Trajectory trajectory = jsonToTrajectory(
+    // "pathplanner/generatedJSON/straight.wpilib.json",
+    // true);
+
+    // 3. Define PID controllers for tracking trajectory
+    // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
+    // 0);
+    // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
+    // 0);
+    // ProfiledPIDController thetaController = new ProfiledPIDController(
+    // AutoConstants.kPThetaController, 0, 0,
+    // AutoConstants.kThetaControllerConstraints);
+    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    // 4. Construct command to follow trajectory
+    // SwerveControllerCommand swerveControllerCommand = new
+    // SwerveControllerCommand(
+    // trajectory,
+    // swerveBase::getPose,
+    // Swerve.kinematics,
+    // xController,
+    // yController,
+    // thetaController,
+    // swerveBase::setModuleStates,
+    // swerveBase);
+
+    // PPSwerveControllerCommand ppSwerveControllerCommand = new
+    // PPSwerveControllerCommand(
+    // trajectory,
+    // swerveBase::getPose, // Pose supplier
+    // Swerve.kinematics, // SwerveDriveKinematics
+    // xController, // X controller. Tune these values for your robot. Leaving them
+    // 0 will only use
+    // // feedforwards.
+    // yController, // Y controller (usually the same values as X controller)
+    // thetaController, // Rotation controller. Tune these values for your robot.
+    // Leaving them 0 will
+    // // only use feedforwards.
+    // swerveBase::setModuleStates, // Module states consumer
+    // swerveBase // Requires this drive subsystem
+    // );
+    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("straight", 2, 3);
+
+    Command ppCommand = getPathPlannerCommand(trajectory);
     // 5. Add some init and wrap-up, and return everything
     return new SequentialCommandGroup(
         new InstantCommand(() -> swerveBase.resetOdometry(trajectory.getInitialPose())),
-        swerveControllerCommand,
+        ppCommand,
         new InstantCommand(() -> swerveBase.stopModules()));
 
   }
