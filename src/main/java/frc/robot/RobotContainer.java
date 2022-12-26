@@ -154,7 +154,7 @@ public class RobotContainer {
     PIDController xController = new PIDController(3, 0, 0);
     PIDController yController = new PIDController(3, 0, 0);
     PIDController thetaController = new PIDController(
-        0.01, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
+        0.01, 0.0, 0.001);// AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
@@ -224,7 +224,7 @@ public class RobotContainer {
     // swerveBase::setModuleStates, // Module states consumer
     // swerveBase // Requires this drive subsystem
     // );
-    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("straight", 1, 2);
+    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("str8", 1, 2);
     System.out.println("degrees pose trajectory = " + trajectory.getInitialPose().getRotation().getDegrees());
     Command ppCommand = getPathPlannerCommand(trajectory);
 

@@ -77,6 +77,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.getSwerveSubsytem().getNavX().reset();
+    m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new Pose2d(), new Rotation2d());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
