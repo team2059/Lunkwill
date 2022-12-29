@@ -2,9 +2,17 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Swerve;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -112,21 +120,19 @@ public class SwerveBase extends SubsystemBase {
    * rotational motion
    * Takes in kinematics and robot angle for parameters
    */
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      Swerve.kinematics,
-      new Rotation2d(getHeading().getRadians()));
+  private final SwerveDriveOdometry odometry;
+
+  public SwerveDriveOdometry getOdometry() {
+    return odometry;
+  }
 
   public SwerveBase() {
 
-    // wait 1 second for navX to calibrate
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000);
-        resetImu();
-      } catch (Exception e) {
-      }
-
-    }).start();
+    navX.reset();
+    odometry = new SwerveDriveOdometry(
+        Swerve.kinematics,
+        new Rotation2d(getHeading().getRadians()));
+    // odometry.resetPosition(new Pose2d());
 
     // initialize the rotation offsets for the CANCoders
     frontLeft.initRotationOffset();
@@ -140,10 +146,10 @@ public class SwerveBase extends SubsystemBase {
     rearLeft.resetDistance();
     rearRight.resetDistance();
 
-    rearRight.getDriveMotor().setInverted(false);
-    rearLeft.getDriveMotor().setInverted(false);
-    frontRight.getDriveMotor().setInverted(false);
-    frontLeft.getDriveMotor().setInverted(false);
+    rearRight.getDriveMotor().setInverted(true);
+    rearLeft.getDriveMotor().setInverted(true);
+    frontRight.getDriveMotor().setInverted(true);
+    frontLeft.getDriveMotor().setInverted(true);
 
     rearRight.getRotationMotor().setInverted(true);
     rearLeft.getRotationMotor().setInverted(true);
@@ -158,33 +164,39 @@ public class SwerveBase extends SubsystemBase {
     // update the odometry every 20ms
     odometry.update(getHeading(), getModuleStates());
 
-    SmartDashboard.putNumber("heading", getHeading().getDegrees());
+    SmartDashboard.putNumber("Odometry heading", odometry.getPoseMeters().getRotation().getDegrees());
     SmartDashboard.putNumber("Odometry x", odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
+    // SmartDashboard.putString("Robot pose",
+    // getPose().getTranslation().toString());
+    SmartDashboard.putNumber("navX Heading",
+        getHeading().getDegrees());
 
-    SmartDashboard.putNumber("CAN FL",
-        frontLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN FR",
-        frontRight.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
-    SmartDashboard.putNumber("CAN RR", rearRight.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN FL",
+    // frontLeft.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN FR",
+    // frontRight.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN RL", rearLeft.getCanCoderAngle().getDegrees());
+    // SmartDashboard.putNumber("CAN RR",
+    // rearRight.getCanCoderAngle().getDegrees());
 
-    SmartDashboard.putNumber("SPARK FL",
-        frontLeft.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK FR",
-        frontRight.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK RL",
-        rearLeft.getIntegratedAngle().getDegrees());
-    SmartDashboard.putNumber("SPARK RR", rearRight.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK FL",
+    // frontLeft.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK FR",
+    // frontRight.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK RL",
+    // rearLeft.getIntegratedAngle().getDegrees());
+    // SmartDashboard.putNumber("SPARK RR",
+    // rearRight.getIntegratedAngle().getDegrees());
 
-    SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
-    SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
-    SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
-    SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
+    // SmartDashboard.putNumber("FL setpoint", frontLeft.getNewTarget());
+    // SmartDashboard.putNumber("FR setpoint", frontRight.getNewTarget());
+    // SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
+    // SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
     SmartDashboard.putNumber("vel SPARK FL",
         frontLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("vel  SPARK FR",
+    SmartDashboard.putNumber("vel SPARK FR",
         frontRight.getCurrentVelocityMetersPerSecond());
     SmartDashboard.putNumber("vel SPARK RL",
         rearLeft.getCurrentVelocityMetersPerSecond());
@@ -194,10 +206,10 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("desired vel SPARK RR meters ",
         rearRight.getDesiredVelocityMeters());
 
-    SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
-        rearRight.getUnoptimizedVelocityMeters());
-    SmartDashboard.putNumber("unoptimized desired angle degrees SPARK RR",
-        rearRight.getUnoptimizedAngleDegrees());
+    // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
+    // rearRight.getUnoptimizedVelocityMeters());
+    // SmartDashboard.putNumber("unoptimized desired angle degrees SPARK RR",
+    // rearRight.getUnoptimizedAngleDegrees());
 
   }
 
@@ -236,9 +248,6 @@ public class SwerveBase extends SubsystemBase {
     // individual module states
     SwerveModuleState[] states = Swerve.kinematics.toSwerveModuleStates(speeds);
 
-    // make sure the wheels don't try to spin faster than the maximum speed possible
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.maxSpeed);
-
     setModuleStates(states);
 
   }
@@ -249,7 +258,8 @@ public class SwerveBase extends SubsystemBase {
    * for the modules
    */
   public void setModuleStates(SwerveModuleState[] moduleStates) {
-
+    // make sure the wheels don't try to spin faster than the maximum speed possible
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Swerve.maxSpeed);
     frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
     frontRight.setDesiredStateClosedLoop(moduleStates[1]);
     rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
@@ -261,10 +271,11 @@ public class SwerveBase extends SubsystemBase {
   public SwerveModuleState[] getModuleStates() {
 
     SwerveModuleState[] states = {
-        new SwerveModuleState(frontRight.getCurrentVelocityMetersPerSecond(), frontRight.getIntegratedAngle()),
-        new SwerveModuleState(rearRight.getCurrentVelocityMetersPerSecond(), rearRight.getIntegratedAngle()),
         new SwerveModuleState(frontLeft.getCurrentVelocityMetersPerSecond(), frontLeft.getIntegratedAngle()),
-        new SwerveModuleState(rearLeft.getCurrentVelocityMetersPerSecond(), rearLeft.getIntegratedAngle())
+        new SwerveModuleState(frontRight.getCurrentVelocityMetersPerSecond(), frontRight.getIntegratedAngle()),
+        new SwerveModuleState(rearLeft.getCurrentVelocityMetersPerSecond(), rearLeft.getIntegratedAngle()),
+        new SwerveModuleState(rearRight.getCurrentVelocityMetersPerSecond(), rearRight.getIntegratedAngle())
+
     };
 
     return states;
@@ -282,9 +293,8 @@ public class SwerveBase extends SubsystemBase {
   }
 
   // reset the current pose to a desired pose
-  public void resetPose(Pose2d pose) {
+  public void resetOdometry(Pose2d pose) {
 
-    navX.reset();
     odometry.resetPosition(pose, getHeading());
 
   }
@@ -348,6 +358,17 @@ public class SwerveBase extends SubsystemBase {
 
     navX.reset();
 
+  }
+
+  public AHRS getNavX() {
+    return navX;
+  }
+
+  public void stopModules() {
+    frontLeft.stop();
+    frontRight.stop();
+    rearRight.stop();
+    rearLeft.stop();
   }
 
 }

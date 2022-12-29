@@ -16,7 +16,7 @@ public final class Constants {
                                                                     // command
         public static final double stickDeadband = 0.1;
 
-        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254, 0.137);
+        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15,0.01);
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
@@ -79,17 +79,11 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
+        public static final double kPXController = 0.75;
+        public static final double kPYController = 0.75;
+        public static final double kPThetaController = 0.33;
 
-        // Constraint for the motion profilied robot angle controller
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+
 }
