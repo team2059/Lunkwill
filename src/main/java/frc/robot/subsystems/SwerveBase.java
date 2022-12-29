@@ -132,7 +132,7 @@ public class SwerveBase extends SubsystemBase {
     odometry = new SwerveDriveOdometry(
         Swerve.kinematics,
         new Rotation2d(getHeading().getRadians()));
-      //  odometry.resetPosition(new Pose2d());
+    // odometry.resetPosition(new Pose2d());
 
     // initialize the rotation offsets for the CANCoders
     frontLeft.initRotationOffset();
@@ -248,9 +248,6 @@ public class SwerveBase extends SubsystemBase {
     // individual module states
     SwerveModuleState[] states = Swerve.kinematics.toSwerveModuleStates(speeds);
 
-    // make sure the wheels don't try to spin faster than the maximum speed possible
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.maxSpeed);
-
     setModuleStates(states);
 
   }
@@ -261,7 +258,8 @@ public class SwerveBase extends SubsystemBase {
    * for the modules
    */
   public void setModuleStates(SwerveModuleState[] moduleStates) {
-
+    // make sure the wheels don't try to spin faster than the maximum speed possible
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Swerve.maxSpeed);
     frontLeft.setDesiredStateClosedLoop(moduleStates[0]);
     frontRight.setDesiredStateClosedLoop(moduleStates[1]);
     rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
