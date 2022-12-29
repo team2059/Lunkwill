@@ -298,19 +298,20 @@ public class SwerveModule extends SubsystemBase {
 
     rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
     desiredVelocityMeters = optimizedDesiredState.speedMetersPerSecond;
+    double angularVelolictySetpoint = desiredVelocityMeters /
+        (Swerve.wheelDiameter / 2.0);
     if (RobotState.isAutonomous()) {
 
-      double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
-          (Swerve.wheelDiameter / 2);
+      driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
 
-      driveController.setReference(
-          angularVelolictySetpoint,
-          ControlType.kVelocity,
-          0,
-          Swerve.driveFF.calculate(angularVelolictySetpoint));
+      // driveController.setReference(
+      // angularVelolictySetpoint,
+      // ControlType.kVelocity,
+      // 0,
+      // Swerve.driveFF.calculate(angularVelolictySetpoint));
 
     } else {
-
+      // driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
       driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
     }
   }
