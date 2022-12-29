@@ -129,7 +129,7 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder = driveMotor.getEncoder();
     rotationEncoder = rotationMotor.getEncoder();
-    testRotationController = new PIDController(0.5, 0, 0.01);
+    testRotationController = new PIDController(0.5, 0, 0.0);
     testRotationController.enableContinuousInput(-Math.PI, Math.PI);
 
     canCoder = new CANCoder(canCoderId);

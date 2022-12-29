@@ -154,7 +154,7 @@ public class RobotContainer {
     PIDController xController = new PIDController(3, 0, 0);
     PIDController yController = new PIDController(3, 0, 0);
     PIDController thetaController = new PIDController(
-        1, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
+        1.5, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
@@ -241,6 +241,5 @@ public class RobotContainer {
         // new InstantCommand(() -> swerveBase.resetOdometry(offsetedPose)),
         ppCommand,
         new InstantCommand(() -> swerveBase.stopModules()));
-
   }
 }
