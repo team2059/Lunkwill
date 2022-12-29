@@ -149,7 +149,7 @@ public class PPSwerveControllerCommand extends CommandBase {
         SmartDashboard.putNumber("current_heading", currentPose.getRotation().getDegrees());
 
         SmartDashboard.putNumber(
-                "PPSwerveControllerCommand_desired_x", -desiredState.poseMeters.getX());
+                "PPSwerveControllerCommand_desired_x", desiredState.poseMeters.getX());
         SmartDashboard.putNumber(
                 "PPSwerveControllerCommand_desired_y", desiredState.poseMeters.getY());
         SmartDashboard.putNumber(
