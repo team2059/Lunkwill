@@ -151,10 +151,10 @@ public class RobotContainer {
 
   public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    PIDController xController = new PIDController(3.2, 0, 0);
+    PIDController xController = new PIDController(3, 0, 0);
     PIDController yController = new PIDController(3, 0, 0);
     PIDController thetaController = new PIDController(
-        0.65, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
+        1, 0.0, 0.0);// AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(

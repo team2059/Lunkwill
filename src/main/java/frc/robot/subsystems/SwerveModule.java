@@ -57,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
   private static final double rotationkP = 0.5;
   private static final double rotationkD = 0.0;
 
-  private static final double drivekP = 0.035;
+  private static final double drivekP = 0.015;
 
   private final CANSparkMax driveMotor;
   private final CANSparkMax rotationMotor;
