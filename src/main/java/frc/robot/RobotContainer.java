@@ -224,7 +224,7 @@ public class RobotContainer {
     // swerveBase::setModuleStates, // Module states consumer
     // swerveBase // Requires this drive subsystem
     // );
-    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath", 1.5, 1);
+    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath", 2, 2);
     System.out.println("degrees pose trajectory = " + trajectory.getInitialPose().getRotation().getDegrees());
     Command ppCommand = getPathPlannerCommand(trajectory);
 
