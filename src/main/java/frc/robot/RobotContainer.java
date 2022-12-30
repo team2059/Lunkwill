@@ -57,6 +57,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
+  private final Limelight limelight = new Limelight();
 
   public SwerveBase getSwerveSubsytem() {
     return swerveBase;
@@ -69,7 +70,8 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton isFieldRelative = new JoystickButton(driver, 5);
+  private final JoystickButton isFieldRelative = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton alignWithTag = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,6 +100,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
+    alignWithTag.whileHeld(new AutoAlignCmd(limelight, swerveBase));
   }
 
   public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {

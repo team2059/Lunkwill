@@ -169,8 +169,8 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
     // SmartDashboard.putString("Robot pose",
     // getPose().getTranslation().toString());
-    SmartDashboard.putNumber("navX Heading",
-        getHeading().getDegrees());
+    // SmartDashboard.putNumber("navX Heading",
+    //     getHeading().getDegrees());
 
     // SmartDashboard.putNumber("CAN FL",
     // frontLeft.getCanCoderAngle().getDegrees());
@@ -194,17 +194,17 @@ public class SwerveBase extends SubsystemBase {
     // SmartDashboard.putNumber("RL setpoint", rearLeft.getNewTarget());
     // SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
-    SmartDashboard.putNumber("vel SPARK FL",
-        frontLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("vel SPARK FR",
-        frontRight.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("vel SPARK RL",
-        rearLeft.getCurrentVelocityMetersPerSecond());
-    SmartDashboard.putNumber("actual vel SPARK RR meters ",
-        rearRight.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK FL",
+    //     frontLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK FR",
+    //     frontRight.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("vel SPARK RL",
+    //     rearLeft.getCurrentVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("actual vel SPARK RR meters ",
+    //     rearRight.getCurrentVelocityMetersPerSecond());
 
-    SmartDashboard.putNumber("desired vel SPARK RR meters ",
-        rearRight.getDesiredVelocityMeters());
+    // SmartDashboard.putNumber("desired vel SPARK RR meters ",
+    //     rearRight.getDesiredVelocityMeters());
 
     // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
     // rearRight.getUnoptimizedVelocityMeters());
