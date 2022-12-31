@@ -72,7 +72,6 @@ public class RobotContainer {
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
   // private final JoystickButton isFieldRelative = new JoystickButton(driver,
   // XboxController.Button.kLeftBumper.value);
-  private final JoystickButton rangeWithTarget = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton turnToAngle = new JoystickButton(driver, XboxController.Button.kA.value);
 
@@ -103,9 +102,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
+
+    // 
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
+
+
     turnToAngle.whileHeld(new TurnToAngleCmd(swerveBase, 90));
-    // rangeWithTarget.whileHeld(new VisionRangeCmd(limelight, swerveBase));
   }
 
   public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {
