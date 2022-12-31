@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveBase;
 
-public class AutoAlignCmd extends CommandBase {
+public class VisionAlignCmd extends CommandBase {
   private final Limelight limelight;
   private final SwerveBase swerveBase;
 
@@ -22,7 +22,7 @@ public class AutoAlignCmd extends CommandBase {
   double rotationSpeed;
 
   /** Creates a new AutoAlignCmd. */
-  public AutoAlignCmd(Limelight limelight, SwerveBase swerveBase) {
+  public VisionAlignCmd(Limelight limelight, SwerveBase swerveBase) {
     this.limelight = limelight;
     this.swerveBase = swerveBase;
     addRequirements(limelight, swerveBase);
@@ -40,13 +40,13 @@ public class AutoAlignCmd extends CommandBase {
   public void execute() {
     if (limelight.hasTargets()) {
       // Calculate angular turn power
-      rotationSpeed = turnController.calculate(limelight.getTargetYaw(), 0);
+      rotationSpeed = turnController.calculate(limelight.getTargetYawDegrees(), 0);
       SmartDashboard.putNumber("rotation speed", rotationSpeed);
 
     } else {
       rotationSpeed = 0;
     }
-    swerveBase.drive(0, 0, rotationSpeed, false);
+    swerveBase.drive(0, 0, rotationSpeed, true);
   }
 
   // Called once the command ends or is interrupted.

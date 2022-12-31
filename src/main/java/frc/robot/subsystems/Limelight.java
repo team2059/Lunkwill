@@ -8,44 +8,73 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Limelight extends SubsystemBase {
 
   private PhotonCamera camera;
-  private PhotonPipelineResult result;
-  private double targetYaw;
-  private boolean hasTargets;
+  // Constants such as camera and target height stored. Change per robot and goal!
+  public final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(11);
+  public final double TARGET_HEIGHT_METERS = Units.inchesToMeters(25);
+
+  // Angle between horizontal and the camera.
+  public final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+
+  // public ArrayList<double> =
+
+  public double getRangeToTargetMeters() {
+
+    double range = 0;
+
+    try {
+      range = PhotonUtils.calculateDistanceToTargetMeters(
+          CAMERA_HEIGHT_METERS,
+          TARGET_HEIGHT_METERS,
+          CAMERA_PITCH_RADIANS,
+          Units.degreesToRadians(getResult().getBestTarget().getPitch()));
+    } catch (NullPointerException ex) {
+      range = -1;
+    }
+
+    return range;
+  }
+
+  public int getTagId() {
+    if (hasTargets()) {
+      return getResult().getBestTarget().getFiducialId();
+    }
+    return -1;
+  }
 
   public PhotonPipelineResult getResult() {
-    result = camera.getLatestResult();
-    return result;
+
+    return camera.getLatestResult();
   }
 
   public boolean hasTargets() {
-    hasTargets = getResult().hasTargets();
-    return hasTargets;
+
+    return getResult().hasTargets();
   }
 
   public PhotonCamera getCamera() {
     return camera;
   }
 
-  public double getTargetYaw() {
+  public double getTargetYawDegrees() {
+    double degrees = 0;
+    try {
+      degrees = camera.getLatestResult()
+          .getBestTarget().getYaw();
 
-    targetYaw = camera.getLatestResult()
-        .getBestTarget().getYaw();
+      return degrees;
+    } catch (NullPointerException ex) {
+      degrees = -999;
 
-    return targetYaw;
+    }
+    return degrees;
 
   }
-
-  // Constants such as camera and target height stored. Change per robot and goal!
-  final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(27.5);
-  final double TARGET_HEIGHT_METERS = Units.feetToMeters(38);
-
-  // Angle between horizontal and the camera.
-  final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(90);
 
   /** Creates a new Limelight. */
   public Limelight() {
@@ -64,10 +93,10 @@ public class Limelight extends SubsystemBase {
 
     SmartDashboard.putBoolean("Has target", hasTargets());
 
-    if (hasTargets()) {
-
-      SmartDashboard.putNumber("target Yaw", getTargetYaw());
-
+    if (hasTargets() == true) {
+      SmartDashboard.putNumber("range inches", Units.metersToInches(getRangeToTargetMeters()));
+      SmartDashboard.putNumber("target Yaw", getTargetYawDegrees());
+      SmartDashboard.putNumber("tag ID", getTagId());
     }
 
   }
