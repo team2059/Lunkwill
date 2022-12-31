@@ -7,6 +7,7 @@ package frc.robot.commands;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveBase;
@@ -37,15 +38,15 @@ public class AutoAlignCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limelight.getCamera().getLatestResult().hasTargets()) {
+    if (limelight.hasTargets()) {
       // Calculate angular turn power
-      // -1.0 required to ensure positive PID controller effort _increases_ yaw
-      rotationSpeed = turnController.calculate(limelight.getCamera().getLatestResult()
-          .getBestTarget().getYaw(), 0);
-      swerveBase.drive(0, 0, rotationSpeed, false);
+      rotationSpeed = turnController.calculate(limelight.getTargetYaw(), 0);
+      SmartDashboard.putNumber("rotation speed", rotationSpeed);
+
     } else {
-      return;
+      rotationSpeed = 0;
     }
+    swerveBase.drive(0, 0, rotationSpeed, false);
   }
 
   // Called once the command ends or is interrupted.
