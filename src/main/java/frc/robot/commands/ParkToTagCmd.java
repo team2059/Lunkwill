@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Swerve;
@@ -87,7 +88,14 @@ public class ParkToTagCmd extends CommandBase {
         swerveBase::setModuleStates,
         swerveBase);
 
-    followPath.schedule();
+    SequentialCommandGroup fullCmd = new SequentialCommandGroup(
+
+        new InstantCommand(() -> swerveBase.resetOdometry(trajectory.getInitialPose())),
+        // new InstantCommand(() -> swerveBase.resetOdometry(offsetedPose)),
+        followPath,
+        new InstantCommand(() -> swerveBase.stopModules()));
+
+    fullCmd.schedule();
 
   }
 
