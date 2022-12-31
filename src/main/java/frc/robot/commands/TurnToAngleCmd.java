@@ -11,9 +11,10 @@ import frc.robot.subsystems.SwerveBase;
 public class TurnToAngleCmd extends CommandBase {
   SwerveBase swerveBase;
   double angleDegrees;
-  final double ANGULAR_P = 0.066;
+  double ANGULAR_P;
   final double ANGULAR_D = 0.0001;
-  PIDController turnController = new PIDController(ANGULAR_P, 0.005, ANGULAR_D);
+  PIDController turnController;
+
   double rotationSpeed;
 
   /** Creates a new TurnToAngleCmd. */
@@ -27,11 +28,22 @@ public class TurnToAngleCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (angleDegrees == 90) {
+      ANGULAR_P = 0.1;
+    } else if (angleDegrees == 180) {
+      ANGULAR_P = 0.066;
+    } else if (angleDegrees == 270) {
+      ANGULAR_P = 0.025;
+    } else {
+      ANGULAR_P = 0;
+    }
+    turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     rotationSpeed = turnController.calculate(swerveBase.getHeading().getDegrees(), angleDegrees);
     swerveBase.drive(0, 0, rotationSpeed, true);
 
