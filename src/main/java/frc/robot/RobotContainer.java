@@ -74,11 +74,13 @@ public class RobotContainer {
   // XboxController.Button.kLeftBumper.value);
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton turnToAngle = new JoystickButton(driver, XboxController.Button.kA.value);
+  private final JoystickButton followTag = new JoystickButton(driver, XboxController.Button.kB.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
+  public RobotContainer()
+  {
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
@@ -102,10 +104,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
+    followTag.whenPressed(new ParkToTagCmd(swerveBase, limelight));
 
-    // 
+    //
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
-
 
     turnToAngle.whileHeld(new TurnToAngleCmd(swerveBase, 90));
   }
@@ -123,33 +125,6 @@ public class RobotContainer {
       System.out.println("Unable to read from file " + filename);
     }
     return null;
-
-    // Command ramseteCommand = new RamseteCommand(
-    // trajectory,
-    // RobotContainer.getDriveTrainSubsystem()::getPose,
-    // new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-    // new SimpleMotorFeedforward(
-    // DriveConstants.ksVolts,
-    // DriveConstants.kvVoltSecondsPerMeter,
-    // DriveConstants.kaVoltSecondsSquaredPerMeter),
-    // DriveConstants.kDriveKinematics,
-    // RobotContainer.getDriveTrainSubsystem()::getWheelSpeeds,
-    // new PIDController(DriveConstants.kPDriveVel, 0, 0),
-    // new PIDController(DriveConstants.kPDriveVel, 0, 0),
-    // // RamseteCommand passes volts to the callback
-    // RobotContainer.getDriveTrainSubsystem()::tankDriveVolts,
-    // RobotContainer.getDriveTrainSubsystem());
-
-    // Run path following command, then stop at the end.
-    // If told to reset odometry, reset odometry before running path.
-    // if (resetOdometry) {
-    // return new SequentialCommandGroup(
-    // new InstantCommand(() -> RobotContainer.getDriveTrainSubsystem()
-    // .resetOdometry(trajectory.getInitialPose())),
-    // ramseteCommand);
-    // } else {
-    // return ramseteCommand;
-    // }
 
   }
 

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,13 +46,30 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putBoolean("Has target", hasTargets);
 
     if (hasTargets) {
-      SmartDashboard.putNumber("range inches", PhotonUtils.calculateDistanceToTargetMeters(
-          CAMERA_HEIGHT_METERS,
-          TARGET_HEIGHT_METERS,
-          CAMERA_PITCH_RADIANS,
-          Units.degreesToRadians(result.getBestTarget().getPitch())));
-      SmartDashboard.putNumber("target Yaw", result.getBestTarget().getYaw());
+      // SmartDashboard.putNumber("range inches", PhotonUtils.calculateDistanceToTargetMeters(
+      //     CAMERA_HEIGHT_METERS,
+      //     TARGET_HEIGHT_METERS,
+      //     CAMERA_PITCH_RADIANS,
+      //     Units.degreesToRadians(result.getBestTarget().getPitch())));
+      // SmartDashboard.putNumber("target Yaw", result.getBestTarget().getYaw());
       SmartDashboard.putNumber("tag ID", result.getBestTarget().getFiducialId());
+
+      Transform3d bestCameraToTarget = result.getBestTarget().getBestCameraToTarget();
+     
+
+      SmartDashboard.putNumber("x (roll)",
+          Units.radiansToDegrees(bestCameraToTarget.getRotation().getX()));
+      SmartDashboard.putNumber("y (pitch)",
+          Units.radiansToDegrees(bestCameraToTarget.getRotation().getY()));
+      SmartDashboard.putNumber("z (yaw)",
+          Units.radiansToDegrees(bestCameraToTarget.getRotation().getZ()));
+
+      SmartDashboard.putNumber("x",
+        bestCameraToTarget.getX());
+      SmartDashboard.putNumber("y",
+          bestCameraToTarget.getY());
+      SmartDashboard.putNumber("z",
+         bestCameraToTarget.getZ());
 
     }
 

@@ -16,7 +16,7 @@ public final class Constants {
                                                                     // command
         public static final double stickDeadband = 0.1;
 
-        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15,0.01);
+        public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15, 0.01);
 
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
@@ -83,6 +83,17 @@ public final class Constants {
         public static final double kPXController = 0.75;
         public static final double kPYController = 0.75;
         public static final double kPThetaController = 0.33;
+
+        public static final double kMaxSpeedMetersPerSecond = Swerve.maxSpeed / 4;
+        public static final double kMaxAngularSpeedRadiansPerSecond = //
+                Swerve.maxAngularVelocity / 10;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
+
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+                new TrapezoidProfile.Constraints(
+                        kMaxAngularSpeedRadiansPerSecond,
+                        kMaxAngularAccelerationRadiansPerSecondSquared);
 
     }
 
