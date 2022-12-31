@@ -55,6 +55,10 @@ public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
 
+  public Joystick getDriver() {
+    return driver;
+  }
+
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
   private final Limelight limelight = new Limelight();
@@ -79,8 +83,7 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
-  {
+  public RobotContainer() {
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
@@ -104,7 +107,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
-    followTag.whenPressed(new ParkToTagCmd(swerveBase, limelight));
+
+    followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
 
     //
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
