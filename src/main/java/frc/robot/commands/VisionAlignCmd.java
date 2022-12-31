@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,9 +39,13 @@ public class VisionAlignCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limelight.hasTargets()) {
+    // Vision-alignment mode
+    // Query the latest result from PhotonVision
+    var result = limelight.getCamera().getLatestResult();
+
+    if (result.hasTargets()) {
       // Calculate angular turn power
-      rotationSpeed = turnController.calculate(limelight.getTargetYawDegrees(), 0);
+      rotationSpeed = turnController.calculate(result.getBestTarget().getYaw(), 0);
       SmartDashboard.putNumber("rotation speed", rotationSpeed);
 
     } else {

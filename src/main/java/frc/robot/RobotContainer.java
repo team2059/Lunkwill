@@ -74,6 +74,7 @@ public class RobotContainer {
   // XboxController.Button.kLeftBumper.value);
   private final JoystickButton rangeWithTarget = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton turnToAngle = new JoystickButton(driver, XboxController.Button.kA.value);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -103,7 +104,8 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
-   // rangeWithTarget.whileHeld(new VisionRangeCmd(limelight, swerveBase));
+    turnToAngle.whileHeld(new TurnToAngleCmd(swerveBase, 90));
+    // rangeWithTarget.whileHeld(new VisionRangeCmd(limelight, swerveBase));
   }
 
   public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {

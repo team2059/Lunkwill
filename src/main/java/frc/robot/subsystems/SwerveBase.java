@@ -42,8 +42,6 @@ public class SwerveBase extends SubsystemBase {
   private static final double rearLeftAngleOffset = Units.degreesToRadians(137 + 134);
   private static final double rearRightAngleOffset = Units.degreesToRadians(232.229 + 2);
 
-
-
   /**
    * SwerveModule objects
    * Parameters:
@@ -173,8 +171,8 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("Odometry y", odometry.getPoseMeters().getY());
     // SmartDashboard.putString("Robot pose",
     // getPose().getTranslation().toString());
-    // SmartDashboard.putNumber("navX Heading",
-    //     getHeading().getDegrees());
+    SmartDashboard.putNumber("navX Heading",
+        getHeading().getDegrees());
 
     // SmartDashboard.putNumber("CAN FL",
     // frontLeft.getCanCoderAngle().getDegrees());
@@ -199,16 +197,16 @@ public class SwerveBase extends SubsystemBase {
     // SmartDashboard.putNumber("RR setpoint", rearRight.getNewTarget());
 
     // SmartDashboard.putNumber("vel SPARK FL",
-    //     frontLeft.getCurrentVelocityMetersPerSecond());
+    // frontLeft.getCurrentVelocityMetersPerSecond());
     // SmartDashboard.putNumber("vel SPARK FR",
-    //     frontRight.getCurrentVelocityMetersPerSecond());
+    // frontRight.getCurrentVelocityMetersPerSecond());
     // SmartDashboard.putNumber("vel SPARK RL",
-    //     rearLeft.getCurrentVelocityMetersPerSecond());
+    // rearLeft.getCurrentVelocityMetersPerSecond());
     // SmartDashboard.putNumber("actual vel SPARK RR meters ",
-    //     rearRight.getCurrentVelocityMetersPerSecond());
+    // rearRight.getCurrentVelocityMetersPerSecond());
 
     // SmartDashboard.putNumber("desired vel SPARK RR meters ",
-    //     rearRight.getDesiredVelocityMeters());
+    // rearRight.getDesiredVelocityMeters());
 
     // SmartDashboard.putNumber("unoptimized desired vel SPARK RR meters ",
     // rearRight.getUnoptimizedVelocityMeters());
