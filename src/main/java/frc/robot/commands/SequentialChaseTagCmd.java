@@ -41,66 +41,64 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
   }
 
   public Command getCommand() {
-    System.out.println("INIT START");
+
     // robot pose
     var startingPose = new Pose2d(0, 0, new Rotation2d());
 
     var result = limelight.getCamera().getLatestResult();
 
     if (result.hasTargets() == false) {
-      System.out.println("has target " + result.hasTargets());
-      System.out.println("no target to make best!");
 
       return new InstantCommand();
     } else {
-      System.out.println("has target " + result.hasTargets());
-      var bestTarget = result.getBestTarget();
-      double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
 
-      // target pose
-      // var endingPose = new Pose2d(
-      //     bestTarget.getBestCameraToTarget().getX() + (Swerve.cameraToFrontEdgeDistanceMeters * Math.cos(yawTheta)),
-      //     bestTarget.getBestCameraToTarget().getY() + (Swerve.cameraToFrontEdgeDistanceMeters * Math.sin(yawTheta)),
-      //     new Rotation2d(yawTheta -
-      //         Math.PI));
+      var bestTarget = result.getBestTarget().getBestCameraToTarget();
+      double yawTheta = bestTarget.getRotation().getZ();
+      var endingPose = new Pose2d();
+      if (result.getBestTarget().getPoseAmbiguity() <= 0.3 && result.getBestTarget().getFiducialId() >= 0) {
+        // target pose
+        endingPose = new Pose2d(
+            bestTarget.getX() - Units.inchesToMeters(12.5),
+            bestTarget.getY(),
+            new Rotation2d(yawTheta -
+                Math.PI));
+        System.out.println(endingPose.toString());
 
-     var endingPose = new Pose2d(0, 3, new Rotation2d(0));
+        var interiorWaypoints = new ArrayList<Translation2d>();
+        interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0));
+        interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0, 2.0 * endingPose.getY() / 3.0));
 
-      System.out.println(endingPose.toString());
+        TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
+        config.setReversed(false);
 
-      var interiorWaypoints = new ArrayList<Translation2d>();
-      interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0));
-      interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0, 2.0 * endingPose.getY() / 3.0));
+        var trajectory = TrajectoryGenerator.generateTrajectory(
+            startingPose,
+            interiorWaypoints,
+            endingPose,
+            config);
 
-      TrajectoryConfig config = new TrajectoryConfig(3, 1.5);
-      config.setReversed(false);
+        swerveBase.resetOdometry(trajectory.getInitialPose());
 
-      var trajectory = TrajectoryGenerator.generateTrajectory(
-          startingPose,
-          interiorWaypoints,
-          endingPose,
-          config);
+        // 3. Define PID controllers for tracking trajectory
+        PIDController xController = new PIDController(0.375, 0,
+            0);
+        PIDController yController = new PIDController(0.4, 0,
+            0);
+        ProfiledPIDController thetaController = new ProfiledPIDController(
+            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-      swerveBase.resetOdometry(trajectory.getInitialPose());
-
-      // 3. Define PID controllers for tracking trajectory
-      PIDController xController = new PIDController(0.375, 0,
-          0);
-      PIDController yController = new PIDController(0.4, 0,
-          0);
-      ProfiledPIDController thetaController = new ProfiledPIDController(
-          AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-      thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-      return new SwerveControllerCommand(
-          trajectory,
-          swerveBase::getPose,
-          Swerve.kinematics,
-          xController,
-          yController,
-          thetaController,
-          swerveBase::setModuleStates,
-          swerveBase);
+        return new SwerveControllerCommand(
+            trajectory,
+            swerveBase::getPose,
+            Swerve.kinematics,
+            xController,
+            yController,
+            thetaController,
+            swerveBase::setModuleStates,
+            swerveBase);
+      }
+      return new InstantCommand();
 
     }
   }
