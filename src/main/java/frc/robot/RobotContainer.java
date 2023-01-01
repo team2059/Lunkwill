@@ -51,7 +51,6 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton turnToAngle = new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton followTag = new JoystickButton(driver, XboxController.Button.kB.value);
 
   /* Subsystems */
@@ -86,7 +85,7 @@ public class RobotContainer {
    * Use this method to define your button->command mappings. Buttons can be
    * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), anxd then passing
    * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
@@ -97,7 +96,6 @@ public class RobotContainer {
     followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
 
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
-    turnToAngle.whileHeld(new TurnToAngleCmd(swerveBase, 90));
 
   }
 
