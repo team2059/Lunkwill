@@ -64,7 +64,7 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
       //     new Rotation2d(yawTheta -
       //         Math.PI));
 
-     var endingPose = new Pose2d(3, 0, new Rotation2d(0));
+     var endingPose = new Pose2d(0, 3, new Rotation2d(0));
 
       System.out.println(endingPose.toString());
 
@@ -86,7 +86,7 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
       // 3. Define PID controllers for tracking trajectory
       PIDController xController = new PIDController(0.375, 0,
           0);
-      PIDController yController = new PIDController(1, 0,
+      PIDController yController = new PIDController(0.4, 0,
           0);
       ProfiledPIDController thetaController = new ProfiledPIDController(
           AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
