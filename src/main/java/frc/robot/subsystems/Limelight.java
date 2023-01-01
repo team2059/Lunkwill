@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.BooleanSupplier;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Limelight extends SubsystemBase {
 
@@ -24,7 +21,7 @@ public class Limelight extends SubsystemBase {
     return camera;
   }
 
-  public BooleanSupplier hasTargetBooleanSupplier(){
+  public BooleanSupplier hasTargetBooleanSupplier() {
     return () -> camera.getLatestResult().hasTargets();
   }
 
@@ -53,16 +50,10 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putBoolean("Has target", hasTargets);
 
     if (hasTargets) {
-      // SmartDashboard.putNumber("range inches", PhotonUtils.calculateDistanceToTargetMeters(
-      //     CAMERA_HEIGHT_METERS,
-      //     TARGET_HEIGHT_METERS,
-      //     CAMERA_PITCH_RADIANS,
-      //     Units.degreesToRadians(result.getBestTarget().getPitch())));
-      // SmartDashboard.putNumber("target Yaw", result.getBestTarget().getYaw());
+
       SmartDashboard.putNumber("tag ID", result.getBestTarget().getFiducialId());
 
       Transform3d bestCameraToTarget = result.getBestTarget().getBestCameraToTarget();
-     
 
       SmartDashboard.putNumber("x (roll)",
           Units.radiansToDegrees(bestCameraToTarget.getRotation().getX()));
@@ -72,11 +63,11 @@ public class Limelight extends SubsystemBase {
           Units.radiansToDegrees(bestCameraToTarget.getRotation().getZ()));
 
       SmartDashboard.putNumber("x",
-        bestCameraToTarget.getX());
+          bestCameraToTarget.getX());
       SmartDashboard.putNumber("y",
           bestCameraToTarget.getY());
       SmartDashboard.putNumber("z",
-         bestCameraToTarget.getZ());
+          bestCameraToTarget.getZ());
 
     }
 

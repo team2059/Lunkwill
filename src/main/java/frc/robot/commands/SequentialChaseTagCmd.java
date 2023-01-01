@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
@@ -37,16 +36,12 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
       Limelight limelight) {
     this.limelight = limelight;
     this.swerveBase = swerveBase;
-    addCommands(new SelectCommand(()->getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
-
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-
+    addRequirements(limelight, swerveBase);
+    addCommands(new SelectCommand(() -> getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
   }
 
-
   public Command getCommand() {
-    System.out.println("INIT START"); 
+    System.out.println("INIT START");
     // robot pose
     var startingPose = new Pose2d(0, 0, new Rotation2d());
 
@@ -99,10 +94,6 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
           thetaController,
           swerveBase::setModuleStates,
           swerveBase);
-
-      // followPath.schedule();
-
-      // System.out.println("INIT END fullCmd has been scheduled");
 
     }
   }

@@ -11,9 +11,9 @@ import frc.robot.subsystems.SwerveBase;
 public class TurnToAngleCmd extends CommandBase {
   SwerveBase swerveBase;
   double angleDegrees;
-  final double ANGULAR_P = 0.066;
-  final double ANGULAR_D = 0.0001;
-  PIDController turnController = new PIDController(ANGULAR_P, 0.005, ANGULAR_D);
+  final double ANGULAR_P = 0.05;
+  final double ANGULAR_D = 0.0;
+  PIDController turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   double rotationSpeed;
 
   /** Creates a new TurnToAngleCmd. */

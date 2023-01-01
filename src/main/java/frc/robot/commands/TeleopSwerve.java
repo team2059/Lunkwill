@@ -3,12 +3,9 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 import frc.robot.subsystems.SwerveBase;
-import frc.robot.subsystems.SwerveModule;
 
 public class TeleopSwerve extends CommandBase {
 
@@ -66,37 +63,8 @@ public class TeleopSwerve extends CommandBase {
      */
 
     double fwdX = forwardX.getAsDouble();
-    // fwdX = Math.copySign(fwdX, fwdX);
-    // fwdX = deadbandInputs(fwdX);
-    // fwdX = xLimiter.calculate(fwdX);
-    // fwdX = deadbandInputs(fwdX) * Units.feetToMeters(Constants.Swerve.maxSpeed);
-    // fwdX = deadbandInputs(fwdX) * xLimiter.calculate(fwdX) *
-    // Swerve.kTeleDriveMaxSpeedMetersPerSecond;
-
     double fwdY = forwardY.getAsDouble();
-    // fwdY = Math.copySign(fwdY, fwdY);
-    // fwdY = deadbandInputs(fwdY);
-    // fwdY = yLimiter.calculate(fwdY);
-    // fwdY = deadbandInputs(fwdY) * Units.feetToMeters(Constants.Swerve.maxSpeed);
-    // fwdY = deadbandInputs(fwdY) * yLimiter.calculate(fwdY) *
-    // Swerve.kTeleDriveMaxSpeedMetersPerSecond;
-
     double rot = rotation.getAsDouble();
-    // rot = Math.copySign(rot * rot, rot);
-    // rot = deadbandInputs(rot);
-    // rot = turningLimiter.calculate(rot);
-    // rot = deadbandInputs(rot) *
-    // Units.degreesToRadians(Constants.Swerve.teleopTurnRateDegPerSec);
-    // rot = deadbandInputs(rot) *
-    // turningLimiter.calculate(rot)
-    // * Swerve.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-    // ;
-
-    // 3. Make the driving smoother
-    // fwdX = xLimiter.calculate(fwdX) * Swerve.kTeleDriveMaxSpeedMetersPerSecond;
-    // fwdY = yLimiter.calculate(fwdY) * Swerve.kTeleDriveMaxSpeedMetersPerSecond;
-    // rot = turningLimiter.calculate(rot)
-    // * Swerve.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
     // 2. Apply deadband
     fwdX = Math.abs(fwdX) > 0.1 ? fwdX : 0.0;
@@ -110,20 +78,10 @@ public class TeleopSwerve extends CommandBase {
         * Swerve.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
     drive.drive(
-        fwdX,
+        -fwdX,
         -fwdY,
-        rot,
+        -rot,
         isFieldRelative);
-
-  }
-
-  // method to deadband inputs to eliminate tiny unwanted values from the
-  // joysticks
-  public double deadbandInputs(double input) {
-
-    if (Math.abs(input) < 0.1)
-      return 0.0;
-    return input;
 
   }
 

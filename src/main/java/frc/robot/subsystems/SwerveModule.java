@@ -5,7 +5,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -14,10 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 
 public class SwerveModule extends SubsystemBase {
@@ -29,30 +25,7 @@ public class SwerveModule extends SubsystemBase {
    * for both rotation and linear movement
    */
 
-  double shuffleboardTarget = 0;
-  double desiredVelocityMeters = 0;
-
-  double unoptimizedVelocityMeters;
-
   public PIDController testRotationController;
-
-  public double getUnoptimizedVelocityMeters() {
-    return unoptimizedVelocityMeters;
-  }
-
-  public double getUnoptimizedAngleDegrees() {
-    return unoptimizedAngleDegrees;
-  }
-
-  double unoptimizedAngleDegrees = 0;
-
-  public double getDesiredVelocityMeters() {
-    return desiredVelocityMeters;
-  }
-
-  public double getNewTarget() {
-    return shuffleboardTarget;
-  }
 
   private static final double rotationkP = 0.5;
   private static final double rotationkD = 0.0;
@@ -62,48 +35,12 @@ public class SwerveModule extends SubsystemBase {
   private final CANSparkMax driveMotor;
   private final CANSparkMax rotationMotor;
 
-  public static double getRotationkp() {
-    return rotationkP;
-  }
-
-  public static double getRotationkd() {
-    return rotationkD;
-  }
-
-  public static double getDrivekp() {
-    return drivekP;
-  }
-
   public CANSparkMax getDriveMotor() {
     return driveMotor;
   }
 
   public CANSparkMax getRotationMotor() {
     return rotationMotor;
-  }
-
-  public RelativeEncoder getDriveEncoder() {
-    return driveEncoder;
-  }
-
-  public RelativeEncoder getRotationEncoder() {
-    return rotationEncoder;
-  }
-
-  public CANCoder getCanCoder() {
-    return canCoder;
-  }
-
-  public Rotation2d getOffset() {
-    return offset;
-  }
-
-  public SparkMaxPIDController getRotationController() {
-    return rotationController;
-  }
-
-  public SparkMaxPIDController getDriveController() {
-    return driveController;
   }
 
   private final RelativeEncoder driveEncoder;
@@ -246,28 +183,12 @@ public class SwerveModule extends SubsystemBase {
    */
   public static SwerveModuleState optimize(
       SwerveModuleState desiredState, Rotation2d currentAngle) {
-    // double targetAngle =
-    // placeInAppropriate0To360Scope(desiredState.angle.getRadians());
-    // double targetSpeed = desiredState.speedMetersPerSecond;
-    // double delta = placeInAppropriate0To360Scope(targetAngle -
-    // currentAngle.getRadians());
-    // if (delta > Math.PI / 2) {
-    // targetSpeed = -targetSpeed;
-    // targetAngle = placeInAppropriate0To360Scope(targetAngle + Math.PI);
-    // }
-
-    // return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
 
     double targetAngle = placeInAppropriate0To360Scope(desiredState.angle.getRadians());
 
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = (targetAngle - currentAngle.getRadians());
     if (Math.abs(delta) > (Math.PI / 2)) {
-      // System.out.println("desiredAngle = "
-      // + desiredState.angle.getDegrees()
-      // + "currentAngle = " + currentAngle.getDegrees() +
-      // ", targetAngle = " + Units.radiansToDegrees(targetAngle) + " delta = " +
-      // Units.radiansToDegrees(delta));
       targetSpeed = -targetSpeed;
       targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
     }
@@ -286,32 +207,20 @@ public class SwerveModule extends SubsystemBase {
       return;
     }
 
-    unoptimizedAngleDegrees = unoptimizedDesiredState.angle.getDegrees();
-    unoptimizedVelocityMeters = unoptimizedDesiredState.speedMetersPerSecond;
-
     SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
 
     double angularSetPoint = placeInAppropriate0To360Scope(
         optimizedDesiredState.angle.getRadians());
 
-    shuffleboardTarget = Units.radiansToDegrees(angularSetPoint);
-
     rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
-    desiredVelocityMeters = optimizedDesiredState.speedMetersPerSecond;
-    double angularVelolictySetpoint = desiredVelocityMeters /
+
+    double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
     if (RobotState.isAutonomous()) {
-
       driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
 
-      // driveController.setReference(
-      // angularVelolictySetpoint,
-      // ControlType.kVelocity,
-      // 0,
-      // Swerve.driveFF.calculate(angularVelolictySetpoint));
-
     } else {
-      // driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
+
       driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
     }
   }
