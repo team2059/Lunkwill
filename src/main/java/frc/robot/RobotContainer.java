@@ -5,14 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -20,21 +13,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.Swerve;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-
-import org.opencv.core.Mat;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -55,18 +45,6 @@ public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
 
-  public Joystick getDriver() {
-    return driver;
-  }
-
-  /* Subsystems */
-  private final SwerveBase swerveBase = new SwerveBase();
-  private final Limelight limelight = new Limelight();
-
-  public SwerveBase getSwerveSubsytem() {
-    return swerveBase;
-  }
-
   /* Drive Controls */
   private final int translationAxis = 1;
   private final int strafeAxis = 0;
@@ -79,6 +57,20 @@ public class RobotContainer {
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton turnToAngle = new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton followTag = new JoystickButton(driver, XboxController.Button.kB.value);
+
+  /* Subsystems */
+  private final SwerveBase swerveBase = new SwerveBase();
+  private final Limelight limelight = new Limelight();
+
+
+  public Joystick getDriver() {
+    return driver;
+  }
+
+
+  public SwerveBase getSwerveSubsytem() {
+    return swerveBase;
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -108,16 +100,21 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
+    followTag.whenPressed(new SequentialChaseTagCmd(swerveBase,limelight));
+    
+
+    // followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
+    //followTag.whenPressed(new ConditionalCommand(new Test(null, null, null, null, null, null, null, limelight, swerveBase, limelight), new InstantCommand(),
+     //   limelight.hasTargetBooleanSupplier()));
 
     //
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
-
     turnToAngle.whileHeld(new TurnToAngleCmd(swerveBase, 90));
+   // CommandScheduler.getInstance().schedule( new Test() );
+
   }
 
   public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {
-
     // Trajectory trajectory;
 
     try {

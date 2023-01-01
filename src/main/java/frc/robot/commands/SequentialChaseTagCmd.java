@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
@@ -36,12 +37,13 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
       Limelight limelight) {
     this.limelight = limelight;
     this.swerveBase = swerveBase;
-    addCommands(getCommand(), new InstantCommand(() -> swerveBase.stopModules()));
+    addCommands(new SelectCommand(()->getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
   }
+
 
   public Command getCommand() {
     System.out.println("INIT START"); 

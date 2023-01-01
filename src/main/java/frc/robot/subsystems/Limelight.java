@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.function.BooleanSupplier;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -19,6 +22,10 @@ public class Limelight extends SubsystemBase {
 
   public PhotonCamera getCamera() {
     return camera;
+  }
+
+  public BooleanSupplier hasTargetBooleanSupplier(){
+    return () -> camera.getLatestResult().hasTargets();
   }
 
   // Constants such as camera and target height stored. Change per robot and goal!
