@@ -6,6 +6,12 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -64,32 +70,30 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
                 Math.PI));
         System.out.println(endingPose.toString());
 
-        var interiorWaypoints = new ArrayList<Translation2d>();
-        interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0));
-        interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0, 2.0 * endingPose.getY() / 3.0));
+        PathPlannerTrajectory pathPlannerTrajectory = PathPlanner.generatePath(
+            new PathConstraints(2, 1),
+            // Start point. At the position of the robot, initial travel direction toward
+            // the target,
+            // robot rotation as the holonomic rotation, and putting in the (possibly 0)
+            // velocity override.
+            new PathPoint(startingPose.getTranslation(), startingPose.getRotation()), // position, heading
+            // position, heading
+            new PathPoint(
+                endingPose.getTranslation(),
+                endingPose.getRotation(), new Rotation2d(yawTheta -
+                    Math.PI)) // position, heading
+        );
 
-        TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
-        config.setReversed(false);
-
-        var trajectory = TrajectoryGenerator.generateTrajectory(
-            startingPose,
-            interiorWaypoints,
-            endingPose,
-            config);
-
-        swerveBase.resetOdometry(trajectory.getInitialPose());
-
-        // 3. Define PID controllers for tracking trajectory
-        PIDController xController = new PIDController(0.375, 0,
-            0);
-        PIDController yController = new PIDController(0.4, 0,
-            0);
-        ProfiledPIDController thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        PIDController xController = new PIDController(0.375, 0, 0);
+        PIDController yController = new PIDController(0.375, 0, 0);
+        PIDController thetaController = new PIDController(
+            0.5, 0.0, 0.0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        return new SwerveControllerCommand(
-            trajectory,
+        swerveBase.resetOdometry(pathPlannerTrajectory.getInitialPose());
+
+        return new PPSwerveControllerCommand(
+            pathPlannerTrajectory,
             swerveBase::getPose,
             Swerve.kinematics,
             xController,
@@ -97,6 +101,43 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
             thetaController,
             swerveBase::setModuleStates,
             swerveBase);
+
+        // var interiorWaypoints = new ArrayList<Translation2d>();
+        // interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0,
+        // endingPose.getY() / 3.0));
+        // interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0, 2.0 *
+        // endingPose.getY() / 3.0));
+
+        // TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
+        // config.setReversed(false);
+
+        // var trajectory = TrajectoryGenerator.generateTrajectory(
+        // startingPose,
+        // interiorWaypoints,
+        // endingPose,
+        // config);
+
+        // swerveBase.resetOdometry(trajectory.getInitialPose());
+
+        // // 3. Define PID controllers for tracking trajectory
+        // PIDController xController = new PIDController(0.375, 0,
+        // 0);
+        // PIDController yController = new PIDController(0.4, 0,
+        // 0);
+        // ProfiledPIDController thetaController = new ProfiledPIDController(
+        // AutoConstants.kPThetaController, 0, 0,
+        // AutoConstants.kThetaControllerConstraints);
+        // thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        // return new SwerveControllerCommand(
+        // trajectory,
+        // swerveBase::getPose,
+        // Swerve.kinematics,
+        // xController,
+        // yController,
+        // thetaController,
+        // swerveBase::setModuleStates,
+        // swerveBase);
       }
       return new InstantCommand();
 

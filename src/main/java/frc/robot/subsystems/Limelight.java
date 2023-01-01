@@ -64,12 +64,11 @@ public class Limelight extends SubsystemBase {
           Units.radiansToDegrees(bestCameraToTarget.getRotation().getZ()));
 
       SmartDashboard.putNumber("x",
-          bestCameraToTarget.getX());
+          Units.metersToInches(bestCameraToTarget.getX()));
       SmartDashboard.putNumber("y",
-          bestCameraToTarget.getY());
+          Units.metersToInches(bestCameraToTarget.getY()));
       SmartDashboard.putNumber("z",
-          bestCameraToTarget.getZ());
-
+          Units.metersToInches(bestCameraToTarget.getZ()));
     }
 
   }
