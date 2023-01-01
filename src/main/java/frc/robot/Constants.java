@@ -15,7 +15,9 @@ public final class Constants {
                 /* Drivetrain Constants */
                 public static final double trackWidth = Units.inchesToMeters(19.5);
                 public static final double wheelBase = Units.inchesToMeters(16.5);
-                public static final double wheelDiameter = Units.inchesToMeters(4.0);
+
+                // nominal (real) divided by fudge factor
+                public static final double wheelDiameter = Units.inchesToMeters(4.0/1.04085);
                 public static final double wheelCircumference = wheelDiameter * Math.PI;
 
                 public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
@@ -54,13 +56,15 @@ public final class Constants {
                 public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
                 public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
+                public static final double cameraToFrontEdgeDistanceMeters = Units.inchesToMeters(5.75);
+
         }
 
         public static final class AutoConstants {
 
                 public static final double kPXController = 0.75;
                 public static final double kPYController = 0.75;
-                public static final double kPThetaController = 0.33;
+                public static final double kPThetaController = 5;
 
                 public static final double kMaxSpeedMetersPerSecond = Swerve.maxSpeed / 4;
                 public static final double kMaxAngularSpeedRadiansPerSecond = //

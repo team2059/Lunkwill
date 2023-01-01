@@ -52,6 +52,7 @@ public class Limelight extends SubsystemBase {
     if (hasTargets) {
 
       SmartDashboard.putNumber("tag ID", result.getBestTarget().getFiducialId());
+      SmartDashboard.putNumber("pose ambiguity", result.getBestTarget().getPoseAmbiguity());
 
       Transform3d bestCameraToTarget = result.getBestTarget().getBestCameraToTarget();
 

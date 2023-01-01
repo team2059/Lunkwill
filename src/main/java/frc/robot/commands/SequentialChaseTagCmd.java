@@ -55,17 +55,24 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
     } else {
       System.out.println("has target " + result.hasTargets());
       var bestTarget = result.getBestTarget();
+      double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
 
       // target pose
-      var endingPose = new Pose2d(bestTarget.getBestCameraToTarget().getX() - Units.inchesToMeters(7),
-          bestTarget.getBestCameraToTarget().getY(),
-          new Rotation2d(bestTarget.getBestCameraToTarget().getRotation().getZ() - Math.PI));
+      // var endingPose = new Pose2d(
+      //     bestTarget.getBestCameraToTarget().getX() + (Swerve.cameraToFrontEdgeDistanceMeters * Math.cos(yawTheta)),
+      //     bestTarget.getBestCameraToTarget().getY() + (Swerve.cameraToFrontEdgeDistanceMeters * Math.sin(yawTheta)),
+      //     new Rotation2d(yawTheta -
+      //         Math.PI));
+
+     var endingPose = new Pose2d(3, 0, new Rotation2d(0));
+
+      System.out.println(endingPose.toString());
 
       var interiorWaypoints = new ArrayList<Translation2d>();
       interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0));
       interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0, 2.0 * endingPose.getY() / 3.0));
 
-      TrajectoryConfig config = new TrajectoryConfig(0.75, 0.5);
+      TrajectoryConfig config = new TrajectoryConfig(3, 1.5);
       config.setReversed(false);
 
       var trajectory = TrajectoryGenerator.generateTrajectory(
@@ -77,7 +84,7 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
       swerveBase.resetOdometry(trajectory.getInitialPose());
 
       // 3. Define PID controllers for tracking trajectory
-      PIDController xController = new PIDController(1, 0,
+      PIDController xController = new PIDController(0.375, 0,
           0);
       PIDController yController = new PIDController(1, 0,
           0);
