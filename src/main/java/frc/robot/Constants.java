@@ -1,7 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -17,7 +20,7 @@ public final class Constants {
                 public static final double wheelBase = Units.inchesToMeters(16.5);
 
                 // nominal (real) divided by fudge factor
-                public static final double wheelDiameter = Units.inchesToMeters(4.0/1.04085);
+                public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.04085);
                 public static final double wheelCircumference = wheelDiameter * Math.PI;
 
                 public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
@@ -58,6 +61,16 @@ public final class Constants {
 
                 public static final double cameraToFrontEdgeDistanceMeters = Units.inchesToMeters(5.75);
 
+        }
+
+        public static class VisionConstants {
+
+                /**
+                 * Physical location of the camera on the robot, relative to the center of the
+                 * robot.
+                 */
+                public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(
+                                new Translation3d(-0.0762, 0.0, -0.13335), new Rotation3d());
         }
 
         public static final class AutoConstants {

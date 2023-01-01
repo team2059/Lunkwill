@@ -200,6 +200,13 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
+  public void drive(ChassisSpeeds chassisSpeeds) {
+    SwerveModuleState[] states = Swerve.kinematics.toSwerveModuleStates(chassisSpeeds);
+
+    setModuleStates(states);
+
+  }
+
   /**
    * Method to set the desired state for each swerve module
    * Uses PID and feedforward control to control the linear and rotational values
