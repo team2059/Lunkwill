@@ -56,7 +56,7 @@ public final class Constants {
                 public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
                 public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
-                public static final double cameraToFrontEdgeDistanceMeters = Units.inchesToMeters(5.75);
+                public static final double cameraToFrontEdgeDistanceMeters = Units.inchesToMeters(7);
 
         }
 
