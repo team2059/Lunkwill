@@ -52,6 +52,7 @@ public class RobotContainer {
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton followTag = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton takeSnapshot = new JoystickButton(driver, XboxController.Button.kX.value);
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
@@ -96,6 +97,7 @@ public class RobotContainer {
     followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
 
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
+    takeSnapshot.whenPressed(new InstantCommand(() -> limelight.takeSnapshot()));
 
   }
 
