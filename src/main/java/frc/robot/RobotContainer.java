@@ -49,10 +49,10 @@ public class RobotContainer {
   private final int rotationAxis = 4;
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton followTag = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton takeSnapshot = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton zeroGyro;
+  private final JoystickButton alignWithTarget;
+  private final JoystickButton followTag;
+  private final JoystickButton autoBalance;
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
@@ -70,13 +70,20 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    driver = new Joystick(0);
+    zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    followTag = new JoystickButton(driver, XboxController.Button.kB.value);
+    autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
+    swerveBase = new SwerveBase();
+    limelight = new Limelight();
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
             () -> driver.getRawAxis(translationAxis),
             () -> driver.getRawAxis(strafeAxis),
             () -> driver.getRawAxis(rotationAxis),
-            true));
+            () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -98,6 +105,8 @@ public class RobotContainer {
 
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
     takeSnapshot.whenPressed(new InstantCommand(() -> limelight.takeSnapshot()));
+
+    autoBalance.onTrue(new AutoBalanceCmd(swerveBase));
 
   }
 
