@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Swerve;
@@ -106,7 +107,7 @@ public class RobotContainer {
     alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
     takeSnapshot.whenPressed(new InstantCommand(() -> limelight.takeSnapshot()));
 
-    autoBalance.onTrue(new AutoBalanceCmd(swerveBase));
+    autoBalance.onTrue(new ProxyCommand(() -> new AutoBalanceCmd(swerveBase)));
 
   }
 

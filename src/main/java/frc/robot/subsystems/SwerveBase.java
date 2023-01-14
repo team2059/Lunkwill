@@ -83,6 +83,10 @@ public class SwerveBase extends SubsystemBase {
       Swerve.frontRightRotationEncoderId,
       frontRightAngleOffset);
 
+  public SwerveModule getFrontRight() {
+    return frontRight;
+  }
+
   private final SwerveModule rearLeft = new SwerveModule(
       Swerve.rearLeftDriveMotorId,
       Swerve.rearLeftRotationMotorId,

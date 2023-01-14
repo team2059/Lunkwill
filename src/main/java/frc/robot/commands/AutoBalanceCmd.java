@@ -16,10 +16,12 @@ public class AutoBalanceCmd extends CommandBase {
   SwerveBase swerveBase;
   double roll;
   double error;
-  double driveSpeed;
   double kDriveP;
   boolean haveIBeenTilted = false;
   boolean isCloserToCenter = false;
+  double previousVelocity = 0;
+  double driveSpeed = 0;
+  int counter = 0;
 
   /** Creates a new AutoBalanceCmd. */
   public AutoBalanceCmd(SwerveBase swerveBase) {
@@ -44,18 +46,39 @@ public class AutoBalanceCmd extends CommandBase {
       haveIBeenTilted = true;
     }
 
-    System.out.println("roll" + roll);
+    // System.out.println("roll" + roll);
     error = 0 - roll;
-    System.out.println("error" + error);
+    // System.out.println("error" + error);
     if (haveIBeenTilted == false) {
-      swerveBase.drive(0.66, 0, 0, true);
+      driveSpeed = 0.66;
+      swerveBase.drive(driveSpeed, 0, 0, true);
+
     } else {
 
-      swerveBase.drive(Math.signum(error) * 0.2, 0, 0, true);
-      if (Math.abs(error) < 2.5) {
-        swerveBase.stopModules();
+      driveSpeed = Math.copySign(driveSpeed, error);
+
+      double currentVelocity = swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond();
+
+      // swerveBase.drive(Math.signum(error) * 0.2, 0, 0, true);
+      if (Math.signum(currentVelocity) != Math
+          .signum(previousVelocity)) {
+        System.out.println("counter = " + counter++);
+        System.out.println(currentVelocity);
+        System.out.println(previousVelocity);
+        System.out.println("error =" + error);
+        System.out.println("driveSpeed before = " + driveSpeed);
+        driveSpeed *= 0.4;
+
+        System.out.println("driveSpeed after = " + driveSpeed);
+      }
+      if (Math.abs(roll) < 4) {
+        swerveBase.drive(0, 0, 0, true);
+      } else {
+        swerveBase.drive(driveSpeed, 0, 0, true);
       }
     }
+
+    previousVelocity = swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond();
 
   }
 
