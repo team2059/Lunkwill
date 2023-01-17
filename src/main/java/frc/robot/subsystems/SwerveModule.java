@@ -225,6 +225,30 @@ public class SwerveModule extends SubsystemBase {
     }
   }
 
+  public void setDesiredStateClosedLoop(SwerveModuleState unoptimizedDesiredState, boolean isAutoBalancing) {
+    if (Math.abs(unoptimizedDesiredState.speedMetersPerSecond) < 0.001) {
+      stop();
+      return;
+    }
+
+    SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
+
+    double angularSetPoint = placeInAppropriate0To360Scope(
+        optimizedDesiredState.angle.getRadians());
+
+    rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
+
+    double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
+        (Swerve.wheelDiameter / 2.0);
+    if (RobotState.isAutonomous() || isAutoBalancing == true) {
+      driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
+
+    } else {
+
+      driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
+    }
+  }
+
   public void resetEncoders() {
 
     driveEncoder.setPosition(0);

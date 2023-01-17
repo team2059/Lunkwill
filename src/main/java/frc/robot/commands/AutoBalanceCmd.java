@@ -50,8 +50,8 @@ public class AutoBalanceCmd extends CommandBase {
     error = 0 - roll;
     // System.out.println("error" + error);
     if (haveIBeenTilted == false) {
-      driveSpeed = 0.66;
-      swerveBase.drive(driveSpeed, 0, 0, true);
+      driveSpeed = 0.5;
+      swerveBase.drive(driveSpeed, 0, 0, true, true);
 
     } else {
 
@@ -67,14 +67,17 @@ public class AutoBalanceCmd extends CommandBase {
         System.out.println(previousVelocity);
         System.out.println("error =" + error);
         System.out.println("driveSpeed before = " + driveSpeed);
-        driveSpeed *= 0.4;
+        driveSpeed *= 0.2;
 
         System.out.println("driveSpeed after = " + driveSpeed);
       }
-      if (Math.abs(roll) < 4) {
-        swerveBase.drive(0, 0, 0, true);
+      if (Math.abs(roll) < 6) {
+        swerveBase.drive(0, 0, 0, true, true);
       } else {
-        swerveBase.drive(driveSpeed, 0, 0, true);
+        if (Math.abs(driveSpeed) < 0.2) {
+          driveSpeed = Math.copySign(0.15, driveSpeed);
+        }
+        swerveBase.drive(driveSpeed, 0, 0, true, true);
       }
     }
 

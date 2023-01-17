@@ -210,6 +210,29 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
+  public void drive(double forward, double strafe, double rotation, boolean isFieldRelative, boolean isAutoBalancing) {
+
+    /**
+     * ChassisSpeeds object to represent the overall state of the robot
+     * ChassisSpeeds takes a forward and sideways linear value and a rotational
+     * value
+     * 
+     * speeds is set to field relative or default (robot relative) based on
+     * parameter
+     */
+    ChassisSpeeds speeds = isFieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            forward, strafe, rotation, getHeading())
+        : new ChassisSpeeds(forward, strafe, rotation);
+
+    // use kinematics (wheel placements) to convert overall robot state to array of
+    // individual module states
+    SwerveModuleState[] states = Swerve.kinematics.toSwerveModuleStates(speeds);
+
+    setModuleStates(states, isAutoBalancing);
+
+  }
+
   /**
    * Method to set the desired state for each swerve module
    * Uses PID and feedforward control to control the linear and rotational values
@@ -222,6 +245,21 @@ public class SwerveBase extends SubsystemBase {
     frontRight.setDesiredStateClosedLoop(moduleStates[1]);
     rearLeft.setDesiredStateClosedLoop(moduleStates[2]);
     rearRight.setDesiredStateClosedLoop(moduleStates[3]);
+
+  }
+
+  /**
+   * Method to set the desired state for each swerve module
+   * Uses PID and feedforward control to control the linear and rotational values
+   * for the modules
+   */
+  public void setModuleStates(SwerveModuleState[] moduleStates, boolean isAutoBalancing) {
+    // make sure the wheels don't try to spin faster than the maximum speed possible
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Swerve.maxSpeed);
+    frontLeft.setDesiredStateClosedLoop(moduleStates[0], isAutoBalancing);
+    frontRight.setDesiredStateClosedLoop(moduleStates[1], isAutoBalancing);
+    rearLeft.setDesiredStateClosedLoop(moduleStates[2], isAutoBalancing);
+    rearRight.setDesiredStateClosedLoop(moduleStates[3], isAutoBalancing);
 
   }
 
