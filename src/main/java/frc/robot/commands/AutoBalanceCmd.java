@@ -89,6 +89,7 @@ public class AutoBalanceCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("DONE BALANCING");
+    //System.out.println(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond());
 
   }
 
@@ -96,6 +97,7 @@ public class AutoBalanceCmd extends CommandBase {
   @Override
   public boolean isFinished() {
     // return (haveIBeenTilted && Math.abs(error) < 2.5);
-    return false;
+     return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
+     //return false;
   }
 }
