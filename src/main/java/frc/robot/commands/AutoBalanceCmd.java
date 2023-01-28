@@ -4,11 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.ArrayList;
-
-import org.opencv.core.Mat;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveBase;
 
@@ -89,7 +84,7 @@ public class AutoBalanceCmd extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("DONE BALANCING");
-    //System.out.println(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond());
+    // System.out.println(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond());
 
   }
 
@@ -97,7 +92,7 @@ public class AutoBalanceCmd extends CommandBase {
   @Override
   public boolean isFinished() {
     // return (haveIBeenTilted && Math.abs(error) < 2.5);
-     return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
-     //return false;
+    return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
+    // return false;
   }
 }

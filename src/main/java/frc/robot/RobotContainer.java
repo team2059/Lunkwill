@@ -5,10 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,8 +17,6 @@ import frc.robot.Constants.Swerve;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -42,7 +36,8 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  private final Joystick driver;
+  private final ButtonBox buttonBox;
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -52,8 +47,10 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton zeroGyro;
   private final JoystickButton alignWithTarget;
-  private final JoystickButton followTag;
   private final JoystickButton autoBalance;
+  private final JoystickButton leftAlignTag;
+  private final JoystickButton centerAlignTag;
+  private final JoystickButton rightAlignTag;
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
@@ -72,10 +69,13 @@ public class RobotContainer {
    */
   public RobotContainer() {
     driver = new Joystick(0);
+    buttonBox = new ButtonBox(1);
     zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    followTag = new JoystickButton(driver, XboxController.Button.kB.value);
     autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
+    leftAlignTag = new JoystickButton(buttonBox, 1);
+    centerAlignTag = new JoystickButton(buttonBox, 2);
+    rightAlignTag = new JoystickButton(buttonBox, 3);
     swerveBase = new SwerveBase();
     limelight = new Limelight();
     swerveBase.setDefaultCommand(
@@ -100,12 +100,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.whenPressed(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    followTag.whenPressed(new SequentialChaseTagCmd(swerveBase, limelight));
+    zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    alignWithTarget.whileHeld(new VisionAlignCmd(limelight, swerveBase));
-    takeSnapshot.whenPressed(new InstantCommand(() -> limelight.takeSnapshot()));
+    leftAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, -10));
+    centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
+    rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 10));
+
+    alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
     autoBalance.onTrue(new ProxyCommand(() -> new AutoBalanceCmd(swerveBase)));
 
@@ -146,7 +148,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath");
-    System.out.println("degrees pose trajectory = " + trajectory.getInitialPose().getRotation().getDegrees());
+
     Command ppCommand = getPathPlannerCommand(trajectory);
 
     return new SequentialCommandGroup(

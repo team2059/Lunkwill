@@ -28,15 +28,17 @@ import frc.robot.subsystems.SwerveBase;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SequentialChaseTagCmd extends SequentialCommandGroup {
+public class GoToTagCmd extends SequentialCommandGroup {
         SwerveBase swerveBase;
         Limelight limelight;
+        double sideOffset;
 
         /** Creates a new SequentialChaseTagCmd. */
-        public SequentialChaseTagCmd(SwerveBase swerveBase,
-                        Limelight limelight) {
+        public GoToTagCmd(SwerveBase swerveBase,
+                        Limelight limelight, double sideOffset) {
                 this.limelight = limelight;
                 this.swerveBase = swerveBase;
+                this.sideOffset = sideOffset;
                 addRequirements(limelight, swerveBase);
                 addCommands(new ProxyCommand(() -> getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
         }
@@ -65,7 +67,7 @@ public class SequentialChaseTagCmd extends SequentialCommandGroup {
 
                         // april tag in robot final coordiante frame
                         Translation2d A_rf = new Translation2d(LimelightConstants.originToFront,
-                                        LimelightConstants.originToSide);
+                                       Units.inchesToMeters(sideOffset));
                         System.out.println("A in robot final" + A_rf.toString());
 
                         // april tag in limelight initial coordinate frame
