@@ -1,8 +1,18 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Swerve;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -341,6 +351,48 @@ public class SwerveBase extends SubsystemBase {
     frontRight.stop();
     rearRight.stop();
     rearLeft.stop();
+  }
+
+  public SequentialCommandGroup followPathCmd(String pathName) {
+
+    PathPlannerTrajectory trajectory = getPathPlannerTrajectory(pathName);
+
+    Command ppCommand = getPathPlannerCommand(trajectory);
+
+    return new SequentialCommandGroup(
+
+        new InstantCommand(() -> this.resetOdometry(trajectory.getInitialPose())),
+        ppCommand,
+        new InstantCommand(() -> this.stopModules()));
+  }
+
+  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName) {
+
+    PathConstraints constraints = PathPlanner.getConstraintsFromPath(pathName);
+    PathPlannerTrajectory ppTrajectory = PathPlanner.loadPath(pathName, constraints, false);
+    return ppTrajectory;
+
+  }
+
+  public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
+
+    PIDController xController = new PIDController(3, 0, 0);
+    PIDController yController = new PIDController(3, 0, 0);
+    PIDController thetaController = new PIDController(
+        1, 0.0, 0.0);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
+        trajectory,
+        this::getPose,
+        Swerve.kinematics,
+        xController,
+        yController,
+        thetaController,
+        this::setModuleStates,
+        this);
+
+    return command;
   }
 
 }

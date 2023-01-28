@@ -8,6 +8,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
@@ -56,13 +58,15 @@ public class RobotContainer {
   private final SwerveBase swerveBase = new SwerveBase();
   private final Limelight limelight = new Limelight();
 
-  public Joystick getDriver() {
-    return driver;
-  }
+  // public Joystick getDriver() {
+  // return driver;
+  // }
 
-  public SwerveBase getSwerveSubsytem() {
-    return swerveBase;
-  }
+  // public SwerveBase getSwerveSubsytem() {
+  // return swerveBase;
+  // }
+
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -88,6 +92,12 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    autoChooser.setDefaultOption("forward1m", swerveBase.followPathCmd("forward1m"));
+
+    autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
+
+    Shuffleboard.getTab("Autonomous").add(autoChooser);
   }
 
   /**
@@ -113,48 +123,12 @@ public class RobotContainer {
 
   }
 
-  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName) {
-    PathConstraints constraints = PathPlanner.getConstraintsFromPath(pathName);
-    PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints, false);
-    return examplPathPlannerTrajectory;
-  }
-
-  public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
-
-    PIDController xController = new PIDController(3, 0, 0);
-    PIDController yController = new PIDController(3, 0, 0);
-    PIDController thetaController = new PIDController(
-        1, 0.0, 0.0);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
-        trajectory,
-        swerveBase::getPose,
-        Swerve.kinematics,
-        xController,
-        yController,
-        thetaController,
-        swerveBase::setModuleStates,
-        swerveBase);
-
-    return command;
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath");
-
-    Command ppCommand = getPathPlannerCommand(trajectory);
-
-    return new SequentialCommandGroup(
-
-        new InstantCommand(() -> swerveBase.resetOdometry(trajectory.getInitialPose())),
-        ppCommand,
-        new InstantCommand(() -> swerveBase.stopModules()));
+    return autoChooser.getSelected();
   }
 }
