@@ -111,32 +111,18 @@ public class RobotContainer {
 
   }
 
-  public Trajectory jsonToTrajectory(String filename, boolean resetOdometry) {
-
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
-      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      return trajectory;
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + filename, ex.getStackTrace());
-      System.out.println("Unable to read from file " + filename);
-    }
-    return null;
-
-  }
-
-  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName, double maxVelocity, double maxAcceleration) {
-    PathConstraints constraints = new PathConstraints(maxVelocity, maxAcceleration);
+  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName) {
+    PathConstraints constraints = PathPlanner.getConstraintsFromPath(pathName);
     PathPlannerTrajectory examplPathPlannerTrajectory = PathPlanner.loadPath(pathName, constraints, false);
     return examplPathPlannerTrajectory;
   }
 
   public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    PIDController xController = new PIDController(3.5, 0, 0);
-    PIDController yController = new PIDController(3.5, 0, 0);
+    PIDController xController = new PIDController(3, 0, 0);
+    PIDController yController = new PIDController(3, 0, 0);
     PIDController thetaController = new PIDController(
-        1.5, 0.0, 0.0);
+        1, 0.0, 0.0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
@@ -159,7 +145,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath", 1, 2);
+    PathPlannerTrajectory trajectory = getPathPlannerTrajectory("NewPath");
     System.out.println("degrees pose trajectory = " + trajectory.getInitialPose().getRotation().getDegrees());
     Command ppCommand = getPathPlannerCommand(trajectory);
 
