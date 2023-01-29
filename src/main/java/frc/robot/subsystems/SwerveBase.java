@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
@@ -55,38 +56,6 @@ public class SwerveBase extends SubsystemBase {
       Swerve.frontLeftRotationEncoderId,
       frontLeftAngleOffset);
 
-  public static double getFrontleftangleoffset() {
-    return frontLeftAngleOffset;
-  }
-
-  public static double getFrontrightangleoffset() {
-    return frontRightAngleOffset;
-  }
-
-  public static double getRearleftangleoffset() {
-    return rearLeftAngleOffset;
-  }
-
-  public static double getRearrightangleoffset() {
-    return rearRightAngleOffset;
-  }
-
-  public SwerveModule getFrontLeft() {
-    return frontLeft;
-  }
-
-  public SwerveModule getFrontRight() {
-    return frontRight;
-  }
-
-  public SwerveModule getRearLeft() {
-    return rearLeft;
-  }
-
-  public SwerveModule getRearRight() {
-    return rearRight;
-  }
-
   private final SwerveModule frontRight = new SwerveModule(
       Swerve.frontRightDriveMotorId,
       Swerve.frontRightRotationMotorId,
@@ -109,34 +78,32 @@ public class SwerveBase extends SubsystemBase {
       Swerve.rearRightRotationEncoderId,
       rearRightAngleOffset);
 
-  // commanded values from the joysticks and field relative value to use in
-  // AlignWithTargetVision and AlignWithGyro
-  private double commandedForward = 0;
-  private double commandedStrafe = 0;
-  private double commandedRotation = 0;
-
-  private boolean isCommandedFieldRelative = false;
-
-  private final AHRS navX = new AHRS(SPI.Port.kMXP);
+  private final AHRS navX;
 
   /**
    * odometry for the robot, measured in meters for linear motion and radians for
    * rotational motion
    * Takes in kinematics and robot angle for parameters
    */
-  private final SwerveDriveOdometry odometry;
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.kinematics, new Rotation2d(),
+      getModulePositions());
 
   public SwerveDriveOdometry getOdometry() {
     return odometry;
   }
 
   public SwerveBase() {
+    navX = new AHRS(SPI.Port.kMXP);
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        navX.reset();
+        odometry.resetPosition(new Rotation2d(), getModulePositions(), new Pose2d());
+      } catch (Exception e) {
+      }
+    }).start();
 
-    navX.reset();
-    odometry = new SwerveDriveOdometry(
-        Swerve.kinematics,
-        new Rotation2d(getHeading().getRadians()));
-    // odometry.resetPosition(new Pose2d());
+    // odometry.resetPosition(new Rotation2d(), getModulePositions(), new Pose2d());
 
     // initialize the rotation offsets for the CANCoders
     frontLeft.initRotationOffset();
@@ -166,7 +133,7 @@ public class SwerveBase extends SubsystemBase {
   public void periodic() {
 
     // update the odometry every 20ms
-    odometry.update(getHeading(), getModuleStates());
+    odometry.update(getHeading(), getModulePositions());
 
     SmartDashboard.putString("Robot pose",
         getPose().toString());
@@ -190,14 +157,6 @@ public class SwerveBase extends SubsystemBase {
    * if the control is field relative or robot relative
    */
   public void drive(double forward, double strafe, double rotation, boolean isFieldRelative) {
-
-    // update the drive inputs for use in AlignWithGyro and AlignWithTargetVision
-    // control
-    commandedForward = forward;
-    commandedStrafe = strafe;
-    commandedRotation = rotation;
-
-    isCommandedFieldRelative = isFieldRelative;
 
     /**
      * ChassisSpeeds object to represent the overall state of the robot
@@ -288,6 +247,21 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
+  // returns an array of SwerveModulePositions
+  public SwerveModulePosition[] getModulePositions() {
+
+    SwerveModulePosition[] positions = {
+        new SwerveModulePosition(frontLeft.getCurrentDistanceMetersPerSecond(), frontLeft.getIntegratedAngle()),
+        new SwerveModulePosition(frontRight.getCurrentDistanceMetersPerSecond(), frontRight.getIntegratedAngle()),
+        new SwerveModulePosition(rearLeft.getCurrentDistanceMetersPerSecond(), rearLeft.getIntegratedAngle()),
+        new SwerveModulePosition(rearRight.getCurrentDistanceMetersPerSecond(), rearRight.getIntegratedAngle())
+
+    };
+
+    return positions;
+
+  }
+
   /**
    * Return the current position of the robot on field
    * Based on drive encoder and gyro reading
@@ -301,7 +275,7 @@ public class SwerveBase extends SubsystemBase {
   // reset the current pose to a desired pose
   public void resetOdometry(Pose2d pose) {
 
-    odometry.resetPosition(pose, getHeading());
+    odometry.resetPosition(getHeading(), getModulePositions(), pose);
 
   }
 
@@ -319,26 +293,6 @@ public class SwerveBase extends SubsystemBase {
   public Rotation2d getHeading() {
 
     return Rotation2d.fromDegrees(-navX.getYaw());
-
-  }
-
-  public double[] getCommandedDriveValues() {
-
-    double[] values = { commandedForward, commandedStrafe, commandedRotation };
-
-    return values;
-
-  }
-
-  public boolean getIsFieldRelative() {
-
-    return isCommandedFieldRelative;
-
-  }
-
-  public void resetImu() {
-
-    navX.reset();
 
   }
 

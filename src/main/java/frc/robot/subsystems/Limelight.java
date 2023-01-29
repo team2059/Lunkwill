@@ -32,7 +32,7 @@ public class Limelight extends SubsystemBase {
   // Angle between horizontal and the camera.
   public final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
 
-  public void takeSnapshot(){
+  public void takeSnapshot() {
     camera.takeInputSnapshot();
   }
 

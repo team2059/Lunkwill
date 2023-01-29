@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -27,22 +28,21 @@ public class TeleopSwerve extends CommandBase {
   private final DoubleSupplier forwardY;
   private final DoubleSupplier rotation;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-
-  private final boolean isFieldRelative;
+  private final Supplier<Boolean> fieldOrientedFunction;
 
   public TeleopSwerve(
       SwerveBase subsystem,
       DoubleSupplier fwdX,
       DoubleSupplier fwdY,
       DoubleSupplier rot,
-      boolean fieldRelative) {
+      Supplier<Boolean> fieldOrientedFunction) {
 
     drive = subsystem;
     forwardX = fwdX;
     forwardY = fwdY;
     rotation = rot;
 
-    isFieldRelative = fieldRelative;
+    this.fieldOrientedFunction = fieldOrientedFunction;
 
     this.xLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -81,7 +81,7 @@ public class TeleopSwerve extends CommandBase {
         -fwdX,
         -fwdY,
         -rot,
-        isFieldRelative);
+        fieldOrientedFunction.get());
 
   }
 

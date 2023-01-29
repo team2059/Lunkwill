@@ -146,6 +146,10 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
+  public double getCurrentDistanceMetersPerSecond() {
+    return driveEncoder.getPosition() * (Swerve.wheelDiameter / 2.0);
+  }
+
   // unwraps a target angle to be [0,2π]
   public static double placeInAppropriate0To360Scope(double unwrappedAngle) {
 

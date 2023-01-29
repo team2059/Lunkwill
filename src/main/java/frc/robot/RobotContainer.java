@@ -55,8 +55,8 @@ public class RobotContainer {
   private final JoystickButton rightAlignTag;
 
   /* Subsystems */
-  private final SwerveBase swerveBase = new SwerveBase();
-  private final Limelight limelight = new Limelight();
+  private final SwerveBase swerveBase;
+  private final Limelight limelight;
 
   // public Joystick getDriver() {
   // return driver;

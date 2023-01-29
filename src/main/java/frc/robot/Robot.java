@@ -34,8 +34,9 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.getSwerveSubsytem().getNavX().reset();
-    m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new Pose2d(), new Rotation2d());
+    // m_robotContainer.getSwerveSubsytem().getNavX().reset();
+    // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
+    // Pose2d(), new Rotation2d());
     SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
