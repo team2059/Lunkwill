@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -83,11 +85,18 @@ public class Robot extends TimedRobot {
     // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
     // Rotation2d(),
     // m_robotContainer.getSwerveSubsytem().getModulePositions(), new Pose2d());
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    try {
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    } catch (NullPointerException ex) {
+      m_autonomousCommand = new InstantCommand();
+    }
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+    } else {
+      DriverStation.reportError("m_autonomousCommand null in Robot.java", m_autonomousCommand == null);
+      new InstantCommand().schedule();
     }
   }
 

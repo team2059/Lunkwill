@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -93,11 +94,16 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    autoChooser.setDefaultOption("forward1m", swerveBase.followPathCmd("forward1m"));
+    try {
+      autoChooser.setDefaultOption("forward1m", swerveBase.followPathCmd("forward1m"));
 
-    autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
+      autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
 
-    Shuffleboard.getTab("Autonomous").add(autoChooser);
+      Shuffleboard.getTab("Autonomous").add(autoChooser);
+    } catch (NullPointerException ex) {
+      autoChooser.setDefaultOption("NULL nothing", new InstantCommand());
+      DriverStation.reportError("auto choose NULL somewhere in RobotContainer.java", null);
+    }
   }
 
   /**
@@ -129,6 +135,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    try {
+      return autoChooser.getSelected();
+    } catch (NullPointerException ex) {
+      DriverStation.reportError("auto choose NULL somewhere in getAutonomousCommand in RobotContainer.java", null);
+      return new InstantCommand();
+    }
   }
 }
