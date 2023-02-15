@@ -92,38 +92,39 @@ public class Arm extends SubsystemBase {
 
   }
 
-  public void manualTiltGoToPos() {
-    if (Math.abs(RobotContainer.driver.getRawAxis(1)) < 0.1) {
-      tiltMotor.set(0);
-      return;
-    }
-    tiltMotor.set(0.66 * RobotContainer.driver.getRawAxis(1));
-    tiltMotor.setIdleMode(IdleMode.kBrake);
-    return;
-  }
+  // public void manualTiltGoToPos() {
+  // if (Math.abs(RobotContainer.driver.getRawAxis(1)) < 0.1) {
+  // tiltMotor.set(0);
+  // return;
+  // }
+  // tiltMotor.set(0.66 * RobotContainer.driver.getRawAxis(1));
+  // tiltMotor.setIdleMode(IdleMode.kBrake);
+  // return;
+  // }
 
-  public void PIDGoToPos(double setpoint) {
-    double output = tiltController.calculate(thruBoreEncoder.getAbsolutePosition(), setpoint);
-    SmartDashboard.putNumber("output", output);
-    System.out.println("OUT PUT" + output);
+  // public void PIDGoToPos(double setpoint) {
+  // double output =
+  // tiltController.calculate(thruBoreEncoder.getAbsolutePosition(), setpoint);
+  // SmartDashboard.putNumber("output", output);
+  // System.out.println("OUT PUT" + output);
 
-    while (RobotContainer.driver.getRawButton(0)) {
-      // figure out why output needs to be negated
-      tiltMotor.set(-output);
-      return;
-    }
-    return;
-  }
+  // while (RobotContainer.driver.getRawButton(0)) {
+  // // figure out why output needs to be negated
+  // tiltMotor.set(-output);
+  // return;
+  // }
+  // return;
+  // }
 
-  public void manualArmExtension() {
-    if (Math.abs(RobotContainer.driver.getRawAxis(5)) < 0.1) {
-      extensionMotor.set(0);
-      return;
-    }
-    extensionMotor.set(0.66 * RobotContainer.driver.getRawAxis(5));
-    extensionMotor.setIdleMode(IdleMode.kBrake);
-    return;
-  }
+  // public void manualArmExtension() {
+  // if (Math.abs(RobotContainer.driver.getRawAxis(5)) < 0.1) {
+  // extensionMotor.set(0);
+  // return;
+  // }
+  // extensionMotor.set(0.66 * RobotContainer.driver.getRawAxis(5));
+  // extensionMotor.setIdleMode(IdleMode.kBrake);
+  // return;
+  // }
 
   @Override
   public void simulationPeriodic() {
