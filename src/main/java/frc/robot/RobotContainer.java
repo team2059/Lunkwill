@@ -39,7 +39,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver;
+  public static final Joystick driver = new Joystick(0);;
   private final ButtonBox buttonBox;
 
   /* Drive Controls */
@@ -54,18 +54,15 @@ public class RobotContainer {
   private final JoystickButton leftAlignTag;
   private final JoystickButton centerAlignTag;
   private final JoystickButton rightAlignTag;
+  private final JoystickButton tilt50;
+  private final JoystickButton tilt100;
+  private final JoystickButton extend50;
+  private final JoystickButton extend100;
 
   /* Subsystems */
   private final SwerveBase swerveBase;
   private final Limelight limelight;
-
-  // public Joystick getDriver() {
-  // return driver;
-  // }
-
-  // public SwerveBase getSwerveSubsytem() {
-  // return swerveBase;
-  // }
+  private final Arm arm;
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -73,7 +70,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    driver = new Joystick(0);
+    // driver = new Joystick(0);
     buttonBox = new ButtonBox(1);
     zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -81,7 +78,14 @@ public class RobotContainer {
     leftAlignTag = new JoystickButton(buttonBox, 1);
     centerAlignTag = new JoystickButton(buttonBox, 2);
     rightAlignTag = new JoystickButton(buttonBox, 3);
+
+    tilt50 = new JoystickButton(buttonBox, 4);
+    tilt100 = new JoystickButton(buttonBox, 5);
+    extend50 = new JoystickButton(buttonBox, 6);
+    extend100 = new JoystickButton(buttonBox, 7);
+
     swerveBase = new SwerveBase();
+    arm = new Arm();
     limelight = new Limelight();
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
@@ -122,6 +126,11 @@ public class RobotContainer {
     leftAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, -10));
     centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
     rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 10));
+
+    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.1)));
+    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.2)));
+    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
+    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
 
     alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

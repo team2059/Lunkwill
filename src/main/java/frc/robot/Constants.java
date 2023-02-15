@@ -8,6 +8,16 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
+        public static final class ArmConstants {
+
+                public static final int tiltId = 9;
+                public static final int extendId = 10;
+                public static final int thruBoreDIO = 0;
+                public static final double tiltkP = 2.5;
+                public static final double extensionkP = 2.5;
+
+        }
+
         public static final class Swerve {
 
                 public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15, 0.01);
