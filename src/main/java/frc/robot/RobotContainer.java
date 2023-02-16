@@ -8,7 +8,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,11 +53,14 @@ public class RobotContainer {
   private final JoystickButton tilt100;
   private final JoystickButton extend50;
   private final JoystickButton extend100;
+  private final JoystickButton gripperSolenoidToggle;
+  private final JoystickButton extenderSolenoidToggle;
 
   /* Subsystems */
   private final SwerveBase swerveBase;
   private final Limelight limelight;
   private final Arm arm;
+  private final Pneumatics pneumatics;
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -65,6 +70,7 @@ public class RobotContainer {
   public RobotContainer() {
     // driver = new Joystick(0);
     buttonBox = new ButtonBox(1);
+
     zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
@@ -76,16 +82,20 @@ public class RobotContainer {
     tilt100 = new JoystickButton(buttonBox, 5);
     extend50 = new JoystickButton(buttonBox, 6);
     extend100 = new JoystickButton(buttonBox, 7);
+    gripperSolenoidToggle = new JoystickButton(buttonBox, 8);
+    extenderSolenoidToggle = new JoystickButton(buttonBox, 9);
 
     swerveBase = new SwerveBase();
     arm = new Arm();
     limelight = new Limelight();
+    pneumatics = new Pneumatics();
+
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
-            () -> driver.getRawAxis(translationAxis),
-            () -> driver.getRawAxis(strafeAxis),
-            () -> driver.getRawAxis(rotationAxis),
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis),
             () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // Configure the button bindings
@@ -124,6 +134,10 @@ public class RobotContainer {
     tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.2)));
     extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
     extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
+    gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setGripperSolenoid(true)));
+    gripperSolenoidToggle.toggleOnFalse(new InstantCommand(() -> pneumatics.setGripperSolenoid(false)));
+    extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setExtenderSolenoid(true)));
+    extenderSolenoidToggle.toggleOnFalse(new InstantCommand(() -> pneumatics.setExtenderSolenoid(false)));
 
     alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

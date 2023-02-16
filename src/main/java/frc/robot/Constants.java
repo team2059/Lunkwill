@@ -7,14 +7,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+        public static final class PowerDistribution {
+                public static final int pdpID = 15;
+        }
 
         public static final class ArmConstants {
 
-                public static final int tiltId = 9;
-                public static final int extendId = 10;
+                public static final int tiltId = 16;
+                public static final int extendId = 9;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 2.5;
                 public static final double extensionkP = 2.5;
+
+        }
+
+        public static final class Pneumatics {
+                public static final int pneumaticsHubId = 17;
 
         }
 
@@ -23,8 +31,8 @@ public final class Constants {
                 public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15, 0.01);
 
                 /* Drivetrain Constants */
-                public static final double trackWidth = Units.inchesToMeters(19.5);
-                public static final double wheelBase = Units.inchesToMeters(16.5);
+                public static final double trackWidth = Units.inchesToMeters(18.75);
+                public static final double wheelBase = Units.inchesToMeters(24.5);
 
                 // nominal (real) divided by fudge factor
                 public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.04085);
@@ -44,11 +52,11 @@ public final class Constants {
                 public static final double maxSpeed = 4.5; // meters per second
                 public static final double maxAngularVelocity = 11.5;
 
-                public static final int frontLeftRotationMotorId = 5;
-                public static final int frontLeftDriveMotorId = 6;
+                public static final int frontLeftRotationMotorId = 7;
+                public static final int frontLeftDriveMotorId = 8;
 
-                public static final int frontRightRotationMotorId = 7;
-                public static final int frontRightDriveMotorId = 8;
+                public static final int frontRightRotationMotorId = 5;
+                public static final int frontRightDriveMotorId = 6;
 
                 public static final int rearLeftRotationMotorId = 3;
                 public static final int rearLeftDriveMotorId = 4;
@@ -56,10 +64,10 @@ public final class Constants {
                 public static final int rearRightRotationMotorId = 1;
                 public static final int rearRightDriveMotorId = 2;
 
-                public static final int frontLeftRotationEncoderId = 11;
-                public static final int frontRightRotationEncoderId = 12;
-                public static final int rearLeftRotationEncoderId = 10;
-                public static final int rearRightRotationEncoderId = 9;
+                public static final int frontLeftRotationEncoderId = 12;
+                public static final int frontRightRotationEncoderId = 13;
+                public static final int rearLeftRotationEncoderId = 14;
+                public static final int rearRightRotationEncoderId = 11;
 
                 public static final double kTeleDriveMaxSpeedMetersPerSecond = 7.5 / 4.0;
                 public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 3.5;

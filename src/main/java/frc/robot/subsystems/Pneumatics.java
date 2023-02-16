@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -13,16 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class Pneumatics extends SubsystemBase {
-  Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-  DoubleSolenoid gripperSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 0, 1);
-  DoubleSolenoid extenderSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 2, 3);
+  Compressor phCompressor = new Compressor(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH);
+  DoubleSolenoid gripperSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
+      0, 1);
+  DoubleSolenoid extenderSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
+      2, 3);
   boolean extenderBrakeState = false;
   boolean gripperState = false;
 
   boolean compressorEnabled;
   boolean pressureSwitch;
   double compressorCurrent;
-
 
   /** Creates a new Pneumatics. */
   public Pneumatics() {
@@ -68,7 +70,7 @@ public class Pneumatics extends SubsystemBase {
   }
 
   public void toggleExtenderSolenoid() {
-      extenderSolenoid.toggle();
+    extenderSolenoid.toggle();
   }
 
   public boolean getCompressorEnabled() {
