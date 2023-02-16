@@ -26,7 +26,7 @@ public class Limelight extends SubsystemBase {
   }
 
   // Constants such as camera and target height stored. Change per robot and goal!
-  public final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(11);
+  public final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(34.125);
   public final double TARGET_HEIGHT_METERS = Units.inchesToMeters(25);
 
   // Angle between horizontal and the camera.
