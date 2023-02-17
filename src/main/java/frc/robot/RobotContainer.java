@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
@@ -61,6 +62,7 @@ public class RobotContainer {
   private final Limelight limelight;
   private final Arm arm;
   private final Pneumatics pneumatics;
+  private final PowerDistributionPanel powerDistributionPanel;
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -89,6 +91,7 @@ public class RobotContainer {
     arm = new Arm();
     limelight = new Limelight();
     pneumatics = new Pneumatics();
+    powerDistributionPanel = new PowerDistributionPanel();
 
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
@@ -130,10 +133,11 @@ public class RobotContainer {
     centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
     rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 10));
 
-    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.1)));
-    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.2)));
+    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.5)));
+    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.7)));
     extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
     extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
+
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setGripperSolenoid(true)));
     gripperSolenoidToggle.toggleOnFalse(new InstantCommand(() -> pneumatics.setGripperSolenoid(false)));
     extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setExtenderSolenoid(true)));

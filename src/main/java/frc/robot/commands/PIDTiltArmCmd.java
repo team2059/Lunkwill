@@ -13,6 +13,7 @@ import frc.robot.subsystems.Arm;
 public class PIDTiltArmCmd extends CommandBase {
   private Arm arm;
   private double setpoint;
+  double output;
 
   /** Creates a new PIDExtendArmCmd. */
   public PIDTiltArmCmd(Arm arm, double setpoint) {
@@ -25,6 +26,7 @@ public class PIDTiltArmCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("setPoint cmd", setpoint);
 
   }
 
@@ -32,9 +34,10 @@ public class PIDTiltArmCmd extends CommandBase {
   @Override
   public void execute() {
     double thruBorePos = arm.getThruBorePosition();
-    double output = arm.getTiltController().calculate(thruBorePos, setpoint);
+    output = arm.getTiltController().calculate(thruBorePos, setpoint);
     SmartDashboard.putNumber("thruBorePos", thruBorePos);
     SmartDashboard.putNumber("tiltOutput", output);
+    System.out.println("output" + output);
     arm.getTiltMotor().set(output);
   }
 
@@ -47,6 +50,8 @@ public class PIDTiltArmCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (arm.getThruBorePosition()) > (0.95 * setpoint);
+    // return (arm.getThruBorePosition()) > (0.95 * setpoint);
+    // return Math.abs(output) < 0.05;
+    return false;
   }
 }

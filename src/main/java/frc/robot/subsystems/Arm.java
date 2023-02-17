@@ -40,7 +40,7 @@ public class Arm extends SubsystemBase {
   }
 
   public double getThruBorePosition() {
-    return thruBorePosition;
+    return thruBoreEncoder.getAbsolutePosition();
   }
 
   public double getExtendPosition() {
@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
     thruBoreEncoder = new DutyCycleEncoder(Constants.ArmConstants.thruBoreDIO);
     extensionEncoder = extensionMotor.getEncoder();
 
-    tiltController = new PIDController(Constants.ArmConstants.tiltkP, 0.00, 0.0);
+    tiltController = new PIDController(Constants.ArmConstants.tiltkP, 0.00, Constants.ArmConstants.tiltkD);
     extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0);
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration
@@ -89,6 +89,12 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
+    double output = RobotContainer.driver.getRawAxis(5) * 0.5;
+    if (Math.abs(output) < 0.05) {
+      output = 0;
+    }
+    // System.out.println(output);
+    tiltMotor.set(output);
 
   }
 

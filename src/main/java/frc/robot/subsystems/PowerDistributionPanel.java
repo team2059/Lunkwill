@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class PowerDistributionPanel extends SubsystemBase {
-  PowerDistribution revPDP;
+  public PowerDistribution revPDP;
 
   /** Creates a new PowerDistribution. */
   public PowerDistributionPanel() {
@@ -42,7 +42,11 @@ public class PowerDistributionPanel extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("hasStickyFaults", hasStickyFaults);
-    SmartDashboard.putData("reset sticky faults", new InstantCommand(() -> revPDP.clearStickyFaults()));
+    // SmartDashboard.putData("reset sticky faults",
+    //     new InstantCommand(() -> revPDP.clearStickyFaults(), this));
+    // if (hasStickyFaults) {
+    // revPDP.clearStickyFaults();
+    // }
 
     // This method will be called once per scheduler run
   }
