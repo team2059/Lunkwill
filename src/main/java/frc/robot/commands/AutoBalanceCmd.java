@@ -35,7 +35,7 @@ public class AutoBalanceCmd extends CommandBase {
   @Override
   public void execute() {
 
-    roll = swerveBase.getNavX().getRoll();
+    roll = swerveBase.getNavX().getPitch();
 
     if (Math.abs(roll) > 10) {
       haveIBeenTilted = true;
@@ -66,11 +66,11 @@ public class AutoBalanceCmd extends CommandBase {
 
         System.out.println("driveSpeed after = " + driveSpeed);
       }
-      if (Math.abs(roll) < 6) {
+      if (Math.abs(roll) < 8.75) {
         swerveBase.drive(0, 0, 0, true, true);
       } else {
-        if (Math.abs(driveSpeed) < 0.2) {
-          driveSpeed = Math.copySign(0.15, driveSpeed);
+        if (Math.abs(driveSpeed) < 0.33) {
+          driveSpeed = Math.copySign(0.33, driveSpeed);
         }
         swerveBase.drive(driveSpeed, 0, 0, true, true);
       }
@@ -91,8 +91,9 @@ public class AutoBalanceCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    return false;
     // return (haveIBeenTilted && Math.abs(error) < 2.5);
-    return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
+  //  return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
     // return false;
   }
 }

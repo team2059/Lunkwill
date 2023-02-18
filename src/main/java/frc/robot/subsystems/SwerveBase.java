@@ -149,8 +149,8 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("navX Heading",
         getHeading().getDegrees());
 
-    SmartDashboard.putNumber("roll",
-        navX.getRoll());
+    SmartDashboard.putNumber("yaw",
+        navX.getYaw());
 
     SmartDashboard.putNumber("pitch",
         navX.getPitch());
