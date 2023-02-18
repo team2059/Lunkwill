@@ -36,7 +36,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   /* Controllers */
   public static final Joystick driver = new Joystick(0);;
-  private final ButtonBox buttonBox;
+  public static final ButtonBox buttonBox = new ButtonBox(1);
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -71,7 +71,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // driver = new Joystick(0);
-    buttonBox = new ButtonBox(1);
+    // buttonBox = new ButtonBox(1);
 
     zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
@@ -138,10 +138,20 @@ public class RobotContainer {
     extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
     extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
 
-    gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setGripperSolenoid(true)));
-    gripperSolenoidToggle.toggleOnFalse(new InstantCommand(() -> pneumatics.setGripperSolenoid(false)));
-    extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.setExtenderSolenoid(true)));
-    extenderSolenoidToggle.toggleOnFalse(new InstantCommand(() -> pneumatics.setExtenderSolenoid(false)));
+    gripperSolenoidToggle
+        .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
+
+    extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleExtenderSolenoid()));
+    // gripperSolenoidToggle
+    // .toggleOnTrue(
+    // new InstantCommand(() ->
+    // pneumatics.setGripperSolenoid(pneumatics.isGripperPressed().getAsBoolean())));
+    // gripperSolenoidToggle.toggleOnFalse(new InstantCommand(() ->
+    // pneumatics.setGripperSolenoid(false)));
+    // extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() ->
+    // pneumatics.setExtenderSolenoid(true)));
+    // extenderSolenoidToggle.toggleOnFalse(new InstantCommand(() ->
+    // pneumatics.setExtenderSolenoid(false)));
 
     alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

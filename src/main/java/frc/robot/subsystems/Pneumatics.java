@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -13,14 +15,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
+import java.util.function.BooleanSupplier;
+
 public class Pneumatics extends SubsystemBase {
   Compressor phCompressor = new Compressor(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH);
   DoubleSolenoid gripperSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
       0, 1);
   DoubleSolenoid extenderSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
       2, 3);
-  boolean extenderBrakeState = false;
-  boolean gripperState = false;
+  boolean extenderState;
+  boolean gripperState;
 
   boolean compressorEnabled;
   boolean pressureSwitch;
@@ -29,8 +33,11 @@ public class Pneumatics extends SubsystemBase {
   /** Creates a new Pneumatics. */
   public Pneumatics() {
     phCompressor.enableDigital();
-    gripperSolenoid.set(kForward);
-    extenderSolenoid.set(kForward);
+    gripperSolenoid.set(kReverse);
+    extenderSolenoid.set(kReverse);
+    extenderState = false;
+    gripperState = false;
+
   }
 
   @Override
@@ -44,33 +51,40 @@ public class Pneumatics extends SubsystemBase {
     SmartDashboard.putBoolean("Pressure Switch", pressureSwitch);
     SmartDashboard.putNumber("Compressor Current", compressorCurrent);
     SmartDashboard.putBoolean("Gripper State", gripperState);
-    SmartDashboard.putBoolean("Extender State", extenderBrakeState);
+    SmartDashboard.putBoolean("Extender State", extenderState);
   }
 
-  public void setGripperSolenoid(boolean state) {
-    if (state) {
-      gripperSolenoid.set(kReverse);
-    } else {
-      gripperSolenoid.set(kForward);
-    }
-    gripperState = state;
-  }
+  // public BooleanSupplier isGripperPressed() {
+  // return () -> RobotContainer.buttonBox.getRawButton(8);
+  // }
 
-  public void setExtenderSolenoid(boolean state) {
-    if (state) {
-      extenderSolenoid.set(kReverse);
-    } else {
-      extenderSolenoid.set(kForward);
-    }
-    extenderBrakeState = state;
-  }
+  // public void setGripperSolenoid(boolean initialState) {
+
+  // if (initialState == true) {
+  // gripperSolenoid.set(kReverse);
+  // } else {
+  // gripperSolenoid.set(kForward);
+  // }
+
+  // }
+
+  // public void setExtenderSolenoid(boolean state) {
+  // if (state) {
+  // extenderSolenoid.set(kReverse);
+  // } else {
+  // extenderSolenoid.set(kForward);
+  // }
+  // extenderBrakeState = state;
+  // }
 
   public void toggleGripperSolenoid() {
     gripperSolenoid.toggle();
+    gripperState = !gripperState;
   }
 
   public void toggleExtenderSolenoid() {
     extenderSolenoid.toggle();
+    extenderState = !extenderState;
   }
 
   public boolean getCompressorEnabled() {
@@ -79,6 +93,10 @@ public class Pneumatics extends SubsystemBase {
 
   public boolean getGripperState() {
     return gripperState;
+  }
+
+  public boolean getExtenderState() {
+    return extenderState;
   }
 
   public Compressor getCompressor() {
