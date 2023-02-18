@@ -18,7 +18,7 @@ public final class Constants {
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 5;
                 public static final double tiltkD = 0.01;
-                public static final double extensionkP = 2.5;
+                public static final double extensionkP = 0.01;
 
         }
 

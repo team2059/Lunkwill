@@ -35,7 +35,7 @@ public class PIDExtendArmCmd extends CommandBase {
     double output = arm.getExtensionController().calculate(position, setpoint);
     SmartDashboard.putNumber("extendPos", position);
     SmartDashboard.putNumber("extendOutput", output);
-    arm.getExtensionMotor().set(output);
+    arm.getExtensionMotor().set(-output);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,6 +47,6 @@ public class PIDExtendArmCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (arm.getExtendPosition()) > (0.95 * setpoint);
+    return false;
   }
 }

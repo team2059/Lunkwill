@@ -93,12 +93,20 @@ public class RobotContainer {
     pneumatics = new Pneumatics();
     powerDistributionPanel = new PowerDistributionPanel();
 
+    // swerveBase.setDefaultCommand(
+    // new TeleopSwerve(
+    // swerveBase,
+    // () -> -driver.getRawAxis(translationAxis),
+    // () -> -driver.getRawAxis(strafeAxis),
+    // () -> -driver.getRawAxis(rotationAxis),
+    // () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
+
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis),
+            () -> 0,
+            () -> 0,
+            () -> 0,
             () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // Configure the button bindings
@@ -133,25 +141,15 @@ public class RobotContainer {
     centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
     rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 10));
 
-    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.5)));
-    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.7)));
-    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
-    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, 0.1)));
+    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.09)));
+    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.18)));
+    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)));
+    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
     extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleExtenderSolenoid()));
-    // gripperSolenoidToggle
-    // .toggleOnTrue(
-    // new InstantCommand(() ->
-    // pneumatics.setGripperSolenoid(pneumatics.isGripperPressed().getAsBoolean())));
-    // gripperSolenoidToggle.toggleOnFalse(new InstantCommand(() ->
-    // pneumatics.setGripperSolenoid(false)));
-    // extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() ->
-    // pneumatics.setExtenderSolenoid(true)));
-    // extenderSolenoidToggle.toggleOnFalse(new InstantCommand(() ->
-    // pneumatics.setExtenderSolenoid(false)));
 
     alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

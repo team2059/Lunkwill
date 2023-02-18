@@ -80,7 +80,8 @@ public class Arm extends SubsystemBase {
 
     extensionMotor.restoreFactoryDefaults();
     extensionMotor.setIdleMode(IdleMode.kBrake);
-    tiltMotor.setInverted(false);
+    extensionMotor.setInverted(true);
+    // extensionEncoder.setPosition(0);
 
   }
 
@@ -89,12 +90,17 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
-    double output = RobotContainer.driver.getRawAxis(5) * 0.5;
-    if (Math.abs(output) < 0.05) {
-      output = 0;
+    double tiltOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
+    double extendOutput = RobotContainer.driver.getRawAxis(1) * 0.5;
+    if (Math.abs(tiltOutput) < 0.05) {
+      tiltOutput = 0;
+    }
+    if (Math.abs(extendOutput) < 0.05) {
+      extendOutput = 0;
     }
     // System.out.println(output);
-    tiltMotor.set(output);
+    extensionMotor.set(extendOutput);
+    tiltMotor.set(tiltOutput);
 
   }
 
