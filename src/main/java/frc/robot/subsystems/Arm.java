@@ -99,8 +99,8 @@ public class Arm extends SubsystemBase {
       extendOutput = 0;
     }
     // System.out.println(output);
-    extensionMotor.set(extendOutput);
-    tiltMotor.set(tiltOutput);
+    // extensionMotor.set(extendOutput);
+    // stiltMotor.set(tiltOutput);
 
   }
 

@@ -93,21 +93,21 @@ public class RobotContainer {
     pneumatics = new Pneumatics();
     powerDistributionPanel = new PowerDistributionPanel();
 
-    // swerveBase.setDefaultCommand(
-    // new TeleopSwerve(
-    // swerveBase,
-    // () -> -driver.getRawAxis(translationAxis),
-    // () -> -driver.getRawAxis(strafeAxis),
-    // () -> -driver.getRawAxis(rotationAxis),
-    // () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
-
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
-            () -> 0,
-            () -> 0,
-            () -> 0,
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis),
             () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
+
+    // swerveBase.setDefaultCommand(
+    // new TeleopSwerve(
+    // swerveBase,
+    // () -> 0,
+    // () -> 0,
+    // () -> 0,
+    // () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -115,7 +115,7 @@ public class RobotContainer {
     try {
       autoChooser.setDefaultOption("forward1m", swerveBase.followPathCmd("forward1m"));
 
-      autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
+     // autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {

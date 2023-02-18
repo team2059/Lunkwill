@@ -221,7 +221,7 @@ public class SwerveModule extends SubsystemBase {
     double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
     if (RobotState.isAutonomous()) {
-      driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
+      driveMotor.setVoltage(-Swerve.driveFF.calculate(angularVelolictySetpoint));
 
     } else {
 

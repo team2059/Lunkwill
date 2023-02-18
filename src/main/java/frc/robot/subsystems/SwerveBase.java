@@ -241,21 +241,6 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
-  // returns an array of SwerveModuleState
-  public SwerveModuleState[] getModuleStates() {
-
-    SwerveModuleState[] states = {
-        new SwerveModuleState(frontLeft.getCurrentVelocityMetersPerSecond(), frontLeft.getIntegratedAngle()),
-        new SwerveModuleState(frontRight.getCurrentVelocityMetersPerSecond(), frontRight.getIntegratedAngle()),
-        new SwerveModuleState(rearLeft.getCurrentVelocityMetersPerSecond(), rearLeft.getIntegratedAngle()),
-        new SwerveModuleState(rearRight.getCurrentVelocityMetersPerSecond(), rearRight.getIntegratedAngle())
-
-    };
-
-    return states;
-
-  }
-
   // returns an array of SwerveModulePositions
   public SwerveModulePosition[] getModulePositions() {
 
