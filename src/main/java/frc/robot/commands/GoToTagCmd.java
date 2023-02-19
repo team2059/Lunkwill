@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.Swerve;
@@ -32,13 +35,15 @@ public class GoToTagCmd extends SequentialCommandGroup {
         SwerveBase swerveBase;
         Limelight limelight;
         double sideOffset;
+        int tagId;
 
         /** Creates a new SequentialChaseTagCmd. */
         public GoToTagCmd(SwerveBase swerveBase,
-                        Limelight limelight, double sideOffset) {
+                        Limelight limelight, double sideOffset, int tagId) {
                 this.limelight = limelight;
                 this.swerveBase = swerveBase;
                 this.sideOffset = sideOffset;
+                this.tagId = tagId;
                 addRequirements(limelight, swerveBase);
                 addCommands(new ProxyCommand(() -> getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
         }
@@ -55,7 +60,18 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         return new InstantCommand();
                 } else {
 
-                        var bestTarget = result.getBestTarget();
+                        var listOfTargets = result.getTargets();
+                        var bestTarget = new PhotonTrackedTarget();
+
+                        for (int i = 0; i < listOfTargets.size(); i++) {
+                                if (listOfTargets.get(i).getFiducialId() == tagId) {
+                                        bestTarget = listOfTargets.get(i);
+                                }
+
+                                // safeguard at default target not in alliance color
+                                // bestTarget = result.getBestTarget();
+                        }
+
                         double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
 
                         double xLL = bestTarget.getBestCameraToTarget().getX();

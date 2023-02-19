@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,6 +38,10 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  public ArrayList<Integer> tagIDs = new ArrayList<>();
+
+  public final String allianceColor = DriverStation.getAlliance().toString();
+
   /* Controllers */
   public static final Joystick driver = new Joystick(0);;
   public static final ButtonBox buttonBox = new ButtonBox(1);
@@ -48,13 +55,17 @@ public class RobotContainer {
   private final JoystickButton zeroGyro;
   private final JoystickButton alignWithTarget;
   private final JoystickButton autoBalance;
-  private final JoystickButton leftAlignTag;
-  private final JoystickButton centerAlignTag;
-  private final JoystickButton rightAlignTag;
-  private final JoystickButton tilt50;
-  private final JoystickButton tilt100;
-  private final JoystickButton extend50;
-  private final JoystickButton extend100;
+
+  // april tags
+  private final JoystickButton leftTag;
+  private final JoystickButton centerTag;
+  private final JoystickButton rightTag;
+  private final JoystickButton substationTag;
+
+  // private final JoystickButton tilt50;
+  // private final JoystickButton tilt100;
+  // private final JoystickButton extend50;
+  // private final JoystickButton extend100;
   private final JoystickButton gripperSolenoidToggle;
   private final JoystickButton extenderSolenoidToggle;
 
@@ -74,17 +85,40 @@ public class RobotContainer {
     // driver = new Joystick(0);
     // buttonBox = new ButtonBox(1);
 
+    if (allianceColor.equals("Red")) {
+      tagIDs.add(8);
+      tagIDs.add(7);
+      tagIDs.add(6);
+      tagIDs.add(4);
+
+    } else {
+      tagIDs.add(3);
+      tagIDs.add(2);
+      tagIDs.add(1);
+      tagIDs.add(5);
+
+    }
+
+    System.out.println("alliance color = " + allianceColor);
+
+    for (int i = 0; i < 4; i++) {
+      System.out.println(tagIDs.get(i));
+    }
+
     zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
-    leftAlignTag = new JoystickButton(buttonBox, 1);
-    centerAlignTag = new JoystickButton(buttonBox, 2);
-    rightAlignTag = new JoystickButton(buttonBox, 3);
 
-    tilt50 = new JoystickButton(buttonBox, 4);
-    tilt100 = new JoystickButton(buttonBox, 5);
-    extend50 = new JoystickButton(buttonBox, 6);
-    extend100 = new JoystickButton(buttonBox, 7);
+    leftTag = new JoystickButton(buttonBox, 1);
+    centerTag = new JoystickButton(buttonBox, 2);
+    rightTag = new JoystickButton(buttonBox, 3);
+    substationTag = new JoystickButton(buttonBox, 4);
+
+    // tilt50 = new JoystickButton(buttonBox, 4);
+    // tilt100 = new JoystickButton(buttonBox, 5);
+    // extend50 = new JoystickButton(buttonBox, 6);
+    // extend100 = new JoystickButton(buttonBox, 7);
+
     gripperSolenoidToggle = new JoystickButton(buttonBox, 8);
     extenderSolenoidToggle = new JoystickButton(buttonBox, 9);
 
@@ -94,13 +128,9 @@ public class RobotContainer {
     pneumatics = new Pneumatics();
     powerDistributionPanel = new PowerDistributionPanel();
 
-    swerveBase.setDefaultCommand(
-        new TeleopSwerve(
-            swerveBase,
-            () -> driver.getRawAxis(translationAxis),
-            () -> driver.getRawAxis(strafeAxis),
-            () -> driver.getRawAxis(rotationAxis),
-            () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
+    swerveBase.setDefaultCommand(new TeleopSwerve(swerveBase, () -> driver.getRawAxis(translationAxis),
+        () -> driver.getRawAxis(strafeAxis), () -> driver.getRawAxis(rotationAxis),
+        () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // swerveBase.setDefaultCommand(
     // new TeleopSwerve(
@@ -113,7 +143,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    try {
+    try
+
+    {
       autoChooser.setDefaultOption("simple",
           new SequentialCommandGroup(swerveBase.followPathCmd("simple"), new AutoBalanceCmd(swerveBase)));
 
@@ -140,14 +172,23 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    leftAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, -18));
-    centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
-    rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 18));
+    if (allianceColor.equals("Red")) {
+      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
+      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
+      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
+      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
+    } else {
+      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
+      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
+      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
+      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
 
-    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.09)));
-    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.18)));
-    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)));
-    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)));
+    }
+
+    // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.09)));
+    // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.18)));
+    // extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)));
+    // extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
