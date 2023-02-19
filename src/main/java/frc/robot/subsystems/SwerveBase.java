@@ -10,6 +10,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -304,12 +305,14 @@ public class SwerveBase extends SubsystemBase {
   public SequentialCommandGroup followPathCmd(String pathName) {
 
     PathPlannerTrajectory trajectory = getPathPlannerTrajectory(pathName);
+    PathPlannerState state = trajectory.getInitialState();
 
     Command ppCommand = getPathPlannerCommand(trajectory);
 
     return new SequentialCommandGroup(
 
-        new InstantCommand(() -> this.resetOdometry(trajectory.getInitialPose())),
+        new InstantCommand(
+            () -> this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(), state.holonomicRotation))),
         ppCommand,
         new InstantCommand(() -> this.stopModules()));
   }

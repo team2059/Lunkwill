@@ -25,7 +25,7 @@ public class SwerveModule extends SubsystemBase {
    * for both rotation and linear movement
    */
 
-  public PIDController testRotationController;
+  public PIDController rotationController;
 
   private static final double rotationkP = 0.5;
   private static final double rotationkD = 0.0;
@@ -51,8 +51,6 @@ public class SwerveModule extends SubsystemBase {
   // absolute offset for the CANCoder so that the wheels can be aligned when the
   // robot is turned on
   private final Rotation2d offset;
-
-  private final SparkMaxPIDController rotationController;
   private final SparkMaxPIDController driveController;
 
   public SwerveModule(
@@ -66,8 +64,8 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder = driveMotor.getEncoder();
     rotationEncoder = rotationMotor.getEncoder();
-    testRotationController = new PIDController(0.5, 0, 0.0);
-    testRotationController.enableContinuousInput(-Math.PI, Math.PI);
+    rotationController = new PIDController(0.5, 0, 0.0);
+    rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
     canCoder = new CANCoder(canCoderId);
 
@@ -76,7 +74,6 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setIdleMode(IdleMode.kBrake);
     rotationMotor.setIdleMode(IdleMode.kBrake);
 
-    rotationController = rotationMotor.getPIDController();
     driveController = driveMotor.getPIDController();
 
     rotationController.setP(rotationkP);
@@ -216,7 +213,7 @@ public class SwerveModule extends SubsystemBase {
     double angularSetPoint = placeInAppropriate0To360Scope(
         optimizedDesiredState.angle.getRadians());
 
-    rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
+    rotationMotor.set(rotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
 
     double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
@@ -240,7 +237,7 @@ public class SwerveModule extends SubsystemBase {
     double angularSetPoint = placeInAppropriate0To360Scope(
         optimizedDesiredState.angle.getRadians());
 
-    rotationMotor.set(testRotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
+    rotationMotor.set(rotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
 
     double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
