@@ -114,10 +114,11 @@ public class RobotContainer {
     configureButtonBindings();
 
     try {
-      autoChooser.setDefaultOption("forward1m",
-          new SequentialCommandGroup(swerveBase.followPathCmd("forward1m"), new AutoBalanceCmd(swerveBase)));
+      autoChooser.setDefaultOption("simple",
+          new SequentialCommandGroup(swerveBase.followPathCmd("simple"), new AutoBalanceCmd(swerveBase)));
 
-      // autoChooser.addOption("complex", swerveBase.followPathCmd("complex"));
+      autoChooser.addOption("complex",
+          new SequentialCommandGroup(swerveBase.followPathCmd("complex"), new AutoBalanceCmd(swerveBase)));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {

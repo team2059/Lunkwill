@@ -46,11 +46,11 @@ public class AutoBalanceCmd extends CommandBase {
     // System.out.println("error" + error);
     if (haveIBeenTilted == false) {
       driveSpeed = 0.5;
-      swerveBase.drive(-driveSpeed, 0, 0, true, true);
+      swerveBase.drive(driveSpeed, 0, 0, true, true);
 
     } else {
 
-      driveSpeed = -Math.copySign(driveSpeed, error);
+      driveSpeed = Math.copySign(driveSpeed, error);
 
       double currentVelocity = swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond();
 
