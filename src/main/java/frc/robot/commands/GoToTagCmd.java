@@ -67,7 +67,7 @@ public class GoToTagCmd extends SequentialCommandGroup {
 
                         // april tag in robot final coordiante frame
                         Translation2d A_rf = new Translation2d(LimelightConstants.originToFront,
-                                       Units.inchesToMeters(sideOffset));
+                                        Units.inchesToMeters(sideOffset));
                         System.out.println("A in robot final" + A_rf.toString());
 
                         // april tag in limelight initial coordinate frame
@@ -86,15 +86,26 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         Translation2d finalTranslation = A_r0.minus(A_rf.rotateBy(rf_to_ri));
                         System.out.println(finalTranslation.toString());
 
-                        Pose2d endingPose = new Pose2d(finalTranslation.getX(), finalTranslation.getY(),
+                        Pose2d endingPose = new Pose2d(finalTranslation.getX(),
+                                        finalTranslation.getY(),
                                         rf_to_ri);
 
-                        System.out.println(endingPose.toString());
+                        // Pose2d endingPose = new Pose2d(finalTranslation.getX(),
+                        // finalTranslation.getY(),
+                        // new Rotation2d());
+
+                        Translation2d interiorOne = new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0);
+                        Translation2d interiorTwo = new Translation2d(2.0 * endingPose.getX() / 3.0,
+                                        2.0 * endingPose.getY() / 3.0);
 
                         var interiorWaypoints = new ArrayList<Translation2d>();
-                        interiorWaypoints.add(new Translation2d(endingPose.getX() / 3.0, endingPose.getY() / 3.0));
-                        interiorWaypoints.add(new Translation2d(2.0 * endingPose.getX() / 3.0,
-                                        2.0 * endingPose.getY() / 3.0));
+                        interiorWaypoints.add(interiorOne);
+                        interiorWaypoints.add(interiorTwo);
+
+                        System.out.println("START = " + startingPose.toString());
+                        System.out.println("interiorOne" + interiorOne.toString());
+                        System.out.println("interiorTwo" + interiorTwo.toString());
+                        System.out.println("ENDING = " + endingPose.toString());
 
                         TrajectoryConfig config = new TrajectoryConfig(3, 1.5);
                         config.setReversed(false);

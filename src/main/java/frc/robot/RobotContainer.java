@@ -97,9 +97,9 @@ public class RobotContainer {
     swerveBase.setDefaultCommand(
         new TeleopSwerve(
             swerveBase,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis),
+            () -> driver.getRawAxis(translationAxis),
+            () -> driver.getRawAxis(strafeAxis),
+            () -> driver.getRawAxis(rotationAxis),
             () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     // swerveBase.setDefaultCommand(
@@ -140,9 +140,9 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    leftAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, -10));
+    leftAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, -18));
     centerAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0));
-    rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 10));
+    rightAlignTag.onTrue(new GoToTagCmd(swerveBase, limelight, 18));
 
     tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.09)));
     tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.18)));

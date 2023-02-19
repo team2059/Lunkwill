@@ -81,8 +81,8 @@ public final class Constants {
 
         public static final class LimelightConstants {
                 public static final double xCameraOffset = Units.inchesToMeters(2);
-                public static final double yCameraOffset = Units.inchesToMeters(3.625);
-                public static final double originToFront = Units.inchesToMeters(20);
+                public static final double yCameraOffset = Units.inchesToMeters(-3.625);
+                public static final double originToFront = Units.inchesToMeters(21+14);
                 public static final double originToSide = Units.inchesToMeters(0);
         }
 
