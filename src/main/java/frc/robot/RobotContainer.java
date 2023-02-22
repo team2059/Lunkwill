@@ -62,10 +62,10 @@ public class RobotContainer {
   private final JoystickButton rightTag;
   private final JoystickButton substationTag;
 
-  // private final JoystickButton tilt50;
-  // private final JoystickButton tilt100;
-  // private final JoystickButton extend50;
-  // private final JoystickButton extend100;
+  private final JoystickButton tilt50;
+  private final JoystickButton tilt100;
+  private final JoystickButton extend50;
+  private final JoystickButton extend100;
   private final JoystickButton gripperSolenoidToggle;
   private final JoystickButton extenderSolenoidToggle;
 
@@ -114,10 +114,10 @@ public class RobotContainer {
     rightTag = new JoystickButton(buttonBox, 3);
     substationTag = new JoystickButton(buttonBox, 4);
 
-    // tilt50 = new JoystickButton(buttonBox, 4);
-    // tilt100 = new JoystickButton(buttonBox, 5);
-    // extend50 = new JoystickButton(buttonBox, 6);
-    // extend100 = new JoystickButton(buttonBox, 7);
+    tilt50 = new JoystickButton(buttonBox, 4);
+    tilt100 = new JoystickButton(buttonBox, 5);
+    extend50 = new JoystickButton(buttonBox, 6);
+    extend100 = new JoystickButton(buttonBox, 7);
 
     gripperSolenoidToggle = new JoystickButton(buttonBox, 8);
     extenderSolenoidToggle = new JoystickButton(buttonBox, 9);
@@ -172,23 +172,23 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    if (allianceColor.equals("Red")) {
-      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
-      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
-      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
-      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
-    } else {
-      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
-      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
-      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
-      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
+    // if (allianceColor.equals("Red")) {
+    // leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
+    // centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
+    // rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
+    // substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
+    // } else {
+    // leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
+    // centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
+    // rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
+    // substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
 
-    }
+    // }
 
-    // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.09)));
-    // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.18)));
-    // extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)));
-    // extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)));
+    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.85)));
+    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.02)));
+    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)));
+    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));

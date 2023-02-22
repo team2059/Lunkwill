@@ -66,6 +66,7 @@ public class Arm extends SubsystemBase {
     extensionEncoder = extensionMotor.getEncoder();
 
     tiltController = new PIDController(Constants.ArmConstants.tiltkP, 0.00, Constants.ArmConstants.tiltkD);
+    //tiltController.enableContinuousInput(0, 1);
     extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0);
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration
@@ -76,11 +77,11 @@ public class Arm extends SubsystemBase {
      */
     tiltMotor.restoreFactoryDefaults();
     tiltMotor.setIdleMode(IdleMode.kBrake);
-    tiltMotor.setInverted(true);
+    tiltMotor.setInverted(false);
 
     extensionMotor.restoreFactoryDefaults();
     extensionMotor.setIdleMode(IdleMode.kBrake);
-    extensionMotor.setInverted(true);
+    extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 
   }
@@ -90,17 +91,17 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
-    double tiltOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
-    double extendOutput = RobotContainer.driver.getRawAxis(1) * 0.5;
+     double tiltOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
+   // double extendOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
     if (Math.abs(tiltOutput) < 0.05) {
-      tiltOutput = 0;
+    tiltOutput = 0;
     }
-    if (Math.abs(extendOutput) < 0.05) {
-      extendOutput = 0;
-    }
+    // if (Math.abs(extendOutput) < 0.05) {
+    //   extendOutput = 0;
+    // }
     // System.out.println(output);
-    // extensionMotor.set(extendOutput);
-    // tiltMotor.set(tiltOutput);
+    //extensionMotor.set(extendOutput);
+     tiltMotor.set(tiltOutput);
 
   }
 

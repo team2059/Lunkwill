@@ -32,7 +32,7 @@ public class Pneumatics extends SubsystemBase {
 
   /** Creates a new Pneumatics. */
   public Pneumatics() {
-    phCompressor.disable();
+    phCompressor.enableDigital();
     gripperSolenoid.set(kReverse);
     extenderSolenoid.set(kReverse);
     extenderState = false;
