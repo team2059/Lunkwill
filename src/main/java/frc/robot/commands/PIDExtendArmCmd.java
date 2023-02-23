@@ -35,6 +35,8 @@ public class PIDExtendArmCmd extends CommandBase {
     double output = arm.getExtensionController().calculate(position, setpoint);
     SmartDashboard.putNumber("extendPos", position);
     SmartDashboard.putNumber("extendOutput", output);
+    System.out.println("Position:" + position);
+    System.out.println("Output:" + output);
     arm.getExtensionMotor().set(-output);
   }
 

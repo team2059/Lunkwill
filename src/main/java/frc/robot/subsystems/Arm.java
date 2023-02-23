@@ -91,17 +91,18 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
-     double tiltOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
-   // double extendOutput = RobotContainer.driver.getRawAxis(5) * 0.5;
+    double tiltOutput = RobotContainer.joystick.getRawAxis(1) * 0.5;
+    double extendOutput = RobotContainer.joystick.getRawAxis(2) * 0.5;
     if (Math.abs(tiltOutput) < 0.05) {
     tiltOutput = 0;
     }
-    // if (Math.abs(extendOutput) < 0.05) {
-    //   extendOutput = 0;
-    // }
+    if (Math.abs(extendOutput) < 0.05) {
+      extendOutput = 0;
+    }
+    System.out.println(extensionEncoder.getPosition());
     // System.out.println(output);
-    //extensionMotor.set(extendOutput);
-     tiltMotor.set(tiltOutput);
+    extensionMotor.set(-extendOutput);
+    tiltMotor.set(-tiltOutput);
 
   }
 
