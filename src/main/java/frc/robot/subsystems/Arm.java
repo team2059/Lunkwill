@@ -66,8 +66,8 @@ public class Arm extends SubsystemBase {
     extensionEncoder = extensionMotor.getEncoder();
 
     tiltController = new PIDController(Constants.ArmConstants.tiltkP, 0.00, Constants.ArmConstants.tiltkD);
-    //tiltController.enableContinuousInput(0, 1);
-    extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0);
+    // tiltController.enableContinuousInput(0, 1);
+    extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0.001);
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration
      * parameters
@@ -80,7 +80,7 @@ public class Arm extends SubsystemBase {
     tiltMotor.setInverted(false);
 
     extensionMotor.restoreFactoryDefaults();
-    extensionMotor.setIdleMode(IdleMode.kBrake);
+    extensionMotor.setIdleMode(IdleMode.kCoast);
     extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 
@@ -91,18 +91,21 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
-    double tiltOutput = RobotContainer.joystick.getRawAxis(1) * 0.5;
-    double extendOutput = RobotContainer.joystick.getRawAxis(2) * 0.5;
-    if (Math.abs(tiltOutput) < 0.05) {
-    tiltOutput = 0;
+    double tiltOutput = RobotContainer.logitech.getRawAxis(2) * 0.5;
+    double extendOutput = RobotContainer.logitech.getRawAxis(1) * 0.5;
+    if (Math.abs(tiltOutput) < 0.1) {
+      tiltOutput = 0;
     }
-    if (Math.abs(extendOutput) < 0.05) {
+    if (Math.abs(extendOutput) < 0.1) {
       extendOutput = 0;
     }
-    System.out.println(extensionEncoder.getPosition());
     // System.out.println(output);
-    extensionMotor.set(-extendOutput);
-    tiltMotor.set(-tiltOutput);
+    extensionMotor.set(extendOutput);
+    tiltMotor.set(tiltOutput);
+
+    if (RobotContainer.logitech.getRawButton(5)) {
+      extensionEncoder.setPosition(0);
+    }
 
   }
 

@@ -37,6 +37,7 @@ public class PIDTiltArmCmd extends CommandBase {
     output = arm.getTiltController().calculate(thruBorePos, setpoint);
     SmartDashboard.putNumber("thruBorePos", thruBorePos);
     SmartDashboard.putNumber("tiltOutput", output);
+
     System.out.println("output" + output);
     arm.getTiltMotor().set(output);
   }
@@ -52,6 +53,6 @@ public class PIDTiltArmCmd extends CommandBase {
   public boolean isFinished() {
     // return (arm.getThruBorePosition()) > (0.95 * setpoint);
     // return Math.abs(output) < 0.05;
-    return false;
+    return Math.abs(output) < 0.02;
   }
 }

@@ -46,7 +46,7 @@ public class RobotContainer {
   /* Controllers */
   public static final Joystick driver = new Joystick(0);
   public static final ButtonBox buttonBox = new ButtonBox(1);
-  public static final Joystick joystick = new Joystick(3);
+  public static final Joystick logitech = new Joystick(2);
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -122,8 +122,8 @@ public class RobotContainer {
     extend50 = new JoystickButton(buttonBox, 6);
     extend100 = new JoystickButton(buttonBox, 7);
 
-    gripperSolenoidToggle = new JoystickButton(buttonBox, 8);
-    extenderSolenoidToggle = new JoystickButton(buttonBox, 9);
+    gripperSolenoidToggle = new JoystickButton(logitech, 1);
+    extenderSolenoidToggle = new JoystickButton(logitech, 2);
 
     swerveBase = new SwerveBase();
     arm = new Arm();
@@ -188,23 +188,10 @@ public class RobotContainer {
 
     // }
 
-    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.56)));
-    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.58)));
-    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -16.25)));
-
-    // extend50.onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(() -> pneumatics.toggleExtenderSolenoid()),
-    //   new ProxyCommand(() -> new PIDExtendArmCmd(arm, -110)),
-    //   new InstantCommand(() -> pneumatics.toggleExtenderSolenoid())
-    // ));
-
-   extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, -40)));
-
-    // extend100.onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(() -> pneumatics.toggleExtenderSolenoid()),
-    //   new ProxyCommand(() -> new PIDExtendArmCmd(arm, -75)),
-    //   new InstantCommand(() -> pneumatics.toggleExtenderSolenoid())
-    // ));
+    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
+    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
+    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 15)));
+    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, -15)));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));

@@ -8,23 +8,32 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Pneumatics;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class PIDExtendArmCmd extends CommandBase {
   private Arm arm;
+  private Pneumatics pneumatics;
   private double setpoint;
+  double output;
 
   /** Creates a new PIDExtendArmCmd. */
-  public PIDExtendArmCmd(Arm arm, double setpoint) {
+  public PIDExtendArmCmd(Arm arm, Pneumatics pneumatics, double setpoint) {
     this.arm = arm;
+    this.pneumatics = pneumatics;
     this.setpoint = setpoint;
-    addRequirements(arm);
+    addRequirements(arm, pneumatics);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("extend setpoint", setpoint);
+    pneumatics.getExtenderSolenoid().set(kForward);
+    // pneumatics.toggleExtenderSolenoid();
 
   }
 
@@ -32,23 +41,27 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public void execute() {
     double position = arm.getExtendPosition();
-    double output = arm.getExtensionController().calculate(position, setpoint);
+    output = arm.getExtensionController().calculate(position, setpoint);
+    System.out.println(output);
     SmartDashboard.putNumber("extendPos", position);
     SmartDashboard.putNumber("extendOutput", output);
-    System.out.println("Position:" + position);
-    System.out.println("Output:" + output);
-    arm.getExtensionMotor().set(-output);
+
+    arm.getExtensionMotor().set(output);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    arm.getExtensionMotor().setIdleMode(IdleMode.kBrake);
+    arm.getExtensionMotor().setIdleMode(IdleMode.kCoast);
+    pneumatics.getExtenderSolenoid().set(kReverse);
+    // pneumatics.toggleExtenderSolenoid();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(output) < 0.25;
+    // return false;
   }
 }

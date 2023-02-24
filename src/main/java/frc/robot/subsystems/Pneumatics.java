@@ -11,6 +11,7 @@ import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
@@ -76,6 +77,15 @@ public class Pneumatics extends SubsystemBase {
   // }
   // extenderBrakeState = state;
   // }
+
+  public void setExtenderState(Value kDirection) {
+    extenderSolenoid.set(kDirection);
+    if (kDirection.equals(kForward)) {
+      extenderState = true;
+    } else {
+      extenderState = false;
+    }
+  }
 
   public void toggleGripperSolenoid() {
     gripperSolenoid.toggle();
