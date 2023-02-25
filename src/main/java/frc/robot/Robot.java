@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,7 +41,8 @@ public class Robot extends TimedRobot {
     // m_robotContainer.getSwerveSubsytem().getNavX().reset();
     // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
     // Pose2d(), new Rotation2d());
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    PathPlannerServer.startServer(5811); // 5811 = port number. adjust this according to your needs
+    // SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /**

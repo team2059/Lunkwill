@@ -61,7 +61,7 @@ public class PIDExtendArmCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(output) < 0.25;
+    return Math.abs(output) < 0.03;
     // return false;
   }
 }

@@ -54,29 +54,30 @@ public class RobotContainer {
   private final int rotationAxis = 4;
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro;
-  private final JoystickButton alignWithTarget;
-  private final JoystickButton autoBalance;
+  private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
 
   // april tags
-  private final JoystickButton leftTag;
-  private final JoystickButton centerTag;
-  private final JoystickButton rightTag;
-  private final JoystickButton substationTag;
+  private final JoystickButton leftTag = new JoystickButton(buttonBox, 1);;
+  private final JoystickButton centerTag = new JoystickButton(buttonBox, 2);
+  private final JoystickButton rightTag = new JoystickButton(buttonBox, 3);
+  private final JoystickButton substationTag = new JoystickButton(buttonBox, 4);
 
-  private final JoystickButton tilt50;
-  private final JoystickButton tilt100;
-  private final JoystickButton extend50;
-  private final JoystickButton extend100;
-  private final JoystickButton gripperSolenoidToggle;
-  private final JoystickButton extenderSolenoidToggle;
+  private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
+  private final JoystickButton tilt100 = new JoystickButton(buttonBox, 5);
+  private final JoystickButton extend50 = new JoystickButton(buttonBox, 6);
+  private final JoystickButton extend100 = new JoystickButton(buttonBox, 7);
+
+  private final JoystickButton gripperSolenoidToggle = new JoystickButton(logitech, 1);;
+  private final JoystickButton extenderSolenoidToggle = new JoystickButton(logitech, 2);;
 
   /* Subsystems */
-  private final SwerveBase swerveBase;
-  private final Limelight limelight;
-  private final Arm arm;
-  private final Pneumatics pneumatics;
-  private final PowerDistributionPanel powerDistributionPanel;
+  private final SwerveBase swerveBase = new SwerveBase();;
+  private final Limelight limelight = new Limelight();
+  private final Arm arm = new Arm();
+  private final Pneumatics pneumatics = new Pneumatics();;
+  private final PowerDistributionPanel powerDistributionPanel = new PowerDistributionPanel();
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -106,30 +107,6 @@ public class RobotContainer {
     for (int i = 0; i < 4; i++) {
       System.out.println(tagIDs.get(i));
     }
-
-    zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
-
-    leftTag = new JoystickButton(buttonBox, 1);
-    centerTag = new JoystickButton(buttonBox, 2);
-    rightTag = new JoystickButton(buttonBox, 3);
-    substationTag = new JoystickButton(buttonBox, 4);
-
-
-    tilt50 = new JoystickButton(buttonBox, 4);
-    tilt100 = new JoystickButton(buttonBox, 5);
-    extend50 = new JoystickButton(buttonBox, 6);
-    extend100 = new JoystickButton(buttonBox, 7);
-
-    gripperSolenoidToggle = new JoystickButton(logitech, 1);
-    extenderSolenoidToggle = new JoystickButton(logitech, 2);
-
-    swerveBase = new SwerveBase();
-    arm = new Arm();
-    limelight = new Limelight();
-    pneumatics = new Pneumatics();
-    powerDistributionPanel = new PowerDistributionPanel();
 
     swerveBase.setDefaultCommand(new TeleopSwerve(swerveBase, () -> driver.getRawAxis(translationAxis),
         () -> driver.getRawAxis(strafeAxis), () -> driver.getRawAxis(rotationAxis),

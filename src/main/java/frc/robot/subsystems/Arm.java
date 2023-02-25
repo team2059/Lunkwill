@@ -80,7 +80,7 @@ public class Arm extends SubsystemBase {
     tiltMotor.setInverted(false);
 
     extensionMotor.restoreFactoryDefaults();
-    extensionMotor.setIdleMode(IdleMode.kCoast);
+    extensionMotor.setIdleMode(IdleMode.kBrake);
     extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 
@@ -101,7 +101,8 @@ public class Arm extends SubsystemBase {
     }
     // System.out.println(output);
     extensionMotor.set(extendOutput);
-    tiltMotor.set(tiltOutput);
+    System.out.println(extendOutput);
+    // tiltMotor.set(tiltOutput);
 
     if (RobotContainer.logitech.getRawButton(5)) {
       extensionEncoder.setPosition(0);
