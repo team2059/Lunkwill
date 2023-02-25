@@ -101,8 +101,8 @@ public class Arm extends SubsystemBase {
     }
     // System.out.println(output);
     extensionMotor.set(extendOutput);
-    System.out.println(extendOutput);
-    // tiltMotor.set(tiltOutput);
+    // System.out.println(extendOutput);
+     tiltMotor.set(tiltOutput);
 
     if (RobotContainer.logitech.getRawButton(5)) {
       extensionEncoder.setPosition(0);

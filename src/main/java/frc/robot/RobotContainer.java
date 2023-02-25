@@ -8,6 +8,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.controller.PIDController;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -167,8 +168,13 @@ public class RobotContainer {
 
     tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
     tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
-    extend50.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 15)));
-    extend100.onTrue(new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, -15)));
+    extend50.onTrue(new SequentialCommandGroup(new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
+        new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
+        new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 2.5))));
+    extend100
+        .onTrue(new SequentialCommandGroup(new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
+            new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
+            new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));

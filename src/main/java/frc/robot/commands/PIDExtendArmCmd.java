@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Pneumatics;
@@ -32,8 +33,7 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("extend setpoint", setpoint);
-    pneumatics.getExtenderSolenoid().set(kForward);
-    // pneumatics.toggleExtenderSolenoid();
+    // pneumatics.getExtenderSolenoid().set(kForward);
 
   }
 
@@ -52,7 +52,7 @@ public class PIDExtendArmCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    arm.getExtensionMotor().setIdleMode(IdleMode.kCoast);
+   
     pneumatics.getExtenderSolenoid().set(kReverse);
     // pneumatics.toggleExtenderSolenoid();
 
@@ -61,7 +61,7 @@ public class PIDExtendArmCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(output) < 0.03;
-    // return false;
+    // return arm.getExtendPosition() >= 0.9 * setpoint;
+    return Math.abs(output) < 0.05;
   }
 }
