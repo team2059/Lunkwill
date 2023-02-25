@@ -33,7 +33,7 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("extend setpoint", setpoint);
-    // pneumatics.getExtenderSolenoid().set(kForward);
+    pneumatics.getExtenderSolenoid().set(kForward);
 
   }
 

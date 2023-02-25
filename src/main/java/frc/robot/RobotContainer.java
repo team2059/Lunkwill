@@ -47,7 +47,8 @@ public class RobotContainer {
   /* Controllers */
   public static final Joystick driver = new Joystick(0);
   public static final ButtonBox buttonBox = new ButtonBox(1);
-  public static final Joystick logitech = new Joystick(2);
+  public static final ButtonBox buttonBoxTwo = new ButtonBox(2);
+  public static final Joystick logitech = new Joystick(3);
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -60,15 +61,20 @@ public class RobotContainer {
   private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
 
   // april tags
-  private final JoystickButton leftTag = new JoystickButton(buttonBox, 1);;
-  private final JoystickButton centerTag = new JoystickButton(buttonBox, 2);
-  private final JoystickButton rightTag = new JoystickButton(buttonBox, 3);
-  private final JoystickButton substationTag = new JoystickButton(buttonBox, 4);
+  private final JoystickButton leftTag = new JoystickButton(buttonBox, 10);;
+  private final JoystickButton centerTag = new JoystickButton(buttonBoxTwo, 1);
+  private final JoystickButton rightTag = new JoystickButton(buttonBoxTwo, 2);
+  private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 3);
 
-  private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
-  private final JoystickButton tilt100 = new JoystickButton(buttonBox, 5);
-  private final JoystickButton extend50 = new JoystickButton(buttonBox, 6);
-  private final JoystickButton extend100 = new JoystickButton(buttonBox, 7);
+  // middle cube nodes
+  private final JoystickButton lowCube = new JoystickButton(buttonBox, 8);
+  private final JoystickButton midCube = new JoystickButton(buttonBox, 5);
+  private final JoystickButton highCube = new JoystickButton(buttonBox, 2);
+
+  // private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
+  // private final JoystickButton tilt100 = new JoystickButton(buttonBox, 5);
+  // private final JoystickButton extend50 = new JoystickButton(buttonBox, 6);
+  // private final JoystickButton extend100 = new JoystickButton(buttonBox, 7);
 
   private final JoystickButton gripperSolenoidToggle = new JoystickButton(logitech, 1);;
   private final JoystickButton extenderSolenoidToggle = new JoystickButton(logitech, 2);;
@@ -153,28 +159,38 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    // if (allianceColor.equals("Red")) {
-    // leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
-    // centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
-    // rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
-    // substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
-    // } else {
-    // leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
-    // centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
-    // rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
-    // substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
+    if (allianceColor.equals("Red")) {
+      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
+      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
+      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
+      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
+    } else {
+      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
+      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
+      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
+      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
 
-    // }
+    }
 
-    tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
-    tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
-    extend50.onTrue(new SequentialCommandGroup(new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
-        new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
-        new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 2.5))));
-    extend100
-        .onTrue(new SequentialCommandGroup(new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
-            new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
-            new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
+    midCube.onTrue(new SequentialCommandGroup(new PIDTiltArmCmd(arm, Constants.Presets.MID_CUBE_ARM_TILT),
+        new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
+        new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2)
+
+        , new PIDExtendArmCmd(arm, pneumatics,
+            Constants.Presets.MID_CUBE_ARM_EXTEND),
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid())));
+
+    // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
+    // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
+    // extend50.onTrue(new SequentialCommandGroup(new InstantCommand(() ->
+    // pneumatics.getExtenderSolenoid().set(kForward)),
+    // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
+    // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 2.5))));
+    // extend100
+    // .onTrue(new SequentialCommandGroup(new InstantCommand(() ->
+    // pneumatics.getExtenderSolenoid().set(kForward)),
+    // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
+    // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
 
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));

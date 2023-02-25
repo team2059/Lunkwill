@@ -27,6 +27,15 @@ public final class Constants {
 
         }
 
+        public static final class Presets {
+                public static final double MID_CUBE_ARM_TILT = 0.51;
+                public static final double MID_CUBE_ARM_EXTEND = 10;
+                
+                public static final double UPPER_CUBE_ARM_TILT = 0.53;
+                public static final double LOWER_CONE_ARM = 0.53;
+                public static final double UPPER_CONE_ARM = 0.56;
+        }
+
         public static final class Swerve {
 
                 public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.1, 0.15, 0.01);
