@@ -4,21 +4,19 @@
 
 package frc.robot.commands.Arm;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TiltArm;
 
-public class PIDTiltArmCmd extends CommandBase {
+public class JoystickTiltArmCmd extends CommandBase {
   private TiltArm tiltArm;
-  private double setpoint;
-  double output;
+  private DoubleSupplier tiltOutput;
 
-  /** Creates a new PIDExtendArmCmd. */
-  public PIDTiltArmCmd(TiltArm tiltArm, double setpoint) {
+  /** Creates a new JoystickTiltArmCmd. */
+  public JoystickTiltArmCmd(TiltArm tiltArm, DoubleSupplier tiltOutput) {
     this.tiltArm = tiltArm;
-    this.setpoint = setpoint;
+    this.tiltOutput = tiltOutput;
     addRequirements(tiltArm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,33 +24,27 @@ public class PIDTiltArmCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("setPoint cmd", setpoint);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double thruBorePos = tiltArm.getThruBorePosition();
-    output = tiltArm.getTiltController().calculate(thruBorePos, setpoint);
-    SmartDashboard.putNumber("thruBorePos", thruBorePos);
-    SmartDashboard.putNumber("tiltOutput", output);
+    if (Math.abs(tiltOutput.getAsDouble()) < 0.25) {
+      tiltArm.getTiltMotor().set(0);
+    }
 
-    System.out.println("output" + output);
-    tiltArm.getTiltMotor().set(output);
+    tiltArm.getTiltMotor().set(tiltOutput.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    tiltArm.getTiltMotor().setIdleMode(IdleMode.kBrake);
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return (arm.getThruBorePosition()) > (0.95 * setpoint);
-    // return Math.abs(output) < 0.05;
-    return Math.abs(output) < 0.02;
+    return false;
   }
 }

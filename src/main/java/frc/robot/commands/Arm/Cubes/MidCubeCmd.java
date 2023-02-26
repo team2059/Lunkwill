@@ -7,9 +7,10 @@ package frc.robot.commands.Arm.Cubes;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.Arm.ExtendSequenceCmd;
+import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
 import frc.robot.commands.Arm.PIDTiltArmCmd;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.TiltArm;
+import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,12 +19,12 @@ import frc.robot.subsystems.Pneumatics;
 public class MidCubeCmd extends SequentialCommandGroup {
 
   /** Creates a new MidCubeCmd. */
-  public MidCubeCmd(Arm arm, Pneumatics pneumatics) {
+  public MidCubeCmd(TiltArm tiltArm, ExtendArm extendArm, Pneumatics pneumatics) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new PIDTiltArmCmd(arm, Constants.Presets.MID_CUBE_ARM_TILT),
-        new ExtendSequenceCmd(arm, pneumatics, Constants.Presets.MID_CUBE_ARM_EXTEND),
+    addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CUBE_ARM_TILT),
+        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.MID_CUBE_ARM_EXTEND),
         new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
   }
 }
