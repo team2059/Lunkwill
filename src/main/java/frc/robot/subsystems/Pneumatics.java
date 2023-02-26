@@ -56,28 +56,17 @@ public class Pneumatics extends SubsystemBase {
     SmartDashboard.putBoolean("Extender State", extenderState);
   }
 
-  // public BooleanSupplier isGripperPressed() {
-  // return () -> RobotContainer.buttonBox.getRawButton(8);
-  // }
+ 
 
-  // public void setGripperSolenoid(boolean initialState) {
-
-  // if (initialState == true) {
-  // gripperSolenoid.set(kReverse);
-  // } else {
-  // gripperSolenoid.set(kForward);
-  // }
-
-  // }
-
-  // public void setExtenderSolenoid(boolean state) {
-  // if (state) {
-  // extenderSolenoid.set(kReverse);
-  // } else {
-  // extenderSolenoid.set(kForward);
-  // }
-  // extenderBrakeState = state;
-  // }
+  public void setGripperState(Value kDirection) {
+    gripperSolenoid.set(kDirection);
+    if (kDirection.equals(kForward)) {
+      gripperState = true;
+    } else {
+      gripperState = false;
+    }
+   // gripperState = !gripperState;
+  }
 
   public void setExtenderState(Value kDirection) {
     extenderSolenoid.set(kDirection);
@@ -86,8 +75,10 @@ public class Pneumatics extends SubsystemBase {
     } else {
       extenderState = false;
     }
+   // extenderState = !extenderState;
   }
-
+  
+  
   public void toggleGripperSolenoid() {
     gripperSolenoid.toggle();
     gripperState = !gripperState;

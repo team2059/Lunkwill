@@ -4,27 +4,26 @@
 
 package frc.robot;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-
-import edu.wpi.first.math.controller.PIDController;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
+import frc.robot.commands.Arm.ManualExtendCmd;
+import frc.robot.commands.Arm.PIDExtendArmCmd;
+import frc.robot.commands.Arm.PIDTiltArmCmd;
+import frc.robot.commands.Arm.Cubes.MidCubeCmd;
+import frc.robot.commands.Auto.AutoBalanceCmd;
+import frc.robot.commands.Auto.GoToTagCmd;
 import frc.robot.subsystems.*;
 
 // import com.pathplanner.lib.*;
@@ -119,6 +118,8 @@ public class RobotContainer {
         () -> driver.getRawAxis(strafeAxis), () -> driver.getRawAxis(rotationAxis),
         () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
+    arm.setDefaultCommand(new ManualExtendCmd(arm, pneumatics));
+
     // swerveBase.setDefaultCommand(
     // new TeleopSwerve(
     // swerveBase,
@@ -172,13 +173,7 @@ public class RobotContainer {
 
     }
 
-    midCube.onTrue(new SequentialCommandGroup(new PIDTiltArmCmd(arm, Constants.Presets.MID_CUBE_ARM_TILT),
-        new InstantCommand(() -> pneumatics.getExtenderSolenoid().set(kForward)),
-        new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2)
-
-        , new PIDExtendArmCmd(arm, pneumatics,
-            Constants.Presets.MID_CUBE_ARM_EXTEND),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid())));
+    midCube.onTrue(new MidCubeCmd(arm, pneumatics));
 
     // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
     // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
