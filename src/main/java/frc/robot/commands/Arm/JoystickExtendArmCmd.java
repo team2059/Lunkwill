@@ -15,6 +15,7 @@ public class JoystickExtendArmCmd extends CommandBase {
   private Pneumatics pneumatics;
   private ExtendArm extendArm;
   private DoubleSupplier extendOutput;
+  // boolean interrupted = false;
 
   /** Creates a new ManualExtendCmd. */
   public JoystickExtendArmCmd(Pneumatics pneumatics, ExtendArm extendArm, DoubleSupplier extendOutput) {
@@ -34,14 +35,16 @@ public class JoystickExtendArmCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // if (interrupted) {
+    // pneumatics.toggleGripperSolenoid();
+    // }
+    System.out.println(extendOutput.getAsDouble());
     if (Math.abs(extendOutput.getAsDouble()) < 0.075) {
       // extendOutput = 0;
       extendArm.getExtensionMotor().set(0);
-
       pneumatics.setExtenderState(kReverse);
     } else {
       pneumatics.setExtenderState(kForward);
-
     }
     // System.out.println(extendOutput);
     if (Math.abs(extendOutput.getAsDouble()) > 0.125) {
@@ -55,6 +58,8 @@ public class JoystickExtendArmCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    // this.interrupted = interrupted;
+
     // pneumatics.toggleExtenderSolenoid();
   }
 

@@ -59,7 +59,7 @@ public class ExtendArm extends SubsystemBase {
      */
 
     extensionMotor.restoreFactoryDefaults();
-    extensionMotor.setIdleMode(IdleMode.kCoast);
+    extensionMotor.setIdleMode(IdleMode.kBrake);
     extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 

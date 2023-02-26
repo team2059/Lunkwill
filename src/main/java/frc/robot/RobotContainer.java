@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -122,8 +123,8 @@ public class RobotContainer {
         () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
     extendArm.setDefaultCommand(new JoystickExtendArmCmd(pneumatics, extendArm,
-        () -> logitech.getRawAxis(1) * 0.5)
-        .until(() -> logitech.getRawButtonPressed(2) == true));
+        () -> -logitech.getRawAxis(1) * 0.5));
+
     tiltArm.setDefaultCommand(new JoystickTiltArmCmd(tiltArm, () -> logitech.getRawAxis(2) * 0.5));
 
     // Configure the button bindings
@@ -195,7 +196,7 @@ public class RobotContainer {
     gripperSolenoidToggle
         .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
-    extenderSolenoidToggle.toggleOnTrue(toggleExtenderSolenoidCmd);
+    // extenderSolenoidToggle.toggleOnTrue(toggleExtenderSolenoidCmd);
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
