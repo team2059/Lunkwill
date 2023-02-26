@@ -29,7 +29,7 @@ public class JoystickTiltArmCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(tiltOutput.getAsDouble()) < 0.5) {
+    if (Math.abs(tiltOutput.getAsDouble()) < 0.3) {
       tiltArm.getTiltMotor().set(0);
     } else {
 

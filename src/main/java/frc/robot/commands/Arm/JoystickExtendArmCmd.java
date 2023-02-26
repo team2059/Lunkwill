@@ -35,6 +35,7 @@ public class JoystickExtendArmCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     // if (interrupted) {
     // pneumatics.toggleGripperSolenoid();
     // }
@@ -50,6 +51,7 @@ public class JoystickExtendArmCmd extends CommandBase {
     if (Math.abs(extendOutput.getAsDouble()) > 0.125) {
       extendArm.getExtensionMotor().set(extendOutput.getAsDouble());
     }
+
     // else {
     // extendArm.getExtensionMotor().set(0);
     // }

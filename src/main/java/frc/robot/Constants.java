@@ -28,21 +28,24 @@ public final class Constants {
         }
 
         public static final class Presets {
-                public static final double LOW_CUBE_ARM_TILT = 0;
-                public static final double LOW_CUBE_ARM_EXTEND = 0;
+
+                public static final double REST_TILT = 0.32;
+                public static final double REST_EXTEND = 1;
+
+                public static final double LOW_CUBE_ARM_TILT = 0.35;
+                public static final double LOW_CUBE_ARM_EXTEND = 5;
 
                 public static final double MID_CUBE_ARM_TILT = 0.51;
-                public static final double MID_CUBE_ARM_EXTEND = 10;
-                
-                public static final double UPPER_CUBE_ARM_TILT = 0.53;
-                public static final double UPPER_CUBE_ARM_EXTEND = 0;
+                public static final double MID_CUBE_ARM_EXTEND = 15;
 
+                public static final double UPPER_CUBE_ARM_TILT = 0.54;
+                public static final double UPPER_CUBE_ARM_EXTEND = 45;
 
-                public static final double LOWER_CONE_ARM_TILT = 0.53;
-                public static final double LOWER_CONE_ARM_EXTEND = 0;
+                public static final double MID_CONE_ARM_TILT = 0.54;
+                public static final double MID_CONE_ARM_EXTEND = 19;
 
                 public static final double UPPER_CONE_ARM_TILT = 0.56;
-                public static final double UPPWER_CONE_ARM_EXTEND = 0;
+                public static final double UPPWER_CONE_ARM_EXTEND = 45;
         }
 
         public static final class Swerve {

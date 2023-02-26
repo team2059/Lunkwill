@@ -29,13 +29,14 @@ public class TeleopSwerve extends CommandBase {
   private final DoubleSupplier rotation;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
   private final Supplier<Boolean> fieldOrientedFunction;
+  private final Supplier<Boolean> inverted;
 
   public TeleopSwerve(
       SwerveBase subsystem,
       DoubleSupplier fwdX,
       DoubleSupplier fwdY,
       DoubleSupplier rot,
-      Supplier<Boolean> fieldOrientedFunction) {
+      Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted) {
 
     drive = subsystem;
     forwardX = fwdX;
@@ -43,6 +44,7 @@ public class TeleopSwerve extends CommandBase {
     rotation = rot;
 
     this.fieldOrientedFunction = fieldOrientedFunction;
+    this.inverted = inverted;
 
     this.xLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -65,6 +67,16 @@ public class TeleopSwerve extends CommandBase {
     double fwdX = forwardX.getAsDouble();
     double fwdY = forwardY.getAsDouble();
     double rot = rotation.getAsDouble();
+
+    if (inverted.get() == true) {
+      fwdX *= -1;
+      fwdY *= -1;
+      rot *= -1;
+    } else {
+      fwdX *= 1;
+      fwdY *= 1;
+      rot *= 1;
+    }
 
     // 2. Apply deadband
     fwdX = Math.abs(fwdX) > 0.1 ? fwdX : 0.0;

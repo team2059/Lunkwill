@@ -18,16 +18,15 @@ import frc.robot.subsystems.Pneumatics;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class MidCubeCmd extends SequentialCommandGroup {
+public class LowCubeCmd extends SequentialCommandGroup {
 
   /** Creates a new MidCubeCmd. */
-  public MidCubeCmd(TiltArm tiltArm, ExtendArm extendArm, Pneumatics pneumatics) {
+  public LowCubeCmd(TiltArm tiltArm, ExtendArm extendArm, Pneumatics pneumatics) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CUBE_ARM_TILT),
-        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.MID_CUBE_ARM_EXTEND),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
+    addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.LOW_CUBE_ARM_TILT),
+        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.LOW_CUBE_ARM_EXTEND),
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()),new WaitCommand(0.5),new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }
 }

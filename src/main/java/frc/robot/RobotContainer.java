@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,13 @@ import frc.robot.commands.*;
 import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
 import frc.robot.commands.Arm.JoystickExtendArmCmd;
 import frc.robot.commands.Arm.JoystickTiltArmCmd;
+import frc.robot.commands.Arm.PIDExtendArmCmd;
+import frc.robot.commands.Arm.PIDTiltArmCmd;
+import frc.robot.commands.Arm.ZeroEntireArmCmd;
+import frc.robot.commands.Arm.Cones.HighConeCmd;
+import frc.robot.commands.Arm.Cones.MidConeCmd;
+import frc.robot.commands.Arm.Cubes.HighCubeCmd;
+import frc.robot.commands.Arm.Cubes.LowCubeCmd;
 import frc.robot.commands.Arm.Cubes.MidCubeCmd;
 import frc.robot.commands.Auto.AutoBalanceCmd;
 import frc.robot.commands.Auto.GoToTagCmd;
@@ -57,7 +65,8 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton alignWithTarget = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  // private final JoystickButton alignWithTarget = new JoystickButton(driver,
+  // XboxController.Button.kRightBumper.value);
   private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
 
   // april tags
@@ -71,8 +80,13 @@ public class RobotContainer {
   private final JoystickButton midCube = new JoystickButton(buttonBox, 5);
   private final JoystickButton highCube = new JoystickButton(buttonBox, 2);
 
-  private final JoystickButton test = new JoystickButton(logitech, 6);
-  private final JoystickButton test1 = new JoystickButton(logitech, 4);
+  private final JoystickButton lowCone = new JoystickButton(buttonBox, 9);
+  private final JoystickButton midCone = new JoystickButton(buttonBox, 6);
+  private final JoystickButton highCone = new JoystickButton(buttonBox, 3);
+
+  private final JoystickButton extendArmToZero = new JoystickButton(logitech, 4);
+  private final JoystickButton zeroExtensionEncoder = new JoystickButton(logitech, 5);
+  private final JoystickButton extendArmToMax = new JoystickButton(logitech, 6);
 
   // private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
   // private final JoystickButton tilt100 = new JoystickButton(buttonBox, 5);
@@ -80,7 +94,7 @@ public class RobotContainer {
   // private final JoystickButton extend100 = new JoystickButton(buttonBox, 7);
 
   private final JoystickButton gripperSolenoidToggle = new JoystickButton(logitech, 1);
-  private final JoystickButton extenderSolenoidToggle = new JoystickButton(logitech, 2);
+  private final JoystickButton zeroEntireArm = new JoystickButton(logitech, 2);
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
@@ -94,8 +108,8 @@ public class RobotContainer {
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /* Commands */
-  InstantCommand toggleExtenderSolenoidCmd = new InstantCommand(() -> pneumatics.toggleExtenderSolenoid());
-  public MidCubeCmd midCubeCmd = new MidCubeCmd(tiltArm, extendArm, pneumatics);
+  // InstantCommand toggleExtenderSolenoidCmd = new InstantCommand(() ->
+  // pneumatics.toggleExtenderSolenoid());
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -120,7 +134,8 @@ public class RobotContainer {
 
     swerveBase.setDefaultCommand(new TeleopSwerve(swerveBase, () -> driver.getRawAxis(translationAxis),
         () -> driver.getRawAxis(strafeAxis), () -> driver.getRawAxis(rotationAxis),
-        () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
+        () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value),
+        () -> driver.getRawButton(XboxController.Button.kRightBumper.value)));
 
     extendArm.setDefaultCommand(new JoystickExtendArmCmd(pneumatics, extendArm,
         () -> -logitech.getRawAxis(1) * 0.5));
@@ -176,10 +191,18 @@ public class RobotContainer {
 
     }
 
-    midCube.onTrue(midCubeCmd);
+    lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
+    midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
+    highCube.onTrue(new HighCubeCmd(tiltArm, extendArm, pneumatics));
 
-    test.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 40));
-    test1.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 2));
+    midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
+    highCube.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
+
+    zeroExtensionEncoder.onTrue(new InstantCommand(() -> extendArm.getExtensionEncoder().setPosition(0)));
+
+    extendArmToMax.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 44));
+    extendArmToZero.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 1));
+    zeroEntireArm.onTrue(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
 
     // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
     // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
