@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -13,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -80,7 +82,7 @@ public class Arm extends SubsystemBase {
     tiltMotor.setInverted(false);
 
     extensionMotor.restoreFactoryDefaults();
-    extensionMotor.setIdleMode(IdleMode.kBrake);
+    extensionMotor.setIdleMode(IdleMode.kCoast);
     extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 
@@ -92,24 +94,38 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
     double tiltOutput = RobotContainer.logitech.getRawAxis(2) * 0.5;
-    // double extendOutput = RobotContainer.logitech.getRawAxis(1) * 0.5;
-    if (Math.abs(tiltOutput) < 0.1) {
-      tiltOutput = 0;
-    }
-    // if (Math.abs(extendOutput) < 0.1) {
-    // extendOutput = 0;
-    // }
-
-    // extensionMotor.set(extendOutput);
-
-    // System.out.println(output);
-
-    // System.out.println(extendOutput);
-    tiltMotor.set(tiltOutput);
+    double extendOutput = RobotContainer.logitech.getRawAxis(1) * 0.5;
 
     if (RobotContainer.logitech.getRawButton(5)) {
       extensionEncoder.setPosition(0);
     }
+
+    if (CommandScheduler.getInstance().isScheduled(RobotContainer.fullExtend)
+        || CommandScheduler.getInstance().isScheduled(RobotContainer.fullRetract)
+        || CommandScheduler.getInstance().isScheduled(RobotContainer.midCubeCmd)) {
+      return;
+    }
+
+    if (Math.abs(tiltOutput) < 0.25) {
+      tiltOutput = 0;
+    }
+
+    if (Math.abs(extendOutput) < 0.075) {
+      extendOutput = 0;
+
+      RobotContainer.pneumatics.setExtenderState(kReverse);
+    } else {
+      RobotContainer.pneumatics.setExtenderState(kForward);
+
+    }
+    // System.out.println(extendOutput);
+    if (Math.abs(extendOutput) > 0.125) {
+      extensionMotor.set(extendOutput);
+    } else {
+      extensionMotor.set(0);
+    }
+
+    tiltMotor.set(tiltOutput);
 
   }
 

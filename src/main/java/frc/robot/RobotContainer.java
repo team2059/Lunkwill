@@ -5,7 +5,6 @@
 package frc.robot;
 
 import java.util.ArrayList;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,9 +17,7 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
-import frc.robot.commands.Arm.ManualExtendCmd;
-import frc.robot.commands.Arm.PIDExtendArmCmd;
-import frc.robot.commands.Arm.PIDTiltArmCmd;
+import frc.robot.commands.Arm.ExtendSequenceCmd;
 import frc.robot.commands.Arm.Cubes.MidCubeCmd;
 import frc.robot.commands.Auto.AutoBalanceCmd;
 import frc.robot.commands.Auto.GoToTagCmd;
@@ -70,22 +67,35 @@ public class RobotContainer {
   private final JoystickButton midCube = new JoystickButton(buttonBox, 5);
   private final JoystickButton highCube = new JoystickButton(buttonBox, 2);
 
+  private final JoystickButton test = new JoystickButton(logitech, 6);
+  private final JoystickButton test1 = new JoystickButton(logitech, 4);
+
   // private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
   // private final JoystickButton tilt100 = new JoystickButton(buttonBox, 5);
   // private final JoystickButton extend50 = new JoystickButton(buttonBox, 6);
   // private final JoystickButton extend100 = new JoystickButton(buttonBox, 7);
 
-  private final JoystickButton gripperSolenoidToggle = new JoystickButton(logitech, 1);;
-  private final JoystickButton extenderSolenoidToggle = new JoystickButton(logitech, 2);;
+  // private final JoystickButton gripperSolenoidToggle = new
+  // JoystickButton(logitech, 1);;
+  // private final JoystickButton extenderSolenoidToggle = new
+  // JoystickButton(logitech, 2);;
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();;
   private final Limelight limelight = new Limelight();
-  private final Arm arm = new Arm();
-  private final Pneumatics pneumatics = new Pneumatics();;
-  private final PowerDistributionPanel powerDistributionPanel = new PowerDistributionPanel();
+  private final static Arm arm = new Arm();
+  public static final Pneumatics pneumatics = new Pneumatics();;
+  // private final PowerDistributionPanel powerDistributionPanel = new
+  // PowerDistributionPanel();
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  /* Commands */
+
+  public static ExtendSequenceCmd fullExtend = new ExtendSequenceCmd(arm, pneumatics, 40);
+  public static ExtendSequenceCmd fullRetract = new ExtendSequenceCmd(arm, pneumatics, 2);
+
+  public static MidCubeCmd midCubeCmd = new MidCubeCmd(arm, pneumatics);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -118,7 +128,7 @@ public class RobotContainer {
         () -> driver.getRawAxis(strafeAxis), () -> driver.getRawAxis(rotationAxis),
         () -> !driver.getRawButton(XboxController.Button.kLeftBumper.value)));
 
-    arm.setDefaultCommand(new ManualExtendCmd(arm, pneumatics));
+    // arm.setDefaultCommand(new ManualExtendCmd(arm, pneumatics));
 
     // swerveBase.setDefaultCommand(
     // new TeleopSwerve(
@@ -147,6 +157,10 @@ public class RobotContainer {
     }
   }
 
+  public Pneumatics getPneumatics() {
+    return pneumatics;
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -173,7 +187,10 @@ public class RobotContainer {
 
     }
 
-    midCube.onTrue(new MidCubeCmd(arm, pneumatics));
+    midCube.onTrue(midCubeCmd);
+
+    test.onTrue(fullExtend);
+    test1.onTrue(fullRetract);
 
     // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
     // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
@@ -187,12 +204,13 @@ public class RobotContainer {
     // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
     // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
 
-    gripperSolenoidToggle
-        .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
+    // gripperSolenoidToggle
+    // .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
-    extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleExtenderSolenoid()));
+    // extenderSolenoidToggle.toggleOnTrue(new InstantCommand(() ->
+    // pneumatics.toggleExtenderSolenoid()));
 
-    alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
+    // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
     autoBalance.onTrue(new ProxyCommand(() -> new AutoBalanceCmd(swerveBase)));
 

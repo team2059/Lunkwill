@@ -4,12 +4,8 @@
 
 package frc.robot.commands.Arm;
 
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Pneumatics;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
@@ -33,7 +29,7 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("extend setpoint", setpoint);
-    pneumatics.setExtenderState(kForward);
+    // pneumatics.setExtenderState(kForward);
 
   }
 
@@ -52,7 +48,7 @@ public class PIDExtendArmCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   
+
     pneumatics.setExtenderState(kReverse);
     // pneumatics.toggleExtenderSolenoid();
 

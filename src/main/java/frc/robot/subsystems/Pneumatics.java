@@ -37,7 +37,7 @@ public class Pneumatics extends SubsystemBase {
     phCompressor.enableDigital();
     gripperSolenoid.set(kReverse);
     extenderSolenoid.set(kReverse);
-    extenderState = false; 
+    extenderState = false;
     gripperState = false;
 
   }
@@ -49,14 +49,16 @@ public class Pneumatics extends SubsystemBase {
     pressureSwitch = phCompressor.getPressureSwitchValue();
     compressorCurrent = phCompressor.getCurrent();
 
+    if (RobotContainer.logitech.getRawButtonPressed(1) == true) {
+      RobotContainer.pneumatics.toggleGripperSolenoid();
+    }
+
     SmartDashboard.putBoolean("Compressor Enabled", compressorEnabled);
     SmartDashboard.putBoolean("Pressure Switch", pressureSwitch);
     SmartDashboard.putNumber("Compressor Current", compressorCurrent);
     SmartDashboard.putBoolean("Gripper State", gripperState);
     SmartDashboard.putBoolean("Extender State", extenderState);
   }
-
- 
 
   public void setGripperState(Value kDirection) {
     gripperSolenoid.set(kDirection);
@@ -65,7 +67,7 @@ public class Pneumatics extends SubsystemBase {
     } else {
       gripperState = false;
     }
-   // gripperState = !gripperState;
+    // gripperState = !gripperState;
   }
 
   public void setExtenderState(Value kDirection) {
@@ -75,10 +77,9 @@ public class Pneumatics extends SubsystemBase {
     } else {
       extenderState = false;
     }
-   // extenderState = !extenderState;
+    // extenderState = !extenderState;
   }
-  
-  
+
   public void toggleGripperSolenoid() {
     gripperSolenoid.toggle();
     gripperState = !gripperState;

@@ -6,6 +6,7 @@ package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Pneumatics;
@@ -19,9 +20,8 @@ public class ExtendSequenceCmd extends SequentialCommandGroup {
   public ExtendSequenceCmd(Arm arm, Pneumatics pneumatics, double extendSetpoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new InstantCommand(() -> pneumatics.setExtenderState(kForward)),
-        new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2)
+    addCommands(new InstantCommand(() -> pneumatics.setExtenderState(kForward)), new WaitCommand(0.1),
 
-        , new PIDExtendArmCmd(arm, pneumatics, extendSetpoint));
+        new PIDExtendArmCmd(arm, pneumatics, extendSetpoint));
   }
 }
