@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -42,14 +43,27 @@ public class ExtendArm extends SubsystemBase {
 
   public PIDController extensionController;
 
+  public DigitalInput limitSwitch;
+  public boolean isLimitReached;
+
+  public boolean isLimitReached() {
+    return isLimitReached;
+  }
+
+  public DigitalInput getLimitSwitch() {
+    return limitSwitch;
+  }
+
   /** Creates a new ExampleSubsystem. */
   public ExtendArm() {
 
     extensionMotor = new CANSparkMax(Constants.ArmConstants.extendId, MotorType.kBrushless);
 
     extensionEncoder = extensionMotor.getEncoder();
+    limitSwitch = new DigitalInput(9);
 
     extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0.001);
+  
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration
      * parameters
@@ -67,8 +81,14 @@ public class ExtendArm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    isLimitReached = !limitSwitch.get();
 
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
+    SmartDashboard.putBoolean("limit switch", isLimitReached);
+    if (isLimitReached) {
+      System.out.println("isLimitReached = " + isLimitReached);
+      extensionEncoder.setPosition(0);
+    }
 
   }
 

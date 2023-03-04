@@ -48,7 +48,7 @@ public class JoystickExtendArmCmd extends CommandBase {
       pneumatics.setExtenderState(kForward);
     }
     // System.out.println(extendOutput);
-    if (Math.abs(extendOutput.getAsDouble()) > 0.125) {
+    if (Math.abs(extendOutput.getAsDouble()) > 0.3) {
       extendArm.getExtensionMotor().set(extendOutput.getAsDouble());
     }
 

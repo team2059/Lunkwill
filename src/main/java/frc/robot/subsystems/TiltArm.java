@@ -71,6 +71,9 @@ public class TiltArm extends SubsystemBase {
   @Override
   public void periodic() {
 
+    SmartDashboard.putNumber("TILTPERCENT", tiltMotor.getAppliedOutput());
+
+    SmartDashboard.putNumber("TILTVOLTAGE", tiltMotor.getBusVoltage());
     SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
 
   }

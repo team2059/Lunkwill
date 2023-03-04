@@ -38,14 +38,16 @@ public class PIDTiltArmCmd extends CommandBase {
     SmartDashboard.putNumber("thruBorePos", thruBorePos);
     SmartDashboard.putNumber("tiltOutput", output);
 
-    System.out.println("output" + output);
+    // System.out.println("tiltOutput" + output);
     tiltArm.getTiltMotor().set(output);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    tiltArm.getTiltMotor().setIdleMode(IdleMode.kBrake);
+  
+    tiltArm.getTiltMotor().set(0);
+    System.out.println("ENDED TILT");
   }
 
   // Returns true when the command should end.
@@ -53,6 +55,6 @@ public class PIDTiltArmCmd extends CommandBase {
   public boolean isFinished() {
     // return (arm.getThruBorePosition()) > (0.95 * setpoint);
     // return Math.abs(output) < 0.05;
-    return Math.abs(output) < 0.02;
+    return (Math.abs(output) < 0.125);
   }
 }

@@ -6,7 +6,6 @@ package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.TiltArm;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
@@ -30,6 +29,11 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("extend setpoint", setpoint);
+    if (setpoint < extendArm.getExtendPosition()) {
+      extendArm.extensionController.setP(0.1);
+    } else {
+      extendArm.extensionController.setP(0.02);
+    }
     // pneumatics.setExtenderState(kForward);
 
   }
@@ -37,9 +41,10 @@ public class PIDExtendArmCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     double position = extendArm.getExtendPosition();
     output = extendArm.getExtensionController().calculate(position, setpoint);
-    //System.out.println(output);
+    // System.out.println(output);
     SmartDashboard.putNumber("extendPos", position);
     SmartDashboard.putNumber("extendOutput", output);
 
@@ -49,7 +54,7 @@ public class PIDExtendArmCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    extendArm.getExtensionMotor().set(0);
     pneumatics.setExtenderState(kReverse);
     // pneumatics.toggleExtenderSolenoid();
 

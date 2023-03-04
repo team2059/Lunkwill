@@ -18,7 +18,7 @@ public final class Constants {
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;
                 public static final double tiltkD = 0.01;
-                public static final double extensionkP = 0.15;
+                public static final double extensionkP = 0.01;
 
         }
 
@@ -45,7 +45,7 @@ public final class Constants {
                 public static final double MID_CONE_ARM_EXTEND = 19;
 
                 public static final double UPPER_CONE_ARM_TILT = 0.56;
-                public static final double UPPWER_CONE_ARM_EXTEND = 45;
+                public static final double UPPER_CONE_ARM_EXTEND = 45;
         }
 
         public static final class Swerve {

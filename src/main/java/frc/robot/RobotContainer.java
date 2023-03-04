@@ -73,6 +73,7 @@ public class RobotContainer {
   private final JoystickButton leftTag = new JoystickButton(buttonBox, 10);;
   private final JoystickButton centerTag = new JoystickButton(buttonBoxTwo, 1);
   private final JoystickButton rightTag = new JoystickButton(buttonBoxTwo, 2);
+
   private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 3);
 
   // middle cube nodes
@@ -196,7 +197,7 @@ public class RobotContainer {
     highCube.onTrue(new HighCubeCmd(tiltArm, extendArm, pneumatics));
 
     midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
-    highCube.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
+    highCone.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
 
     zeroExtensionEncoder.onTrue(new InstantCommand(() -> extendArm.getExtensionEncoder().setPosition(0)));
 
