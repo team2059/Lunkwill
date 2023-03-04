@@ -27,6 +27,7 @@ public class MidConeCmd extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CONE_ARM_TILT),
         new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.MID_CONE_ARM_EXTEND),
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CONE_ARM_TILT - 0.05),
         new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }

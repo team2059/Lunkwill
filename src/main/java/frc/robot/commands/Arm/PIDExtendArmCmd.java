@@ -30,9 +30,9 @@ public class PIDExtendArmCmd extends CommandBase {
   public void initialize() {
     SmartDashboard.putNumber("extend setpoint", setpoint);
     if (setpoint < extendArm.getExtendPosition()) {
-      extendArm.extensionController.setP(0.1);
+      extendArm.extensionController.setP(0.125);
     } else {
-      extendArm.extensionController.setP(0.02);
+      extendArm.extensionController.setP(0.025);
     }
     // pneumatics.setExtenderState(kForward);
 
@@ -44,7 +44,7 @@ public class PIDExtendArmCmd extends CommandBase {
 
     double position = extendArm.getExtendPosition();
     output = extendArm.getExtensionController().calculate(position, setpoint);
-    // System.out.println(output);
+    System.out.println("extendOutput" +output);
     SmartDashboard.putNumber("extendPos", position);
     SmartDashboard.putNumber("extendOutput", output);
 
@@ -54,8 +54,10 @@ public class PIDExtendArmCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("DONE EXTENDING");
     extendArm.getExtensionMotor().set(0);
     pneumatics.setExtenderState(kReverse);
+
     // pneumatics.toggleExtenderSolenoid();
 
   }
@@ -64,6 +66,6 @@ public class PIDExtendArmCmd extends CommandBase {
   @Override
   public boolean isFinished() {
     // return arm.getExtendPosition() >= 0.9 * setpoint;
-    return Math.abs(output) < 0.05;
+    return Math.abs(output) < 0.125;
   }
 }

@@ -25,6 +25,7 @@ import frc.robot.commands.Arm.JoystickExtendArmCmd;
 import frc.robot.commands.Arm.JoystickTiltArmCmd;
 import frc.robot.commands.Arm.PIDExtendArmCmd;
 import frc.robot.commands.Arm.PIDTiltArmCmd;
+import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Cones.HighConeCmd;
 import frc.robot.commands.Arm.Cones.MidConeCmd;
@@ -70,11 +71,11 @@ public class RobotContainer {
   private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
 
   // april tags
-  private final JoystickButton leftTag = new JoystickButton(buttonBox, 10);;
-  private final JoystickButton centerTag = new JoystickButton(buttonBoxTwo, 1);
-  private final JoystickButton rightTag = new JoystickButton(buttonBoxTwo, 2);
+  private final JoystickButton leftTag = new JoystickButton(buttonBoxTwo, 4);;
+  private final JoystickButton centerTag = new JoystickButton(buttonBoxTwo, 6);
+  private final JoystickButton rightTag = new JoystickButton(buttonBoxTwo, 7);
 
-  private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 3);
+  private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
 
   // middle cube nodes
   private final JoystickButton lowCube = new JoystickButton(buttonBox, 8);
@@ -86,7 +87,7 @@ public class RobotContainer {
   private final JoystickButton highCone = new JoystickButton(buttonBox, 3);
 
   private final JoystickButton extendArmToZero = new JoystickButton(logitech, 4);
-  private final JoystickButton zeroExtensionEncoder = new JoystickButton(logitech, 5);
+  private final JoystickButton pickUpArmPosition = new JoystickButton(logitech, 5);
   private final JoystickButton extendArmToMax = new JoystickButton(logitech, 6);
 
   // private final JoystickButton tilt50 = new JoystickButton(buttonBox, 4);
@@ -199,10 +200,10 @@ public class RobotContainer {
     midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
     highCone.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
 
-    zeroExtensionEncoder.onTrue(new InstantCommand(() -> extendArm.getExtensionEncoder().setPosition(0)));
+    pickUpArmPosition.onTrue(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics));
 
-    extendArmToMax.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 44));
-    extendArmToZero.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 1));
+    extendArmToMax.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, 45));
+    extendArmToZero.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.REST_EXTEND));
     zeroEntireArm.onTrue(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
 
     // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));

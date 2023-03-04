@@ -39,7 +39,7 @@ public class JoystickExtendArmCmd extends CommandBase {
     // if (interrupted) {
     // pneumatics.toggleGripperSolenoid();
     // }
-    System.out.println(extendOutput.getAsDouble());
+   // System.out.println(extendOutput.getAsDouble());
     if (Math.abs(extendOutput.getAsDouble()) < 0.075) {
       // extendOutput = 0;
       extendArm.getExtensionMotor().set(0);
