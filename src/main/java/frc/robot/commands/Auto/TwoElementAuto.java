@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.commands.GoToTagCmd;
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
+import frc.robot.commands.Arm.Cones.HighConeCmd;
 import frc.robot.commands.Arm.Cones.MidConeCmd;
 import frc.robot.commands.Arm.Cubes.MidCubeCmd;
 import frc.robot.subsystems.ExtendArm;
@@ -31,7 +32,7 @@ public class TwoElementAuto extends SequentialCommandGroup {
       Pneumatics pneumatics, Limelight limelight) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new MidConeCmd(tiltArm, extendArm, pneumatics),
+    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics),
         new ParallelCommandGroup(swerveBase.followPathCmd("goToElement"),
             new SequentialCommandGroup(new WaitCommand(2.5),
                 new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics))),

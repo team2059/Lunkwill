@@ -22,7 +22,7 @@ public class LeftConeTaxiBalance extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new MidConeCmd(tiltArm, extendArm, pneumatics), swerveBase.followPathCmd("leftConeTaxiAndBalance"),
+    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics), swerveBase.followPathCmd("leftConeTaxiAndBalance"),
         new AutoBalanceCmd(swerveBase, -1));
   }
 }
