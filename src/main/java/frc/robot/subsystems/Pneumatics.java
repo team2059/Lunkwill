@@ -49,10 +49,6 @@ public class Pneumatics extends SubsystemBase {
     pressureSwitch = phCompressor.getPressureSwitchValue();
     compressorCurrent = phCompressor.getCurrent();
 
-    if (RobotContainer.logitech.getRawButtonPressed(1) == true) {
-      RobotContainer.pneumatics.toggleGripperSolenoid();
-    }
-
     SmartDashboard.putBoolean("Compressor Enabled", compressorEnabled);
     SmartDashboard.putBoolean("Pressure Switch", pressureSwitch);
     SmartDashboard.putNumber("Compressor Current", compressorCurrent);

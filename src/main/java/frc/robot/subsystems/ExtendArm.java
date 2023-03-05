@@ -63,7 +63,7 @@ public class ExtendArm extends SubsystemBase {
     limitSwitch = new DigitalInput(9);
 
     extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0.001);
-  
+
     /**
      * The restoreFactoryDefaults method can be used to reset the configuration
      * parameters
@@ -86,7 +86,7 @@ public class ExtendArm extends SubsystemBase {
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
     SmartDashboard.putBoolean("limit switch", isLimitReached);
     if (isLimitReached) {
-      System.out.println("isLimitReached = " + isLimitReached);
+      // System.out.println("isLimitReached = " + isLimitReached);
       extensionEncoder.setPosition(0);
     }
 
