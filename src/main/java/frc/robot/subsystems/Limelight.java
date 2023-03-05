@@ -12,10 +12,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.BooleanSupplier;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 public class Limelight extends SubsystemBase {
 
   private PhotonCamera camera;
+
+  public final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(34.125);
+  public final double TARGET_HEIGHT_METERS = Units.inchesToMeters(25);
+  public final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+
+  /** Creates a new Limelight. */
+  public Limelight() {
+
+    camera = new PhotonCamera("hhCam");
+
+  }
 
   public PhotonCamera getCamera() {
     return camera;
@@ -25,22 +37,30 @@ public class Limelight extends SubsystemBase {
     return () -> camera.getLatestResult().hasTargets();
   }
 
-  // Constants such as camera and target height stored. Change per robot and goal!
-  public final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(34.125);
-  public final double TARGET_HEIGHT_METERS = Units.inchesToMeters(25);
-
-  // Angle between horizontal and the camera.
-  public final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
-
   public void takeSnapshot() {
     camera.takeInputSnapshot();
   }
 
-  /** Creates a new Limelight. */
-  public Limelight() {
+  public void enableLED() {
+      camera.setLED(VisionLEDMode.kOn);
+  }
 
-    camera = new PhotonCamera("hhCam");
+  public void disableLED() {
+      camera.setLED(VisionLEDMode.kOff);
+  }
 
+  public void setPipeline(int pipelineIndex) {
+      camera.setPipelineIndex(pipelineIndex);
+  }
+
+  public void setTagMode() {
+    setPipeline(0);
+    disableLED();
+  }
+
+  public void setTapeMode() {
+    setPipeline(1);
+    enableLED();
   }
 
   @Override

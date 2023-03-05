@@ -5,24 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveBase;
 
-public class VisionStrafeAlignCmd extends CommandBase {
+public class TapeAlignCmd extends CommandBase {
   private final Limelight limelight;
   private final SwerveBase swerveBase;
 
+  final char direction;
   final double DRIVE_P = 0.1;
   final double DRIVE_D = 0.0;
-  PIDController turnController = new PIDController(DRIVE_P, 0, DRIVE_D);
+  final double STRAFE_OFFSET = 0;
+  PIDController strafeController = new PIDController(DRIVE_P, 0, DRIVE_D);
   double strafeSpeed;
 
   /** Creates a new AutoAlignCmd. */
-  public VisionStrafeAlignCmd(Limelight limelight, SwerveBase swerveBase) {
+  public TapeAlignCmd(Limelight limelight, SwerveBase swerveBase, char direction) {
     this.limelight = limelight;
     this.swerveBase = swerveBase;
+    this.direction = direction;
     addRequirements(limelight, swerveBase);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,7 +32,7 @@ public class VisionStrafeAlignCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    limelight.setTapeMode();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,9 +44,9 @@ public class VisionStrafeAlignCmd extends CommandBase {
 
     if (result.hasTargets()) {
       // Calculate angular turn power
-      double pitch = result.getBestTarget().getPitch();
+      double yaw = result.getBestTarget().getYaw();
      // SmartDashboard.putNumber("pitch valueCMD", pitch);
-      strafeSpeed = turnController.calculate(pitch, 0);
+      strafeSpeed = strafeController.calculate(yaw, 0+STRAFE_OFFSET);
      // SmartDashboard.putNumber("strafeSpeed speed", strafeSpeed);
 
     } else {
@@ -56,6 +58,7 @@ public class VisionStrafeAlignCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    limelight.setTagMode();
   }
 
   // Returns true when the command should end.
