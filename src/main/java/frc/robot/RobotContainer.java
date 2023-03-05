@@ -9,22 +9,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
-import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
+
 import frc.robot.commands.Arm.JoystickExtendArmCmd;
 import frc.robot.commands.Arm.JoystickTiltArmCmd;
-import frc.robot.commands.Arm.PIDExtendArmCmd;
-import frc.robot.commands.Arm.PIDTiltArmCmd;
+
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Cones.HighConeCmd;

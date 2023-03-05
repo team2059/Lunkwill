@@ -42,7 +42,7 @@ public class VisionAlignCmd extends CommandBase {
     if (result.hasTargets()) {
       // Calculate angular turn power
       rotationSpeed = turnController.calculate(result.getBestTarget().getYaw(), 0);
-      SmartDashboard.putNumber("rotation speed", rotationSpeed);
+     // SmartDashboard.putNumber("rotation speed", rotationSpeed);
 
     } else {
       rotationSpeed = 0;

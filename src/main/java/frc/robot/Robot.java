@@ -4,16 +4,15 @@
 
 package frc.robot;
 
-import org.ejml.dense.row.mult.SubmatrixOps_FDRM;
+
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -76,7 +75,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putData("cmd", CommandScheduler.getInstance());
+    //SmartDashboard.putData("cmd", CommandScheduler.getInstance());
 
   }
 

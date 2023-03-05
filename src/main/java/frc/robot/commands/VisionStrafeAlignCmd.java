@@ -43,9 +43,9 @@ public class VisionStrafeAlignCmd extends CommandBase {
     if (result.hasTargets()) {
       // Calculate angular turn power
       double pitch = result.getBestTarget().getPitch();
-      SmartDashboard.putNumber("pitch valueCMD", pitch);
+     // SmartDashboard.putNumber("pitch valueCMD", pitch);
       strafeSpeed = turnController.calculate(pitch, 0);
-      SmartDashboard.putNumber("strafeSpeed speed", strafeSpeed);
+     // SmartDashboard.putNumber("strafeSpeed speed", strafeSpeed);
 
     } else {
       strafeSpeed = 0;

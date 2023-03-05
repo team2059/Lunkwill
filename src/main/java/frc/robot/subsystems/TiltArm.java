@@ -5,19 +5,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
+
 
 public class TiltArm extends SubsystemBase {
 
@@ -71,10 +69,10 @@ public class TiltArm extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("TILTPERCENT", tiltMotor.getAppliedOutput());
+    // SmartDashboard.putNumber("TILTPERCENT", tiltMotor.getAppliedOutput());
 
-    SmartDashboard.putNumber("TILTVOLTAGE", tiltMotor.getBusVoltage());
-    SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
+    // SmartDashboard.putNumber("TILTVOLTAGE", tiltMotor.getBusVoltage());
+    // SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
 
   }
 

@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Arm;
 
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -26,7 +25,7 @@ public class PIDTiltArmCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("setPoint cmd", setpoint);
+    //SmartDashboard.putNumber("setPoint cmd", setpoint);
 
   }
 
@@ -35,8 +34,8 @@ public class PIDTiltArmCmd extends CommandBase {
   public void execute() {
     double thruBorePos = tiltArm.getThruBorePosition();
     output = tiltArm.getTiltController().calculate(thruBorePos, setpoint);
-    SmartDashboard.putNumber("thruBorePos", thruBorePos);
-    SmartDashboard.putNumber("tiltOutput", output);
+   // SmartDashboard.putNumber("thruBorePos", thruBorePos);
+    //SmartDashboard.putNumber("tiltOutput", output);
 
      System.out.println("tiltOutput" + output);
     tiltArm.getTiltMotor().set(output);
