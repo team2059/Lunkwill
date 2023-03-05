@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -327,6 +328,8 @@ public class SwerveBase extends SubsystemBase {
   }
 
   public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
+
+    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
 
     PIDController xController = new PIDController(3, 0, 0);
     PIDController yController = new PIDController(3, 0, 0);
