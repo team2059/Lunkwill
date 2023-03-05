@@ -81,11 +81,10 @@ public class RobotContainer {
 
   /* BUTTON BOX TWO */
   public static final ButtonBox buttonBoxTwo = new ButtonBox(2);
-  private final JoystickButton leftTagCube = new JoystickButton(buttonBoxTwo, 5);;
+  private final JoystickButton leftTagCone = new JoystickButton(buttonBoxTwo, 5);;
   private final JoystickButton centerTagCube = new JoystickButton(buttonBoxTwo, 6);
-  private final JoystickButton rightTagCube = new JoystickButton(buttonBoxTwo, 7);
-  private final JoystickButton leftTagCone = new JoystickButton(buttonBoxTwo, 3);;
-  private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 4);
+  private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 7);
+
   private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
 
   /* LOGITECH */
@@ -187,26 +186,14 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    if (allianceColor.equals("Red")) {
-      leftTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
-      centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
-      rightTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
-      leftTagCone
-          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_LEFT, 2));
-      rightTagCone
-          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_RIGHT, 2));
-      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
-    } else {
-      leftTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
-      centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
-      rightTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
-      leftTagCone
-          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_LEFT, 7));
-      rightTagCone
-          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_RIGHT, 7));
-      substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
-
-    }
+    centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES));
+    leftTagCone
+        .onTrue(
+            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT, 0));
+    rightTagCone
+        .onTrue(
+            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT, 0));
+    substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 0));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
@@ -235,8 +222,7 @@ public class RobotContainer {
     // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
     // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
 
-    gripperSolenoidToggle
-        .toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
+    gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
     // extenderSolenoidToggle.toggleOnTrue(toggleExtenderSolenoidCmd);
 

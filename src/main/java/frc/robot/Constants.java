@@ -29,17 +29,21 @@ public final class Constants {
 
         public static final class Presets {
 
+                public static final double CUBE_LIMELIGHT_OFFSET_INCHES = 2.5;
+                public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23;
+                public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23;
+
                 public static final double PICKUP_TILT = 0.35;
                 public static final double PICKUP_EXTEND = 14.47;
 
                 public static final double REST_TILT = 0.33;
                 public static final double REST_EXTEND = -1;
 
-                public static final double LOW_CUBE_ARM_TILT = 0.36;
+                public static final double LOW_CUBE_ARM_TILT = 0.355;
                 public static final double LOW_CUBE_ARM_EXTEND = 5;
 
                 public static final double MID_CUBE_ARM_TILT = 0.52;
-                public static final double MID_CUBE_ARM_EXTEND = 15;
+                public static final double MID_CUBE_ARM_EXTEND = 17.5;
 
                 public static final double UPPER_CUBE_ARM_TILT = 0.55;
                 public static final double UPPER_CUBE_ARM_EXTEND = 45;
@@ -104,12 +108,13 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double xCameraOffset = Units.inchesToMeters(2);
-                public static final double yCameraOffset = Units.inchesToMeters(-5.5);
-                public static final double originToFront = Units.inchesToMeters(18.75 + 14.625);
-                public static final double originToSide = Units.inchesToMeters(0);
-                public static final double CONE_TAG_OFFSET_INCHES_LEFT = 23;
-                public static final double CONE_TAG_OFFSET_INCHES_RIGHT = -23;
+                public static final double xCameraOffsetInches = 2;
+                public static final double yCameraOffsetInches = -5.5;
+                // public static final double originToFront = Units.inchesToMeters(18.75 +
+                // 14.625);
+                public static final double originToFrontInches = 33;
+
+               
 
         }
 

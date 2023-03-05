@@ -34,15 +34,17 @@ public class GoToTagCmd extends SequentialCommandGroup {
         SwerveBase swerveBase;
         Limelight limelight;
         double sideOffset;
+        double frontOffset;
         int tagId;
 
         /** Creates a new SequentialChaseTagCmd. */
         public GoToTagCmd(SwerveBase swerveBase,
-                        Limelight limelight, double sideOffset, int tagId) {
+                        Limelight limelight, double sideOffset, double frontOffset) {
                 this.limelight = limelight;
                 this.swerveBase = swerveBase;
                 this.sideOffset = sideOffset;
-                this.tagId = tagId;
+                this.frontOffset = frontOffset;
+
                 addRequirements(limelight, swerveBase);
                 addCommands(new ProxyCommand(() -> getCommand()), new InstantCommand(() -> swerveBase.stopModules()));
         }
@@ -59,22 +61,7 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         return new InstantCommand();
                 } else {
 
-                        var listOfTargets = result.getTargets();
-                        var bestTarget = new PhotonTrackedTarget();
-
-                        for (int i = 0; i < listOfTargets.size(); i++) {
-                                if (listOfTargets.get(i).getFiducialId() == tagId) {
-                                        System.out.println("target " +listOfTargets.get(i).getFiducialId());
-                                        System.out.println("tag ID =" + tagId);
-                                        bestTarget = listOfTargets.get(i);
-                                        break;
-                                } else {
-                                        return new InstantCommand();
-                                }
-
-                                // safeguard at default target not in alliance color
-                                // bestTarget = result.getBestTarget();
-                        }
+                        var bestTarget = result.getBestTarget();
 
                         double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
 
@@ -86,7 +73,9 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         Rotation2d rf_to_ri = new Rotation2d(yawTheta - Math.PI);
 
                         // april tag in robot final coordiante frame
-                        Translation2d A_rf = new Translation2d(LimelightConstants.originToFront,
+                        Translation2d A_rf = new Translation2d(
+                                        Units.inchesToMeters(LimelightConstants.originToFrontInches)
+                                                        + Units.inchesToMeters(frontOffset),
                                         Units.inchesToMeters(sideOffset));
                         System.out.println("A in robot final" + A_rf.toString());
 
@@ -95,8 +84,9 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         System.out.println("A in limelight initial" + A_l0.toString());
 
                         // limelight in robot initial coordinate frame
-                        Translation2d Originl0_rO = new Translation2d(LimelightConstants.xCameraOffset,
-                                        LimelightConstants.yCameraOffset);
+                        Translation2d Originl0_rO = new Translation2d(
+                                        Units.inchesToMeters(LimelightConstants.xCameraOffsetInches),
+                                        Units.inchesToMeters(LimelightConstants.yCameraOffsetInches));
                         System.out.println("Limelight in robot initial" + Originl0_rO.toString());
 
                         // april tag in robot initial coordinate frame
