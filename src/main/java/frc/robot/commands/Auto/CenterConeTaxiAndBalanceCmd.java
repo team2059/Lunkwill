@@ -5,6 +5,7 @@
 package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoBalanceCmd;
 import frc.robot.commands.Arm.Cones.HighConeCmd;
 import frc.robot.commands.Arm.Cones.MidConeCmd;
 import frc.robot.subsystems.ExtendArm;
@@ -21,7 +22,7 @@ public class CenterConeTaxiAndBalanceCmd extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new MidConeCmd(tiltArm, extendArm, pneumatics), swerveBase.followPathCmd("centerConeTaxiAndBalance"),
+    addCommands(new MidConeCmd(tiltArm, extendArm, pneumatics), swerveBase.followPathCmd("centerToTaxi"),
         new AutoBalanceCmd(swerveBase, -1));
   }
 }
