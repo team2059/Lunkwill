@@ -43,7 +43,7 @@ public final class Constants {
                 public static final double LOW_CUBE_ARM_EXTEND = 5;
 
                 public static final double MID_CUBE_ARM_TILT = 0.52;
-                public static final double MID_CUBE_ARM_EXTEND = 17.5;
+                public static final double MID_CUBE_ARM_EXTEND = 20;
 
                 public static final double UPPER_CUBE_ARM_TILT = 0.55;
                 public static final double UPPER_CUBE_ARM_EXTEND = 45;

@@ -12,6 +12,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -151,10 +152,10 @@ public class SwerveBase extends SubsystemBase {
         getHeading().getDegrees());
 
     // SmartDashboard.putNumber("yaw",
-    //     navX.getYaw());
+    // navX.getYaw());
 
     // SmartDashboard.putNumber("pitch",
-    //     navX.getPitch());
+    // navX.getPitch());
 
   }
 

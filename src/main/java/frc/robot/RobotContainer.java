@@ -30,7 +30,8 @@ import frc.robot.commands.Arm.Cubes.HighCubeCmd;
 import frc.robot.commands.Arm.Cubes.LowCubeCmd;
 import frc.robot.commands.Arm.Cubes.MidCubeCmd;
 import frc.robot.commands.Auto.AutoBalanceCmd;
-import frc.robot.commands.Auto.GoToTagCmd;
+import frc.robot.commands.Auto.CenterConeAndBalance;
+import frc.robot.commands.Auto.CenterConeTaxiAndBalanceCmd;
 import frc.robot.subsystems.*;
 
 // import com.pathplanner.lib.*;
@@ -156,11 +157,11 @@ public class RobotContainer {
     try
 
     {
-      autoChooser.setDefaultOption("simple",
-          new SequentialCommandGroup(swerveBase.followPathCmd("simple"), new AutoBalanceCmd(swerveBase)));
+      autoChooser.setDefaultOption("centerConeTaxiAndBalance",
+          new CenterConeTaxiAndBalanceCmd(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.addOption("complex",
-          new SequentialCommandGroup(swerveBase.followPathCmd("complex"), new AutoBalanceCmd(swerveBase)));
+      autoChooser.addOption("CenterConeAndBalance",
+          new CenterConeAndBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {

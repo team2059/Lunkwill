@@ -17,10 +17,12 @@ public class AutoBalanceCmd extends CommandBase {
   double previousVelocity = 0;
   double driveSpeed = 0;
   int counter = 0;
+  int direction;
 
   /** Creates a new AutoBalanceCmd. */
-  public AutoBalanceCmd(SwerveBase swerveBase) {
+  public AutoBalanceCmd(SwerveBase swerveBase, int direction) {
     this.swerveBase = swerveBase;
+    this.direction = direction;
     addRequirements(swerveBase);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -45,12 +47,12 @@ public class AutoBalanceCmd extends CommandBase {
     error = 0 - roll;
     // System.out.println("error" + error);
     if (haveIBeenTilted == false) {
-      driveSpeed = 0.5;
+      driveSpeed = direction * 0.5;
       swerveBase.drive(driveSpeed, 0, 0, true, true);
 
     } else {
 
-      driveSpeed = Math.copySign(driveSpeed, error);
+      driveSpeed = direction * Math.copySign(driveSpeed, error);
 
       double currentVelocity = swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond();
 
@@ -66,7 +68,7 @@ public class AutoBalanceCmd extends CommandBase {
 
         System.out.println("driveSpeed after = " + driveSpeed);
       }
-      if (Math.abs(roll) < 8.75) {
+      if (Math.abs(roll) < 10) {
         swerveBase.drive(0, 0, 0, true, true);
       } else {
         if (Math.abs(driveSpeed) < 0.33) {
@@ -93,7 +95,9 @@ public class AutoBalanceCmd extends CommandBase {
   public boolean isFinished() {
     return false;
     // return (haveIBeenTilted && Math.abs(error) < 2.5);
-  //  return (haveIBeenTilted && (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) < 5e-7));
+    // return (haveIBeenTilted &&
+    // (Math.abs(swerveBase.getFrontRight().getCurrentVelocityMetersPerSecond()) <
+    // 5e-7));
     // return false;
   }
 }
