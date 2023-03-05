@@ -108,6 +108,9 @@ public final class Constants {
                 public static final double yCameraOffset = Units.inchesToMeters(-5.5);
                 public static final double originToFront = Units.inchesToMeters(18.75 + 14.625);
                 public static final double originToSide = Units.inchesToMeters(0);
+                public static final double CONE_TAG_OFFSET_INCHES_LEFT = 23;
+                public static final double CONE_TAG_OFFSET_INCHES_RIGHT = -23;
+
         }
 
         public static final class AutoConstants {

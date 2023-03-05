@@ -65,7 +65,12 @@ public class GoToTagCmd extends SequentialCommandGroup {
 
                         for (int i = 0; i < listOfTargets.size(); i++) {
                                 if (listOfTargets.get(i).getFiducialId() == tagId) {
+                                        System.out.println("target " +listOfTargets.get(i).getFiducialId());
+                                        System.out.println("tag ID =" + tagId);
                                         bestTarget = listOfTargets.get(i);
+                                        break;
+                                } else {
+                                        return new InstantCommand();
                                 }
 
                                 // safeguard at default target not in alliance color

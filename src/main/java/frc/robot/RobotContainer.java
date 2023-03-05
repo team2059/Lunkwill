@@ -71,10 +71,11 @@ public class RobotContainer {
   private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kX.value);
 
   // april tags
-  private final JoystickButton leftTag = new JoystickButton(buttonBoxTwo, 4);;
-  private final JoystickButton centerTag = new JoystickButton(buttonBoxTwo, 6);
-  private final JoystickButton rightTag = new JoystickButton(buttonBoxTwo, 7);
-
+  private final JoystickButton leftTagCube = new JoystickButton(buttonBoxTwo, 5);;
+  private final JoystickButton centerTagCube = new JoystickButton(buttonBoxTwo, 6);
+  private final JoystickButton rightTagCube = new JoystickButton(buttonBoxTwo, 7);
+  private final JoystickButton leftTagCone = new JoystickButton(buttonBoxTwo, 3);;
+  private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 4);
   private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
 
   // middle cube nodes
@@ -181,14 +182,22 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
     if (allianceColor.equals("Red")) {
-      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
-      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
-      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
+      leftTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 1));
+      centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 2));
+      rightTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 3));
+      leftTagCone
+          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_LEFT, 2));
+      rightTagCone
+          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_RIGHT, 2));
       substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 5));
     } else {
-      leftTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
-      centerTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
-      rightTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
+      leftTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 6));
+      centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 7));
+      rightTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 8));
+      leftTagCone
+          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_LEFT, 7));
+      rightTagCone
+          .onTrue(new GoToTagCmd(swerveBase, limelight, Constants.LimelightConstants.CONE_TAG_OFFSET_INCHES_RIGHT, 7));
       substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 4));
 
     }
