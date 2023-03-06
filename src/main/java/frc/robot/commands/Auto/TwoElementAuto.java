@@ -40,8 +40,7 @@ public class TwoElementAuto extends SequentialCommandGroup {
         new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.25),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
         swerveBase.followPathCmd("goBackFromElement"),
-        new ProxyCommand(
-            () -> new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES)),
+        new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES-2),
         new MidCubeCmd(tiltArm, extendArm, pneumatics));
   }
 }
