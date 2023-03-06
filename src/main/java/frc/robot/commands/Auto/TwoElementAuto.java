@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -36,10 +37,11 @@ public class TwoElementAuto extends SequentialCommandGroup {
         new ParallelCommandGroup(swerveBase.followPathCmd("goToElement"),
             new SequentialCommandGroup(new WaitCommand(2.5),
                 new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics))),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()),
+        new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.33),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
-        swerveBase.followPathCmd("goBackFromElement"), new InstantCommand(() -> swerveBase.resetOdometry(new Pose2d())),
-        new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES),
+        swerveBase.followPathCmd("goBackFromElement"),
+        new ProxyCommand(
+            () -> new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES)),
         new MidCubeCmd(tiltArm, extendArm, pneumatics));
   }
 }
