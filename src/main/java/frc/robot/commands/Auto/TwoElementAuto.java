@@ -37,7 +37,7 @@ public class TwoElementAuto extends SequentialCommandGroup {
         new ParallelCommandGroup(swerveBase.followPathCmd("goToElement"),
             new SequentialCommandGroup(new WaitCommand(2.5),
                 new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics))),
-        new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.33),
+        new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.25),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
         swerveBase.followPathCmd("goBackFromElement"),
         new ProxyCommand(

@@ -30,8 +30,10 @@ import frc.robot.commands.Arm.Cubes.HighCubeCmd;
 import frc.robot.commands.Arm.Cubes.LowCubeCmd;
 import frc.robot.commands.Arm.Cubes.MidCubeCmd;
 import frc.robot.commands.Auto.CenterConeAndBalance;
-import frc.robot.commands.Auto.CenterConeTaxiAndBalanceCmd;
+import frc.robot.commands.Auto.CenterConeTaxiBalanceCmd;
+import frc.robot.commands.Auto.LeftConeTaxi;
 import frc.robot.commands.Auto.LeftConeTaxiBalance;
+import frc.robot.commands.Auto.RightConeTaxi;
 import frc.robot.commands.Auto.RightConeTaxiBalance;
 import frc.robot.commands.Auto.TwoElementAuto;
 import frc.robot.subsystems.*;
@@ -160,12 +162,17 @@ public class RobotContainer {
 
     {
       autoChooser.setDefaultOption("CenterConeTaxiAndBalanceCmd",
-          new CenterConeTaxiAndBalanceCmd(swerveBase, tiltArm, extendArm, pneumatics));
+          new CenterConeTaxiBalanceCmd(swerveBase, tiltArm, extendArm, pneumatics));
 
       autoChooser.addOption("LeftConeTaxiBalance", new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       autoChooser.addOption("RightConeTaxiBalance",
           new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+
+      autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+
+      autoChooser.addOption("RightConeTaxi",
+          new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
 
       // autoChooser.addOption("CenterConeAndBalanceANDTaxi",
       // new CenterConeAndBalance(swerveBase, tiltArm, extendArm, pneumatics));
@@ -212,27 +219,9 @@ public class RobotContainer {
 
     pickUpArmPosition.onTrue(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics));
 
-    // extendArmToMax.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics,
-    // 45));
-    // extendArmToZero.onTrue(new ExtendToSetpointSequenceCmd(extendArm, pneumatics,
-    // Constants.Presets.REST_EXTEND));
     zeroEntireArm.onTrue(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
 
-    // tilt50.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.31)));
-    // tilt100.onTrue(new ProxyCommand(() -> new PIDTiltArmCmd(arm, 0.55)));
-    // extend50.onTrue(new SequentialCommandGroup(new InstantCommand(() ->
-    // pneumatics.getExtenderSolenoid().set(kForward)),
-    // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
-    // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 2.5))));
-    // extend100
-    // .onTrue(new SequentialCommandGroup(new InstantCommand(() ->
-    // pneumatics.getExtenderSolenoid().set(kForward)),
-    // new InstantCommand(() -> arm.getExtensionMotor().set(-0.5)).withTimeout(0.2),
-    // new ProxyCommand(() -> new PIDExtendArmCmd(arm, pneumatics, 44))));
-
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
-
-    // extenderSolenoidToggle.toggleOnTrue(toggleExtenderSolenoidCmd);
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
