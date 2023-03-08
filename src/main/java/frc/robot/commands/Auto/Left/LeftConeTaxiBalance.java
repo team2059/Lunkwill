@@ -7,7 +7,6 @@ package frc.robot.commands.Auto.Left;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoBalanceCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
-import frc.robot.commands.Arm.Presets.ConePresets.MidConeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.SwerveBase;

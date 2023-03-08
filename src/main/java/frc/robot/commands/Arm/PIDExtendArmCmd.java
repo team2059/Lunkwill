@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ExtendArm;
-import frc.robot.subsystems.Pneumatics;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class PIDExtendArmCmd extends CommandBase {
   private ExtendArm extendArm;

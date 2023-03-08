@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.server.PathPlannerServer;
-
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -40,7 +37,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.getExtendArm().setServoAngle(Constants.ArmConstants.restServoAngle);
+
     // CameraServer.startAutomaticCapture();
     // webcam.setResolution(1280/10, 720/10);
     // SmartDashboard.putNumber("fps", webcam.getActualFPS());
@@ -49,7 +46,8 @@ public class Robot extends TimedRobot {
     // m_robotContainer.getSwerveSubsytem().getNavX().reset();
     // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
     // Pose2d(), new Rotation2d());
-    PathPlannerServer.startServer(5811); // 5811 = port number. adjust this according to your needs
+    // PathPlannerServer.startServer(5811); // 5811 = port number. adjust this
+    // according to your needs
 
     // SmartDashboard.putData(CommandScheduler.getInstance());
   }
@@ -96,6 +94,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.getExtendArm().setServoAngle(Constants.ArmConstants.restServoAngle);
     // m_robotContainer.getSwerveSubsytem().getNavX().reset();
     // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
     // Rotation2d(),

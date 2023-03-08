@@ -6,7 +6,6 @@ package frc.robot.commands.Auto.Center;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoBalanceCmd;
-import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;

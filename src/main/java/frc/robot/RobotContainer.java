@@ -48,7 +48,7 @@ public class RobotContainer {
   public final String allianceColor = DriverStation.getAlliance().toString();
 
   /* XBOX CONTROLLER */
-  public static final XboxController controller = new XboxController(0);
+  public final XboxController controller = new XboxController(0);
   // private final int kExtendArmToZero = 4;
 
   // private final int kExtendArmToMax = 6;
@@ -68,7 +68,7 @@ public class RobotContainer {
   private final JoystickButton zeroEntireArm = new JoystickButton(controller, kZeroEntireArm);
 
   /* BUTTON BOX ONE */
-  public static final ButtonBox buttonBox = new ButtonBox(1);
+  public final ButtonBox buttonBox = new ButtonBox(1);
   private final JoystickButton lowCube = new JoystickButton(buttonBox, 8);
   private final JoystickButton midCube = new JoystickButton(buttonBox, 5);
   private final JoystickButton highCube = new JoystickButton(buttonBox, 2);
@@ -77,16 +77,15 @@ public class RobotContainer {
   private final JoystickButton highCone = new JoystickButton(buttonBox, 3);
 
   /* BUTTON BOX TWO */
-  public static final ButtonBox buttonBoxTwo = new ButtonBox(2);
+  public final ButtonBox buttonBoxTwo = new ButtonBox(2);
   private final JoystickButton leftTagCone = new JoystickButton(buttonBoxTwo, 5);;
   private final JoystickButton centerTagCube = new JoystickButton(buttonBoxTwo, 6);
-  private final JoystickButton autobalance = new JoystickButton(logitech, 4);
   private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 7);
 
   private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
 
   /* LOGITECH */
-  public static final Joystick logitech = new Joystick(3);
+  public final Joystick logitech = new Joystick(3);
   private final int kLogitechTranslationAxis = 1;
   private final int kLogitechStrafeAxis = 0;
   private final int kLogitechRotationAxis = 2;
@@ -105,16 +104,12 @@ public class RobotContainer {
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
   private final Limelight limelight = new Limelight();
-  private final static TiltArm tiltArm = new TiltArm();
+  private final TiltArm tiltArm = new TiltArm();
   private final Pneumatics pneumatics = new Pneumatics();
 
   private final ExtendArm extendArm = new ExtendArm();
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
-
-  public ExtendArm getExtendArm() {
-    return extendArm;
-  }
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -148,7 +143,7 @@ public class RobotContainer {
         () -> !logitech.getRawButton(kFieldOriented),
         () -> logitech.getRawButton(kInverted)));
 
-    extendArm.setDefaultCommand(new JoystickExtendArmCmd(pneumatics, extendArm,
+    extendArm.setDefaultCommand(new JoystickExtendArmCmd(extendArm,
         () -> -controller.getRawAxis(kExtendAxis) * 0.5));
 
     tiltArm.setDefaultCommand(new JoystickTiltArmCmd(tiltArm, () -> -controller.getRawAxis(kTiltAxis) * 0.5));
@@ -201,8 +196,6 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    autobalance.onTrue(new AutoBalanceCmd(swerveBase, -1));
-
     centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES));
     leftTagCone
         .onTrue(
@@ -243,5 +236,9 @@ public class RobotContainer {
       DriverStation.reportError("auto choose NULL somewhere in getAutonomousCommand in RobotContainer.java", null);
       return new InstantCommand();
     }
+  }
+
+  public ExtendArm getExtendArm() {
+    return extendArm;
   }
 }

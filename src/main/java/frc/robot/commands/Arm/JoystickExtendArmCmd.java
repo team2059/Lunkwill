@@ -7,24 +7,22 @@ package frc.robot.commands.Arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ExtendArm;
-import frc.robot.subsystems.Pneumatics;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 import java.util.function.DoubleSupplier;
 
 public class JoystickExtendArmCmd extends CommandBase {
-  private Pneumatics pneumatics;
+
   private ExtendArm extendArm;
   private DoubleSupplier extendOutput;
   // boolean interrupted = false;
 
   /** Creates a new ManualExtendCmd. */
-  public JoystickExtendArmCmd(Pneumatics pneumatics, ExtendArm extendArm, DoubleSupplier extendOutput) {
-    this.pneumatics = pneumatics;
+  public JoystickExtendArmCmd(ExtendArm extendArm, DoubleSupplier extendOutput) {
+
     this.extendArm = extendArm;
     this.extendOutput = extendOutput;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(pneumatics, extendArm);
+    addRequirements(extendArm);
   }
 
   // Called when the command is initially scheduled.
