@@ -54,6 +54,6 @@ public class PIDTiltArmCmd extends CommandBase {
   public boolean isFinished() {
     // return (arm.getThruBorePosition()) > (0.95 * setpoint);
     // return Math.abs(output) < 0.05;
-    return (Math.abs(output) < 0.1);
+    return (Math.abs(output) < 0.125);
   }
 }

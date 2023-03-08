@@ -49,11 +49,11 @@ public class Pneumatics extends SubsystemBase {
     pressureSwitch = phCompressor.getPressureSwitchValue();
     compressorCurrent = phCompressor.getCurrent();
 
-    SmartDashboard.putBoolean("Compressor Enabled", compressorEnabled);
-    SmartDashboard.putBoolean("Pressure Switch", pressureSwitch);
-    SmartDashboard.putNumber("Compressor Current", compressorCurrent);
-    SmartDashboard.putBoolean("Gripper State", gripperState);
-    SmartDashboard.putBoolean("Extender State", extenderState);
+    // SmartDashboard.putBoolean("Compressor Enabled", compressorEnabled);
+    // SmartDashboard.putBoolean("Pressure Switch", pressureSwitch);
+    // SmartDashboard.putNumber("Compressor Current", compressorCurrent);
+    // SmartDashboard.putBoolean("Gripper State", gripperState);
+    // SmartDashboard.putBoolean("Extender State", extenderState);
   }
 
   public void setGripperState(Value kDirection) {

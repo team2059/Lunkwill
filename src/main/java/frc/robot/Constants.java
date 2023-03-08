@@ -48,10 +48,10 @@ public final class Constants {
                 public static final double UPPER_CUBE_ARM_TILT = 0.55;
                 public static final double UPPER_CUBE_ARM_EXTEND = 45;
 
-                public static final double MID_CONE_ARM_TILT = 0.56;
+                public static final double MID_CONE_ARM_TILT = 0.51;
                 public static final double MID_CONE_ARM_EXTEND = 19;
 
-                public static final double UPPER_CONE_ARM_TILT = 0.59;
+                public static final double UPPER_CONE_ARM_TILT = 0.54;
                 public static final double UPPER_CONE_ARM_EXTEND = 45;
         }
 

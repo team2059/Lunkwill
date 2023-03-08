@@ -307,7 +307,8 @@ public class SwerveBase extends SubsystemBase {
   public SequentialCommandGroup followPathCmd(String pathName) {
 
     PathPlannerTrajectory trajectory = getPathPlannerTrajectory(pathName);
-    PathPlannerState state = trajectory.getInitialState();
+    PathPlannerState state = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(),
+        DriverStation.getAlliance());
 
     Command ppCommand = getPathPlannerCommand(trajectory);
 
@@ -329,7 +330,11 @@ public class SwerveBase extends SubsystemBase {
 
   public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
+    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory,
+        DriverStation.getAlliance());
+
+    // System.out.println("GET ALLIANCE: " +
+    // DriverStation.getAlliance().toString());
 
     PIDController xController = new PIDController(3, 0, 0);
     PIDController yController = new PIDController(3, 0, 0);

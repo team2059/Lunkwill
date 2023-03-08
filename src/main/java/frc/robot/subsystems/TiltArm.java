@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-
 public class TiltArm extends SubsystemBase {
 
   public CANSparkMax getTiltMotor() {
@@ -72,7 +71,7 @@ public class TiltArm extends SubsystemBase {
     // SmartDashboard.putNumber("TILTPERCENT", tiltMotor.getAppliedOutput());
 
     // SmartDashboard.putNumber("TILTVOLTAGE", tiltMotor.getBusVoltage());
-    // SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("thru bore pos", thruBoreEncoder.getAbsolutePosition());
 
   }
 

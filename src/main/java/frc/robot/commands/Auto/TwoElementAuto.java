@@ -4,20 +4,17 @@
 
 package frc.robot.commands.Auto;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.GoToTagCmd;
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
-import frc.robot.commands.Arm.Cones.HighConeCmd;
-import frc.robot.commands.Arm.Cones.MidConeCmd;
-import frc.robot.commands.Arm.Cubes.MidCubeCmd;
+import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pneumatics;

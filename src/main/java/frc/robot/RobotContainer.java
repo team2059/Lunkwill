@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 
@@ -24,18 +22,12 @@ import frc.robot.commands.Arm.JoystickTiltArmCmd;
 
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
-import frc.robot.commands.Arm.Cones.HighConeCmd;
-import frc.robot.commands.Arm.Cones.MidConeCmd;
-import frc.robot.commands.Arm.Cubes.HighCubeCmd;
-import frc.robot.commands.Arm.Cubes.LowCubeCmd;
-import frc.robot.commands.Arm.Cubes.MidCubeCmd;
-import frc.robot.commands.Auto.CenterConeAndBalance;
-import frc.robot.commands.Auto.CenterConeTaxiBalanceCmd;
-import frc.robot.commands.Auto.LeftConeTaxi;
-import frc.robot.commands.Auto.LeftConeTaxiBalance;
-import frc.robot.commands.Auto.RightConeTaxi;
-import frc.robot.commands.Auto.RightConeTaxiBalance;
-import frc.robot.commands.Auto.TwoElementAuto;
+import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
+import frc.robot.commands.Arm.Presets.ConePresets.MidConeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
+import frc.robot.commands.Auto.Center.CenterCubeTaxi;
 import frc.robot.subsystems.*;
 
 // import com.pathplanner.lib.*;
@@ -88,6 +80,7 @@ public class RobotContainer {
   public static final ButtonBox buttonBoxTwo = new ButtonBox(2);
   private final JoystickButton leftTagCone = new JoystickButton(buttonBoxTwo, 5);;
   private final JoystickButton centerTagCube = new JoystickButton(buttonBoxTwo, 6);
+  private final JoystickButton autobalance = new JoystickButton(logitech, 4);
   private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 7);
 
   private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
@@ -114,6 +107,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight();
   private final static TiltArm tiltArm = new TiltArm();
   public static final Pneumatics pneumatics = new Pneumatics();
+
   private final ExtendArm extendArm = new ExtendArm();
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
@@ -161,18 +155,20 @@ public class RobotContainer {
     try
 
     {
-      autoChooser.setDefaultOption("CenterConeTaxiAndBalanceCmd",
-          new CenterConeTaxiBalanceCmd(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.setDefaultOption("auto",
+          new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.addOption("LeftConeTaxiBalance", new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      // autoChooser.addOption("LeftConeTaxiBalance", new
+      // LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.addOption("RightConeTaxiBalance",
-          new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      // autoChooser.addOption("RightConeTaxiBalance",
+      // new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      // autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm,
+      // extendArm, pneumatics));
 
-      autoChooser.addOption("RightConeTaxi",
-          new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      // autoChooser.addOption("RightConeTaxi",
+      // new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
 
       // autoChooser.addOption("CenterConeAndBalanceANDTaxi",
       // new CenterConeAndBalance(swerveBase, tiltArm, extendArm, pneumatics));
@@ -200,6 +196,8 @@ public class RobotContainer {
     /* Driver Buttons */
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
+
+    autobalance.onTrue(new AutoBalanceCmd(swerveBase, -1));
 
     centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES));
     leftTagCone
