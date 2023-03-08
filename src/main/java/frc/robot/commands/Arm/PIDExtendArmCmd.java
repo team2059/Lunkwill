@@ -6,22 +6,22 @@ package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class PIDExtendArmCmd extends CommandBase {
   private ExtendArm extendArm;
-  private Pneumatics pneumatics;
   private double setpoint;
   double output;
 
   /** Creates a new PIDExtendArmCmd. */
-  public PIDExtendArmCmd(ExtendArm extendArm, Pneumatics pneumatics, double setpoint) {
+  public PIDExtendArmCmd(ExtendArm extendArm, double setpoint) {
     this.extendArm = extendArm;
-    this.pneumatics = pneumatics;
+
     this.setpoint = setpoint;
-    addRequirements(extendArm, pneumatics);
+    addRequirements(extendArm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -47,7 +47,8 @@ public class PIDExtendArmCmd extends CommandBase {
     System.out.println("extendOutput" + output);
     // SmartDashboard.putNumber("extendPos", position);
     // SmartDashboard.putNumber("extendOutput", output);
-    // SmartDashboard.putNumber("extendOutput", extendArm.getExtensionMotor().getAppliedOutput());
+    // SmartDashboard.putNumber("extendOutput",
+    // extendArm.getExtensionMotor().getAppliedOutput());
 
     extendArm.getExtensionMotor().set(output);
   }
@@ -57,9 +58,8 @@ public class PIDExtendArmCmd extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("DONE EXTENDING");
     extendArm.getExtensionMotor().set(0);
-    pneumatics.setExtenderState(kReverse);
 
-    // pneumatics.toggleExtenderSolenoid();
+    extendArm.setServoAngle(Constants.ArmConstants.restServoAngle);
 
   }
 

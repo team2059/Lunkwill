@@ -26,7 +26,7 @@ public class HighCubeCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CUBE_ARM_TILT),
-        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.UPPER_CUBE_ARM_EXTEND),
+        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.UPPER_CUBE_ARM_EXTEND),
         new InstantCommand(() -> pneumatics.toggleGripperSolenoid()),new WaitCommand(0.5), 
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }

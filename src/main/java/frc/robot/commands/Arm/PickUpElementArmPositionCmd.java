@@ -22,7 +22,7 @@ public class PickUpElementArmPositionCmd extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new PIDTiltArmCmd(tiltArm, Constants.Presets.PICKUP_TILT),
-        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.PICKUP_EXTEND),
+        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.PICKUP_EXTEND),
         new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)));
   }
 }

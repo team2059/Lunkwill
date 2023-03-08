@@ -5,6 +5,7 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
@@ -39,13 +40,15 @@ public class JoystickExtendArmCmd extends CommandBase {
     // if (interrupted) {
     // pneumatics.toggleGripperSolenoid();
     // }
-   // System.out.println(extendOutput.getAsDouble());
+    // System.out.println(extendOutput.getAsDouble());
     if (Math.abs(extendOutput.getAsDouble()) < 0.075) {
       // extendOutput = 0;
       extendArm.getExtensionMotor().set(0);
-      pneumatics.setExtenderState(kReverse);
+      // pneumatics.setExtenderState(kReverse);
+      extendArm.setServoAngle(Constants.ArmConstants.restServoAngle);
     } else {
-      pneumatics.setExtenderState(kForward);
+      // pneumatics.setExtenderState(kForward);
+      extendArm.setServoAngle(Constants.ArmConstants.extendServoAngle);
     }
     // System.out.println(extendOutput);
     if (Math.abs(extendOutput.getAsDouble()) > 0.3) {

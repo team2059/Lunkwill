@@ -106,11 +106,15 @@ public class RobotContainer {
   private final SwerveBase swerveBase = new SwerveBase();
   private final Limelight limelight = new Limelight();
   private final static TiltArm tiltArm = new TiltArm();
-  public static final Pneumatics pneumatics = new Pneumatics();
+  private final Pneumatics pneumatics = new Pneumatics();
 
   private final ExtendArm extendArm = new ExtendArm();
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
+
+  public ExtendArm getExtendArm() {
+    return extendArm;
+  }
 
   SendableChooser<Command> autoChooser = new SendableChooser<>();
 

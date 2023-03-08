@@ -15,6 +15,8 @@ public final class Constants {
 
                 public static final int tiltId = 16;
                 public static final int extendId = 9;
+                public static final int restServoAngle = 15;
+                public static final int extendServoAngle = 25;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;
                 public static final double tiltkD = 0.01;
@@ -113,8 +115,6 @@ public final class Constants {
                 // public static final double originToFront = Units.inchesToMeters(18.75 +
                 // 14.625);
                 public static final double originToFrontInches = 33;
-
-               
 
         }
 

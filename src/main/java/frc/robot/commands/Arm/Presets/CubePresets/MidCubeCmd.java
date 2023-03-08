@@ -26,7 +26,7 @@ public class MidCubeCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CUBE_ARM_TILT),
-        new ExtendToSetpointSequenceCmd(extendArm, pneumatics, Constants.Presets.MID_CUBE_ARM_EXTEND),
+        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.MID_CUBE_ARM_EXTEND),
         new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }

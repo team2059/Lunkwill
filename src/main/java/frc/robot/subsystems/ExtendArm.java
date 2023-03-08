@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -40,6 +41,7 @@ public class ExtendArm extends SubsystemBase {
 
   public DigitalInput limitSwitch;
   public boolean isLimitReached;
+  public Servo servo;
 
   public boolean isLimitReached() {
     return isLimitReached;
@@ -56,6 +58,7 @@ public class ExtendArm extends SubsystemBase {
 
     extensionEncoder = extensionMotor.getEncoder();
     limitSwitch = new DigitalInput(9);
+    servo = new Servo(9);
 
     extensionController = new PIDController(Constants.ArmConstants.extensionkP, 0, 0.001);
 
@@ -74,8 +77,13 @@ public class ExtendArm extends SubsystemBase {
 
   }
 
+  public void setServoAngle(double angle) {
+    servo.setAngle(angle);
+  }
+
   @Override
   public void periodic() {
+
     isLimitReached = !limitSwitch.get();
 
     SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());

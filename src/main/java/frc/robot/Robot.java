@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-
-
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -42,7 +40,8 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-   // CameraServer.startAutomaticCapture();
+    m_robotContainer.getExtendArm().setServoAngle(Constants.ArmConstants.restServoAngle);
+    // CameraServer.startAutomaticCapture();
     // webcam.setResolution(1280/10, 720/10);
     // SmartDashboard.putNumber("fps", webcam.getActualFPS());
     // SmartDashboard.putNumber("byterate", webcam.getActualDataRate());
@@ -51,7 +50,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.getSwerveSubsytem().getOdometry().resetPosition(new
     // Pose2d(), new Rotation2d());
     PathPlannerServer.startServer(5811); // 5811 = port number. adjust this according to your needs
-   
+
     // SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
@@ -76,7 +75,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    //SmartDashboard.putData("cmd", CommandScheduler.getInstance());
+    // SmartDashboard.putData("cmd", CommandScheduler.getInstance());
 
   }
 
@@ -123,6 +122,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // m_robotContainer.extendArm.setServoAngle(15);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
