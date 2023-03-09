@@ -241,13 +241,13 @@ public class SwerveModule extends SubsystemBase {
 
     double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
-    if (RobotState.isAutonomous() || isAutoBalancing == true) {
-      driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
+    // if (RobotState.isAutonomous() || isAutoBalancing == true) {
+    //   driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
 
-    } else {
+    // } else {
 
       driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
-    }
+    //}
   }
 
   public void resetEncoders() {

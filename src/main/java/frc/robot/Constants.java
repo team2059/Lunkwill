@@ -15,7 +15,7 @@ public final class Constants {
 
                 public static final int tiltId = 16;
                 public static final int extendId = 9;
-                public static final int restServoAngle = 15;
+                public static final int restServoAngle = 12;
                 public static final int extendServoAngle = 25;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;
@@ -31,30 +31,39 @@ public final class Constants {
 
         public static final class Presets {
 
-                public static final double CUBE_LIMELIGHT_OFFSET_INCHES = 2.5;
+                public static final double CUBE_LIMELIGHT_OFFSET_INCHES = 2;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23;
+
+                public static final double SUBSTATION_TILT = 0.57;
+                public static final double SUBSTATION_EXTEND = 35;
+                public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -24;
+                public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 24;
+                public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT = 5;
+                
 
                 public static final double PICKUP_TILT = 0.35;
                 public static final double PICKUP_EXTEND = 14.47;
 
-                public static final double REST_TILT = 0.33;
-                public static final double REST_EXTEND = -1;
+                public static final double REST_TILT = 0.32;
+                public static final double REST_EXTEND = -2;
 
                 public static final double LOW_CUBE_ARM_TILT = 0.355;
                 public static final double LOW_CUBE_ARM_EXTEND = 5;
 
                 public static final double MID_CUBE_ARM_TILT = 0.52;
-                public static final double MID_CUBE_ARM_EXTEND = 20;
+                public static final double MID_CUBE_ARM_EXTEND = 25;
 
                 public static final double UPPER_CUBE_ARM_TILT = 0.55;
-                public static final double UPPER_CUBE_ARM_EXTEND = 45;
+                public static final double UPPER_CUBE_ARM_EXTEND = 50;
 
-                public static final double MID_CONE_ARM_TILT = 0.51;
-                public static final double MID_CONE_ARM_EXTEND = 19;
+                public static final double MID_CONE_ARM_TILT = 0.58;
+                public static final double MID_CONE_ARM_TILT_AFTER = MID_CONE_ARM_TILT - 0.075;
+                public static final double MID_CONE_ARM_EXTEND = 22.5;
 
-                public static final double UPPER_CONE_ARM_TILT = 0.54;
-                public static final double UPPER_CONE_ARM_EXTEND = 45;
+                public static final double UPPER_CONE_ARM_TILT = 0.59;
+                public static final double UPPER_CONE_ARM_TILT_AFTER = UPPER_CONE_ARM_TILT - 0.05;
+                public static final double UPPER_CONE_ARM_EXTEND = 55;
         }
 
         public static final class Swerve {

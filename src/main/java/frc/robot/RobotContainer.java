@@ -22,12 +22,15 @@ import frc.robot.commands.Arm.JoystickTiltArmCmd;
 
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
+import frc.robot.commands.Arm.Presets.SubstationPresetCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.MidConeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
+import frc.robot.commands.Auto.TwoElementAuto;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
+import frc.robot.commands.Auto.Center.CenterCubeTaxiBalance;
 import frc.robot.subsystems.*;
 
 // import com.pathplanner.lib.*;
@@ -82,13 +85,16 @@ public class RobotContainer {
   private final JoystickButton centerTagCube = new JoystickButton(buttonBoxTwo, 6);
   private final JoystickButton rightTagCone = new JoystickButton(buttonBoxTwo, 7);
 
-  private final JoystickButton substationTag = new JoystickButton(buttonBoxTwo, 8);
+  private final JoystickButton substationTagLeft = new JoystickButton(buttonBoxTwo, 4);
+  private final JoystickButton substationTagRight = new JoystickButton(buttonBoxTwo, 8);
+  private final JoystickButton substationArm = new JoystickButton(buttonBoxTwo, 9);
 
   /* LOGITECH */
   public final Joystick logitech = new Joystick(3);
   private final int kLogitechTranslationAxis = 1;
   private final int kLogitechStrafeAxis = 0;
   private final int kLogitechRotationAxis = 2;
+  private final int kLogitechSliderAxis = 3;
   private final int kZeroGyro = 5;
   private final int kFieldOriented = 1;
   private final int kInverted = 2;
@@ -140,6 +146,7 @@ public class RobotContainer {
 
     swerveBase.setDefaultCommand(new TeleopSwerve(swerveBase, () -> logitech.getRawAxis(kLogitechTranslationAxis),
         () -> logitech.getRawAxis(kLogitechStrafeAxis), () -> logitech.getRawAxis(kLogitechRotationAxis),
+        () -> logitech.getRawAxis(kLogitechSliderAxis),
         () -> !logitech.getRawButton(kFieldOriented),
         () -> logitech.getRawButton(kInverted)));
 
@@ -155,7 +162,7 @@ public class RobotContainer {
 
     {
       autoChooser.setDefaultOption("auto",
-          new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+          new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       // autoChooser.addOption("LeftConeTaxiBalance", new
       // LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
@@ -203,7 +210,15 @@ public class RobotContainer {
     rightTagCone
         .onTrue(
             new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT, 0));
-    substationTag.onTrue(new GoToTagCmd(swerveBase, limelight, 0, 0));
+    substationTagLeft.onTrue(
+        new GoToTagCmd(swerveBase, limelight, Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT,
+            Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
+
+    substationTagRight.onTrue(
+        new GoToTagCmd(swerveBase, limelight, Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT,
+            Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
+
+    substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));

@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,15 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
-
-
 public class Pneumatics extends SubsystemBase {
   Compressor phCompressor = new Compressor(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH);
   DoubleSolenoid gripperSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
       0, 1);
-  DoubleSolenoid extenderSolenoid = new DoubleSolenoid(Constants.Pneumatics.pneumaticsHubId, PneumaticsModuleType.REVPH,
-      2, 3);
-  boolean extenderState;
+
   boolean gripperState;
 
   boolean compressorEnabled;
@@ -33,11 +28,10 @@ public class Pneumatics extends SubsystemBase {
 
   /** Creates a new Pneumatics. */
   public Pneumatics() {
-    // phCompressor.disable();
-    phCompressor.enableDigital();
+    phCompressor.disable();
+    // phCompressor.enableDigital();
     gripperSolenoid.set(kReverse);
-    extenderSolenoid.set(kReverse);
-    extenderState = false;
+
     gripperState = false;
 
   }
@@ -66,24 +60,9 @@ public class Pneumatics extends SubsystemBase {
     // gripperState = !gripperState;
   }
 
-  public void setExtenderState(Value kDirection) {
-    extenderSolenoid.set(kDirection);
-    if (kDirection.equals(kForward)) {
-      extenderState = true;
-    } else {
-      extenderState = false;
-    }
-    // extenderState = !extenderState;
-  }
-
   public void toggleGripperSolenoid() {
     gripperSolenoid.toggle();
     gripperState = !gripperState;
-  }
-
-  public void toggleExtenderSolenoid() {
-    extenderSolenoid.toggle();
-    extenderState = !extenderState;
   }
 
   public boolean getCompressorEnabled() {
@@ -94,20 +73,12 @@ public class Pneumatics extends SubsystemBase {
     return gripperState;
   }
 
-  public boolean getExtenderState() {
-    return extenderState;
-  }
-
   public Compressor getCompressor() {
     return phCompressor;
   }
 
   public DoubleSolenoid getGripperSolenoid() {
     return gripperSolenoid;
-  }
-
-  public DoubleSolenoid getExtenderSolenoid() {
-    return extenderSolenoid;
   }
 
 }

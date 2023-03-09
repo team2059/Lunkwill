@@ -27,6 +27,7 @@ public class TeleopSwerve extends CommandBase {
   private final DoubleSupplier forwardX;
   private final DoubleSupplier forwardY;
   private final DoubleSupplier rotation;
+  private final DoubleSupplier slowSlider;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
   private final Supplier<Boolean> fieldOrientedFunction;
   private final Supplier<Boolean> inverted;
@@ -36,12 +37,14 @@ public class TeleopSwerve extends CommandBase {
       DoubleSupplier fwdX,
       DoubleSupplier fwdY,
       DoubleSupplier rot,
+      DoubleSupplier slowSlider,
       Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted) {
 
     drive = subsystem;
     forwardX = fwdX;
     forwardY = fwdY;
     rotation = rot;
+    this.slowSlider = slowSlider;
 
     this.fieldOrientedFunction = fieldOrientedFunction;
     this.inverted = inverted;
@@ -89,10 +92,14 @@ public class TeleopSwerve extends CommandBase {
     rot = turningLimiter.calculate(rot)
         * Swerve.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
+    double slowVal = 0.25 + ((Math.abs(slowSlider.getAsDouble() - 1)) / (2.0) * 0.75);
+
+    // System.out.println("slow val = " + slowVal);
+
     drive.drive(
-        -fwdX,
-        -fwdY,
-        -rot,
+        -2 * fwdX * slowVal,
+        -2 * fwdY * slowVal,
+        -1.5 * rot * slowVal,
         fieldOrientedFunction.get());
 
   }

@@ -30,7 +30,7 @@ public class PIDExtendArmCmd extends CommandBase {
     if (setpoint < extendArm.getExtendPosition()) {
       extendArm.extensionController.setP(0.125);
     } else {
-      extendArm.extensionController.setP(0.025);
+      extendArm.extensionController.setP(0.0625);
     }
     // pneumatics.setExtenderState(kForward);
 
