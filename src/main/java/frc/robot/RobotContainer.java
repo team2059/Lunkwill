@@ -29,6 +29,7 @@ import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
 import frc.robot.commands.Auto.TwoElementAuto;
+import frc.robot.commands.Auto.Center.CenterConeTaxiBalance;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
 import frc.robot.commands.Auto.Center.CenterCubeTaxiBalance;
 import frc.robot.subsystems.*;
@@ -161,23 +162,11 @@ public class RobotContainer {
     try
 
     {
+      // autoChooser.setDefaultOption("auto",
+      // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+
       autoChooser.setDefaultOption("auto",
-          new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-
-      // autoChooser.addOption("LeftConeTaxiBalance", new
-      // LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-
-      // autoChooser.addOption("RightConeTaxiBalance",
-      // new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-
-      // autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm,
-      // extendArm, pneumatics));
-
-      // autoChooser.addOption("RightConeTaxi",
-      // new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
-
-      // autoChooser.addOption("CenterConeAndBalanceANDTaxi",
-      // new CenterConeAndBalance(swerveBase, tiltArm, extendArm, pneumatics));
+          new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {

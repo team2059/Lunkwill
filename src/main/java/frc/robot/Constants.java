@@ -46,7 +46,7 @@ public final class Constants {
                 public static final double PICKUP_EXTEND = 14.47;
 
                 public static final double REST_TILT = 0.32;
-                public static final double REST_EXTEND = -2;
+                public static final double REST_EXTEND = -1.5;
 
                 public static final double LOW_CUBE_ARM_TILT = 0.355;
                 public static final double LOW_CUBE_ARM_EXTEND = 5;
