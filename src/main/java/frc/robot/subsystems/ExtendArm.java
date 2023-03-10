@@ -43,7 +43,7 @@ public class ExtendArm extends SubsystemBase {
   public boolean isLimitReached;
   public Servo servo;
 
-  public boolean isLimitReached() {
+  public boolean getIsLimitReached() {
     return isLimitReached;
   }
 

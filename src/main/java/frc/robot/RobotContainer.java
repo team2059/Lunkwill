@@ -32,6 +32,9 @@ import frc.robot.commands.Auto.TwoElementAuto;
 import frc.robot.commands.Auto.Center.CenterConeTaxiBalance;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
 import frc.robot.commands.Auto.Center.CenterCubeTaxiBalance;
+import frc.robot.commands.Auto.Left.LeftConeTaxiBalance;
+import frc.robot.commands.Auto.Left.LeftCubeTaxiBalance;
+import frc.robot.commands.Auto.Right.RightCubeTaxiBalance;
 import frc.robot.subsystems.*;
 
 // import com.pathplanner.lib.*;
@@ -89,6 +92,7 @@ public class RobotContainer {
   private final JoystickButton substationTagLeft = new JoystickButton(buttonBoxTwo, 4);
   private final JoystickButton substationTagRight = new JoystickButton(buttonBoxTwo, 8);
   private final JoystickButton substationArm = new JoystickButton(buttonBoxTwo, 9);
+  private final JoystickButton substationGripAndZero = new JoystickButton(buttonBoxTwo, 10);
 
   /* LOGITECH */
   public final Joystick logitech = new Joystick(3);
@@ -166,7 +170,7 @@ public class RobotContainer {
       // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       autoChooser.setDefaultOption("auto",
-          new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+          new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {
@@ -221,6 +225,8 @@ public class RobotContainer {
     zeroEntireArm.onTrue(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
 
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
+
+    substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

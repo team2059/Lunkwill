@@ -21,7 +21,9 @@ public class ZeroEntireArmCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
-        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.REST_EXTEND),
+        new InstantCommand(() -> extendArm.setServoAngle(Constants.ArmConstants.extendServoAngle)),
+        new ExtendToLimitSwitch(extendArm),
+        // new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.REST_EXTEND),
         new PIDTiltArmCmd(tiltArm, Constants.Presets.REST_TILT));
   }
 }
