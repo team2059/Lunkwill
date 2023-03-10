@@ -28,12 +28,17 @@ import frc.robot.commands.Arm.Presets.ConePresets.MidConeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
-import frc.robot.commands.Auto.TwoElementAuto;
+import frc.robot.commands.Auto.Center.CenterConeTaxi;
 import frc.robot.commands.Auto.Center.CenterConeTaxiBalance;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
 import frc.robot.commands.Auto.Center.CenterCubeTaxiBalance;
+import frc.robot.commands.Auto.Left.LeftConeTaxi;
 import frc.robot.commands.Auto.Left.LeftConeTaxiBalance;
+import frc.robot.commands.Auto.Left.LeftCubeTaxi;
 import frc.robot.commands.Auto.Left.LeftCubeTaxiBalance;
+import frc.robot.commands.Auto.Right.RightConeTaxi;
+import frc.robot.commands.Auto.Right.RightConeTaxiBalance;
+import frc.robot.commands.Auto.Right.RightCubeTaxi;
 import frc.robot.commands.Auto.Right.RightCubeTaxiBalance;
 import frc.robot.subsystems.*;
 
@@ -50,9 +55,6 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public ArrayList<Integer> tagIDs = new ArrayList<>();
-
-  public final String allianceColor = DriverStation.getAlliance().toString();
 
   /* XBOX CONTROLLER */
   public final XboxController controller = new XboxController(0);
@@ -132,22 +134,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // driver = new Joystick(0);
-    // buttonBox = new ButtonBox(1);
-
-    if (allianceColor.equals("Red")) {
-      tagIDs.add(8);
-      tagIDs.add(7);
-      tagIDs.add(6);
-      tagIDs.add(4);
-
-    } else {
-      tagIDs.add(3);
-      tagIDs.add(2);
-      tagIDs.add(1);
-      tagIDs.add(5);
-
-    }
 
     swerveBase.setDefaultCommand(new TeleopSwerve(swerveBase, () -> logitech.getRawAxis(kLogitechTranslationAxis),
         () -> logitech.getRawAxis(kLogitechStrafeAxis), () -> logitech.getRawAxis(kLogitechRotationAxis),
@@ -169,8 +155,27 @@ public class RobotContainer {
       // autoChooser.setDefaultOption("auto",
       // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.setDefaultOption("auto",
+      autoChooser.setDefaultOption("nothing",
+          new InstantCommand());
+
+      autoChooser.addOption("CenterConeTaxi", new CenterConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("CenterConeTaxiBalance",
+          new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("CenterCubeTaxi", new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("CenterCubeTaxiBalance",
+          new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+
+      autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("LeftConeTaxiBalance", new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("LeftCubeTaxiBalance", new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("LeftCubeTaxi", new LeftCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+
+      autoChooser.addOption("RightCubeTaxi", new RightCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("RightCubeTaxiBalance",
           new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("RightConeTaxiBalance",
+          new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("RightConeTaxi", new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {
@@ -197,12 +202,15 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
     centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES));
+
     leftTagCone
         .onTrue(
             new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT, 0));
+
     rightTagCone
         .onTrue(
             new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT, 0));
+
     substationTagLeft.onTrue(
         new GoToTagCmd(swerveBase, limelight, Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT,
             Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
