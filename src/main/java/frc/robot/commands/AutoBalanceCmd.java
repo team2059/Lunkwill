@@ -47,7 +47,7 @@ public class AutoBalanceCmd extends CommandBase {
     error = 0 - roll;
     // System.out.println("error" + error);
     if (haveIBeenTilted == false) {
-      driveSpeed = direction * 0.75;
+      driveSpeed = direction * 2;
       swerveBase.drive(driveSpeed, 0, 0, true, true);
 
     } else {

@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 
@@ -65,6 +67,8 @@ public class RobotContainer {
   private final int kPickUpArmPosition = 5;
   private final int kGripperSolenoidToggle = 6;
   private final int kZeroEntireArm = 1;
+  private final int kSubstationArm = 4;
+  private final int kSubstationGripAndTiltUp = 3;
 
   private final int kTiltAxis = 1;
   private final int kExtendAxis = 5;
@@ -75,6 +79,8 @@ public class RobotContainer {
   // kExtendArmToMax);
   private final JoystickButton gripperSolenoidToggle = new JoystickButton(controller, kGripperSolenoidToggle);
   private final JoystickButton zeroEntireArm = new JoystickButton(controller, kZeroEntireArm);
+  private final JoystickButton substationArm = new JoystickButton(controller, kSubstationArm);
+  private final JoystickButton substationGripAndTiltUp = new JoystickButton(controller, kSubstationGripAndTiltUp);
 
   /* BUTTON BOX ONE */
   public final ButtonBox buttonBox = new ButtonBox(1);
@@ -93,8 +99,9 @@ public class RobotContainer {
 
   private final JoystickButton substationTagLeft = new JoystickButton(buttonBoxTwo, 4);
   private final JoystickButton substationTagRight = new JoystickButton(buttonBoxTwo, 8);
-  private final JoystickButton substationArm = new JoystickButton(buttonBoxTwo, 9);
-  private final JoystickButton substationGripAndZero = new JoystickButton(buttonBoxTwo, 10);
+
+  private final JoystickButton cubeLED = new JoystickButton(buttonBoxTwo, 11);
+  private final JoystickButton coneLED = new JoystickButton(buttonBoxTwo, 12);
 
   /* LOGITECH */
   public final Joystick logitech = new Joystick(3);
@@ -116,15 +123,17 @@ public class RobotContainer {
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
+
   private final Limelight limelight = new Limelight();
   private final TiltArm tiltArm = new TiltArm();
   private final Pneumatics pneumatics = new Pneumatics();
 
   private final ExtendArm extendArm = new ExtendArm();
+  private final LED led = new LED();
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
 
-  SendableChooser<Command> autoChooser = new SendableChooser<>();
+  SendableChooser<String> autoChooser = new SendableChooser<>();
 
   /* Commands */
   // InstantCommand toggleExtenderSolenoidCmd = new InstantCommand(() ->
@@ -155,31 +164,30 @@ public class RobotContainer {
       // autoChooser.setDefaultOption("auto",
       // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.setDefaultOption("nothing",
-          new InstantCommand());
+      // autoChooser.setDefaultOption("nothing",
+      // new InstantCommand());
 
-      autoChooser.addOption("CenterConeTaxi", new CenterConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("CenterConeTaxiBalance",
-          new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("CenterCubeTaxi", new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.setDefaultOption("CenterConeTaxi", "CenterConeTaxi");
+      autoChooser.addOption("CenterConeTaxiBalance", "CenterConeTaxiBalance");
+      autoChooser.addOption("CenterCubeTaxi", "CenterCubeTaxi");
       autoChooser.addOption("CenterCubeTaxiBalance",
-          new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+          "CenterCubeTaxiBalance");
 
-      autoChooser.addOption("LeftConeTaxi", new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("LeftConeTaxiBalance", new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("LeftCubeTaxiBalance", new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("LeftCubeTaxi", new LeftCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("LeftConeTaxi", "LeftConeTaxi");
+      autoChooser.addOption("LeftConeTaxiBalance", "LeftConeTaxiBalance");
+      autoChooser.addOption("LeftCubeTaxiBalance", "LeftCubeTaxiBalance");
+      autoChooser.addOption("LeftCubeTaxi", "LeftCubeTaxi");
 
-      autoChooser.addOption("RightCubeTaxi", new RightCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+      autoChooser.addOption("RightCubeTaxi", "RightCubeTaxi");
       autoChooser.addOption("RightCubeTaxiBalance",
-          new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+          "RightCubeTaxiBalance");
       autoChooser.addOption("RightConeTaxiBalance",
-          new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
-      autoChooser.addOption("RightConeTaxi", new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics));
+          "RightConeTaxiBalance");
+      autoChooser.addOption("RightConeTaxi", "RightConeTaxi");
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {
-      autoChooser.setDefaultOption("NULL nothing", new InstantCommand());
+      autoChooser.setDefaultOption("NULL nothing", "nothing");
       DriverStation.reportError("auto choose NULL somewhere in RobotContainer.java", null);
     }
   }
@@ -198,6 +206,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
+
+    // new JoystickButton(logitech, 4).onTrue(new AutoBalanceCmd(swerveBase, -1));
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
@@ -220,11 +230,14 @@ public class RobotContainer {
             Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
 
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
+    substationGripAndTiltUp.onTrue(new SubstationGripAndTiltUpCmd(tiltArm, extendArm, pneumatics));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
     highCube.onTrue(new HighCubeCmd(tiltArm, extendArm, pneumatics));
 
+    // low cone and low cube should be relatively same
+    lowCone.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
     highCone.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
 
@@ -234,7 +247,15 @@ public class RobotContainer {
 
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
-    substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
+    cubeLED.onTrue(new SequentialCommandGroup(
+        new InstantCommand(() -> led.setCube()),
+        new WaitCommand(5),
+        new InstantCommand(() -> led.setOrange())));
+
+    coneLED.onTrue(new SequentialCommandGroup(
+        new InstantCommand(() -> led.setCone()),
+        new WaitCommand(5),
+        new InstantCommand(() -> led.setOrange())));
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
@@ -249,7 +270,44 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     try {
-      return autoChooser.getSelected();
+      if (autoChooser.getSelected().equals("CenterConeTaxi")) {
+        return new CenterConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("CenterConeTaxiBalance")) {
+        return new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("CenterCubeTaxi")) {
+        return new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("CenterCubeTaxiBalance")) {
+        return new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("LeftConeTaxi")) {
+        return new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("LeftConeTaxiBalance")) {
+        return new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("LeftCubeTaxiBalance")) {
+        return new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("LeftCubeTaxi")) {
+        return new LeftCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("RightCubeTaxi")) {
+        return new RightCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("RightCubeTaxiBalance")) {
+        return new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("RightConeTaxiBalance")) {
+        return new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("RightConeTaxi")) {
+        return new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      return new InstantCommand();
+
     } catch (NullPointerException ex) {
       DriverStation.reportError("auto choose NULL somewhere in getAutonomousCommand in RobotContainer.java", null);
       return new InstantCommand();
@@ -259,4 +317,9 @@ public class RobotContainer {
   public ExtendArm getExtendArm() {
     return extendArm;
   }
+
+  public SwerveBase getSwerveBase() {
+    return swerveBase;
+  }
+
 }

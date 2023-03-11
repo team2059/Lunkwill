@@ -18,13 +18,12 @@ import frc.robot.subsystems.TiltArm;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SubstationGripAndZeroCmd extends SequentialCommandGroup {
+public class SubstationGripAndTiltUpCmd extends SequentialCommandGroup {
   /** Creates a new SubstationGripAndZeroCmd. */
-  public SubstationGripAndZeroCmd(TiltArm tiltArm, ExtendArm extendArm, Pneumatics pneumatics) {
+  public SubstationGripAndTiltUpCmd(TiltArm tiltArm, ExtendArm extendArm, Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.5),
-        new PIDTiltArmCmd(tiltArm, Constants.Presets.SUBSTATION_TILT + 0.02),
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.SUBSTATION_TILT + 0.02));
   }
 }
