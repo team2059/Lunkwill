@@ -67,6 +67,8 @@ public class RobotContainer {
   private final int kPickUpArmPosition = 5;
   private final int kGripperSolenoidToggle = 6;
   private final int kZeroEntireArm = 1;
+  private final int kSubstationArm = 4;
+  private final int kSubstationGripAndTiltUp = 3;
 
   private final int kTiltAxis = 1;
   private final int kExtendAxis = 5;
@@ -77,6 +79,8 @@ public class RobotContainer {
   // kExtendArmToMax);
   private final JoystickButton gripperSolenoidToggle = new JoystickButton(controller, kGripperSolenoidToggle);
   private final JoystickButton zeroEntireArm = new JoystickButton(controller, kZeroEntireArm);
+  private final JoystickButton substationArm = new JoystickButton(controller, kSubstationArm);
+  private final JoystickButton substationGripAndTiltUp = new JoystickButton(controller, kSubstationGripAndTiltUp);
 
   /* BUTTON BOX ONE */
   public final ButtonBox buttonBox = new ButtonBox(1);
@@ -95,8 +99,6 @@ public class RobotContainer {
 
   private final JoystickButton substationTagLeft = new JoystickButton(buttonBoxTwo, 4);
   private final JoystickButton substationTagRight = new JoystickButton(buttonBoxTwo, 8);
-  private final JoystickButton substationArm = new JoystickButton(buttonBoxTwo, 9);
-  private final JoystickButton substationGripAndZero = new JoystickButton(buttonBoxTwo, 10);
 
   private final JoystickButton cubeLED = new JoystickButton(buttonBoxTwo, 11);
   private final JoystickButton coneLED = new JoystickButton(buttonBoxTwo, 12);
@@ -205,7 +207,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
 
-    new JoystickButton(logitech, 4).onTrue(new AutoBalanceCmd(swerveBase, -1));
+    // new JoystickButton(logitech, 4).onTrue(new AutoBalanceCmd(swerveBase, -1));
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
@@ -228,7 +230,7 @@ public class RobotContainer {
             Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
 
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
-    substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
+    substationGripAndTiltUp.onTrue(new SubstationGripAndTiltUpCmd(tiltArm, extendArm, pneumatics));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
@@ -245,19 +247,15 @@ public class RobotContainer {
 
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
-   
-
     cubeLED.onTrue(new SequentialCommandGroup(
-      new InstantCommand(() -> led.setCube()),
-      new WaitCommand(5),
-      new InstantCommand(() -> led.setOrange())
-    ));
+        new InstantCommand(() -> led.setCube()),
+        new WaitCommand(5),
+        new InstantCommand(() -> led.setOrange())));
 
     coneLED.onTrue(new SequentialCommandGroup(
-      new InstantCommand(() -> led.setCone()),
-      new WaitCommand(5),
-      new InstantCommand(() -> led.setOrange())
-    ));
+        new InstantCommand(() -> led.setCone()),
+        new WaitCommand(5),
+        new InstantCommand(() -> led.setOrange())));
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 

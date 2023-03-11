@@ -35,14 +35,14 @@ public final class Constants {
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23.5;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23.5;
 
-                public static final double SUBSTATION_TILT = 0.55;
+                public static final double SUBSTATION_TILT = 0.56;
                 public static final double SUBSTATION_EXTEND = 40;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT = 5;
                 
 
-                public static final double PICKUP_TILT = 0.36;
+                public static final double PICKUP_TILT = 0.365;
                 public static final double PICKUP_EXTEND = 12.5;
 
                 public static final double REST_TILT = 0.32;
