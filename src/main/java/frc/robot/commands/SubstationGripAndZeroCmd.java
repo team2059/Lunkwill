@@ -24,7 +24,6 @@ public class SubstationGripAndZeroCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)), new WaitCommand(0.5),
-        new PIDTiltArmCmd(tiltArm, Constants.Presets.SUBSTATION_TILT + 0.02),
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.SUBSTATION_TILT + 0.02));
   }
 }

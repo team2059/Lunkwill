@@ -27,6 +27,6 @@ public class LowCubeCmd extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.LOW_CUBE_ARM_TILT),
         new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.LOW_CUBE_ARM_EXTEND),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()),new WaitCommand(0.5),new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()),new WaitCommand(0.5));
   }
 }

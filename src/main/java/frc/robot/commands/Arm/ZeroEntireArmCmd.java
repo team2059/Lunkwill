@@ -7,6 +7,7 @@ package frc.robot.commands.Arm;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
@@ -22,6 +23,8 @@ public class ZeroEntireArmCmd extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
         new InstantCommand(() -> extendArm.setServoAngle(Constants.ArmConstants.extendServoAngle)),
+        
+        new WaitCommand(0.25),
         new ExtendToLimitSwitch(extendArm),
         // new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.REST_EXTEND),
         new PIDTiltArmCmd(tiltArm, Constants.Presets.REST_TILT));

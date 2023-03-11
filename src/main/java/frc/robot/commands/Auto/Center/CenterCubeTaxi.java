@@ -4,8 +4,10 @@
 
 package frc.robot.commands.Auto.Center;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoBalanceCmd;
+import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
@@ -21,7 +23,9 @@ public class CenterCubeTaxi extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics), swerveBase.followPathCmd("CenterTaxi"),
+    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics),
+        new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
+            swerveBase.followPathCmd("CenterTaxi")),
         new AutoBalanceCmd(swerveBase, -1));
   }
 }

@@ -121,6 +121,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
+
   private final Limelight limelight = new Limelight();
   private final TiltArm tiltArm = new TiltArm();
   private final Pneumatics pneumatics = new Pneumatics();
@@ -227,11 +228,14 @@ public class RobotContainer {
             Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
 
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
+    substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
     highCube.onTrue(new HighCubeCmd(tiltArm, extendArm, pneumatics));
 
+    // low cone and low cube should be relatively same
+    lowCone.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
     highCone.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
 
@@ -241,7 +245,7 @@ public class RobotContainer {
 
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
-    substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
+   
 
     cubeLED.onTrue(new SequentialCommandGroup(
       new InstantCommand(() -> led.setCube()),
@@ -315,4 +319,9 @@ public class RobotContainer {
   public ExtendArm getExtendArm() {
     return extendArm;
   }
+
+  public SwerveBase getSwerveBase() {
+    return swerveBase;
+  }
+
 }
