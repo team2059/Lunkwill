@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 
@@ -96,6 +98,9 @@ public class RobotContainer {
   private final JoystickButton substationArm = new JoystickButton(buttonBoxTwo, 9);
   private final JoystickButton substationGripAndZero = new JoystickButton(buttonBoxTwo, 10);
 
+  private final JoystickButton cubeLED = new JoystickButton(buttonBoxTwo, 11);
+  private final JoystickButton coneLED = new JoystickButton(buttonBoxTwo, 12);
+
   /* LOGITECH */
   public final Joystick logitech = new Joystick(3);
   private final int kLogitechTranslationAxis = 1;
@@ -121,6 +126,7 @@ public class RobotContainer {
   private final Pneumatics pneumatics = new Pneumatics();
 
   private final ExtendArm extendArm = new ExtendArm();
+  private final LED led = new LED();
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
 
@@ -236,6 +242,18 @@ public class RobotContainer {
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
     substationGripAndZero.onTrue(new SubstationGripAndZeroCmd(tiltArm, extendArm, pneumatics));
+
+    cubeLED.onTrue(new SequentialCommandGroup(
+      new InstantCommand(() -> led.setCube()),
+      new WaitCommand(5),
+      new InstantCommand(() -> led.setOrange())
+    ));
+
+    coneLED.onTrue(new SequentialCommandGroup(
+      new InstantCommand(() -> led.setCone()),
+      new WaitCommand(5),
+      new InstantCommand(() -> led.setOrange())
+    ));
 
     // alignWithTarget.whileTrue(new VisionAlignCmd(limelight, swerveBase));
 
