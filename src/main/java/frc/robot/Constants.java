@@ -15,8 +15,10 @@ public final class Constants {
 
                 public static final int tiltId = 16;
                 public static final int extendId = 9;
-                public static final int restServoAngle = 12;
-                public static final int extendServoAngle = 25;
+                // public static final int restServoAngle = 10;
+                // public static final int extendServoAngle = 25;
+                 public static final int restServoAngle = 10;
+                public static final int extendServoAngle = 35;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;
                 public static final double tiltkD = 0.01;
@@ -35,8 +37,8 @@ public final class Constants {
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23.5;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23.5;
 
-                public static final double SUBSTATION_TILT = 0.56;
-                public static final double SUBSTATION_EXTEND = 40;
+                public static final double SUBSTATION_TILT = 0.555;
+                public static final double SUBSTATION_EXTEND = 35;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT = 5;

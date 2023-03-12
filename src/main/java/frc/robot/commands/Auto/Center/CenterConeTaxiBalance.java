@@ -6,6 +6,7 @@ package frc.robot.commands.Auto.Center;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoBalanceCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
@@ -23,7 +24,7 @@ public class CenterConeTaxiBalance extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics),
+    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics).withTimeout(5),
         new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
             swerveBase.followPathCmd("CenterTaxiBalance")),
         new AutoBalanceCmd(swerveBase, -1));
