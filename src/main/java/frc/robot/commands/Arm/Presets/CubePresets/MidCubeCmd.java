@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
 import frc.robot.commands.Arm.PIDTiltArmCmd;
-import frc.robot.commands.Arm.ZeroEntireArmCmd;
+
 import frc.robot.subsystems.TiltArm;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -25,8 +24,12 @@ import frc.robot.commands.Arm.JoystickTiltArmCmd;
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Presets.SubstationPresetCmd;
-import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
-import frc.robot.commands.Arm.Presets.ConePresets.MidConeCmd;
+
+import frc.robot.commands.Arm.Presets.ConePresets.HighConePartONECmd;
+import frc.robot.commands.Arm.Presets.ConePresets.HighConePartTWOCmd;
+
+import frc.robot.commands.Arm.Presets.ConePresets.MidConePartONECmd;
+import frc.robot.commands.Arm.Presets.ConePresets.MidConePartTWOCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
@@ -88,8 +91,11 @@ public class RobotContainer {
   private final JoystickButton midCube = new JoystickButton(buttonBox, 5);
   private final JoystickButton highCube = new JoystickButton(buttonBox, 2);
   private final JoystickButton lowCone = new JoystickButton(buttonBox, 9);
-  private final JoystickButton midCone = new JoystickButton(buttonBox, 6);
-  private final JoystickButton highCone = new JoystickButton(buttonBox, 3);
+
+  private final JoystickButton midConePartONE = new JoystickButton(buttonBox, 4);
+  private final JoystickButton midConePartTWO = new JoystickButton(buttonBox, 6);
+  private final JoystickButton highConePartONE = new JoystickButton(buttonBox, 1);
+  private final JoystickButton highConePartTWO = new JoystickButton(buttonBox, 3);
 
   /* BUTTON BOX TWO */
   public final ButtonBox buttonBoxTwo = new ButtonBox(2);
@@ -238,8 +244,10 @@ public class RobotContainer {
 
     // low cone and low cube should be relatively same
     lowCone.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
-    midCone.onTrue(new MidConeCmd(tiltArm, extendArm, pneumatics));
-    highCone.onTrue(new HighConeCmd(tiltArm, extendArm, pneumatics));
+    midConePartONE.onTrue(new MidConePartONECmd(tiltArm, extendArm));
+    midConePartTWO.onTrue(new MidConePartTWOCmd(tiltArm, extendArm, pneumatics));
+    highConePartONE.onTrue(new HighConePartONECmd(tiltArm, extendArm));
+    highConePartTWO.onTrue(new HighConePartTWOCmd(tiltArm, extendArm, pneumatics));
 
     pickUpArmPosition.onTrue(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics));
 

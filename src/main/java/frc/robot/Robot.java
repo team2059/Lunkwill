@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -125,8 +122,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-   // m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))));
-    
+    // m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new
+    // Rotation2d(Units.degreesToRadians(0))));
+
     // m_robotContainer.extendArm.setServoAngle(15);
 
     // This makes sure that the autonomous stops running when
