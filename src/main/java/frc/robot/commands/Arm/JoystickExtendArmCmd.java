@@ -39,7 +39,7 @@ public class JoystickExtendArmCmd extends CommandBase {
     // pneumatics.toggleGripperSolenoid();
     // }
     // System.out.println(extendOutput.getAsDouble());
-    if (Math.abs(extendOutput.getAsDouble()) < 0.075) {
+    if (Math.abs(extendOutput.getAsDouble()) < 0.05) {
       // extendOutput = 0;
       extendArm.getExtensionMotor().set(0);
       // pneumatics.setExtenderState(kReverse);
@@ -47,11 +47,12 @@ public class JoystickExtendArmCmd extends CommandBase {
     } else {
       // pneumatics.setExtenderState(kForward);
       extendArm.setServoAngle(Constants.ArmConstants.extendServoAngle);
-    }
-    // System.out.println(extendOutput);
-    if (Math.abs(extendOutput.getAsDouble()) > 0.3) {
       extendArm.getExtensionMotor().set(extendOutput.getAsDouble());
     }
+    // System.out.println(extendOutput);
+    // if (Math.abs(extendOutput.getAsDouble()) > 0.3) {
+      
+    // }
 
     // else {
     // extendArm.getExtensionMotor().set(0);

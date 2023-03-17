@@ -6,11 +6,11 @@ package frc.robot.commands.Arm.Presets.ConePresets;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 import frc.robot.commands.Arm.PIDTiltArmCmd;
-
+import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.subsystems.TiltArm;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
@@ -26,6 +26,7 @@ public class HighConePartTWOCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT_AFTER),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
+        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }
 }

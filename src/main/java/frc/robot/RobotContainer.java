@@ -217,15 +217,18 @@ public class RobotContainer {
 
     zeroGyro.onTrue(new InstantCommand(() -> swerveBase.getNavX().reset()));
 
-    centerTagCube.onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_OFFSET_INCHES));
+    centerTagCube
+        .onTrue(new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_FRONT_OFFSET_INCHES));
 
     leftTagCone
         .onTrue(
-            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT, 0));
+            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT,
+                Constants.Presets.CONE_LIMELIGHT_FRONT_OFFSET_INCHES));
 
     rightTagCone
         .onTrue(
-            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT, 0));
+            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT,
+                Constants.Presets.CONE_LIMELIGHT_FRONT_OFFSET_INCHES));
 
     substationTagLeft.onTrue(
         new GoToTagCmd(swerveBase, limelight, Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT,

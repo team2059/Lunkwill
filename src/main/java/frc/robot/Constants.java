@@ -17,8 +17,8 @@ public final class Constants {
                 public static final int extendId = 9;
                 // public static final int restServoAngle = 10;
                 // public static final int extendServoAngle = 25;
-                 public static final int restServoAngle = 10;
-                public static final int extendServoAngle = 45;
+                public static final int restServoAngle = 65;
+                public static final int extendServoAngle = 0;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;
                 public static final double tiltkD = 0.01;
@@ -33,18 +33,18 @@ public final class Constants {
 
         public static final class Presets {
 
-                public static final double CUBE_LIMELIGHT_OFFSET_INCHES = 2;
+                public static final double CUBE_LIMELIGHT_FRONT_OFFSET_INCHES = 0;
+                public static final double CONE_LIMELIGHT_FRONT_OFFSET_INCHES = -3;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23.5;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23.5;
 
                 public static final double SUBSTATION_TILT = 0.555;
-                public static final double SUBSTATION_EXTEND = 35;
+                public static final double SUBSTATION_EXTEND = 0;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT = 5;
-                
 
-                public static final double PICKUP_TILT = 0.365;
+                public static final double PICKUP_TILT = 0.37;
                 public static final double PICKUP_EXTEND = 12.5;
 
                 public static final double REST_TILT = 0.32;
