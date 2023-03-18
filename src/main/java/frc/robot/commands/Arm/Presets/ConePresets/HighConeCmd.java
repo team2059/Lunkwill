@@ -27,6 +27,7 @@ public class HighConeCmd extends SequentialCommandGroup {
     addCommands(new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT),
         new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.UPPER_CONE_ARM_EXTEND),
         new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT_AFTER),
-        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5));
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT));
   }
 }

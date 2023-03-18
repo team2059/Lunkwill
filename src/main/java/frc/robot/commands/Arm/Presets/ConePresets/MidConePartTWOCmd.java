@@ -28,6 +28,7 @@ public class MidConePartTWOCmd extends SequentialCommandGroup {
     addCommands(
         new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CONE_ARM_TILT_AFTER),
         new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.5),
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.MID_CONE_ARM_TILT),
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
   }
 }
