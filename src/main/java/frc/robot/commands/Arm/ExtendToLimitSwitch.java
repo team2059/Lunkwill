@@ -47,7 +47,7 @@ public class ExtendToLimitSwitch extends CommandBase {
     // SmartDashboard.putNumber("extendOutput",
     // extendArm.getExtensionMotor().getAppliedOutput());
 
-    extendArm.getExtensionMotor().set(-0.75);
+    extendArm.getExtensionMotor().set(-0.9);
   }
 
   // Called once the command ends or is interrupted.

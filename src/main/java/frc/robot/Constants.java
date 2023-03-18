@@ -34,11 +34,11 @@ public final class Constants {
         public static final class Presets {
 
                 public static final double CUBE_LIMELIGHT_FRONT_OFFSET_INCHES = 0;
-                public static final double CONE_LIMELIGHT_FRONT_OFFSET_INCHES = -3;
+                public static final double CONE_LIMELIGHT_FRONT_OFFSET_INCHES = 0;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23.5;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23.5;
 
-                public static final double SUBSTATION_TILT = 0.555;
+                public static final double SUBSTATION_TILT = 0.565;
                 public static final double SUBSTATION_EXTEND = 0;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
@@ -59,7 +59,7 @@ public final class Constants {
                 public static final double UPPER_CUBE_ARM_TILT = 0.55;
                 public static final double UPPER_CUBE_ARM_EXTEND = 50;
 
-                public static final double MID_CONE_ARM_TILT = 0.58;
+                public static final double MID_CONE_ARM_TILT = 0.57;
                 public static final double MID_CONE_ARM_TILT_AFTER = MID_CONE_ARM_TILT - 0.075;
                 public static final double MID_CONE_ARM_EXTEND = 22.5;
 
@@ -125,7 +125,7 @@ public final class Constants {
                 public static final double yCameraOffsetInches = -5.5;
                 // public static final double originToFront = Units.inchesToMeters(18.75 +
                 // 14.625);
-                public static final double originToFrontInches = 33;
+                public static final double originToFrontInches = 27.5;
 
         }
 
