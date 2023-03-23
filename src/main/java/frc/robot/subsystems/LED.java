@@ -19,13 +19,13 @@ public class LED extends SubsystemBase {
     }
   }
 
-  public RGB purple = new RGB(100, 0, 200);
-  public RGB yellow = new RGB(180, 230, 75);
-  public RGB orange = new RGB(245, 90, 5);
+  public RGB purple = new RGB(190, 0, 255);
+  public RGB yellow = new RGB(255, 255, 0);
+  public RGB orange = new RGB(255, 140, 0);
 
   private AddressableLED led;
   private AddressableLEDBuffer buffer;
-  private final int LED_LEN = 10;
+  private final int LED_LEN = 56;
 
   /** Creates a new LED. */
   public LED() {

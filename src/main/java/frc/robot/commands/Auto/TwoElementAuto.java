@@ -14,6 +14,7 @@ import frc.robot.commands.GoToTagCmd;
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Presets.ConePresets.HighConeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Limelight;
@@ -30,14 +31,32 @@ public class TwoElementAuto extends SequentialCommandGroup {
       Pneumatics pneumatics, Limelight limelight) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics),
-        new ParallelCommandGroup(swerveBase.followPathCmd("goToElement"),
-            new SequentialCommandGroup(new WaitCommand(2.5),
-                new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics))),
-        new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)), new WaitCommand(0.25),
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
-        swerveBase.followPathCmd("goBackFromElement"), new WaitCommand(1.25),
-        new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_FRONT_OFFSET_INCHES - 2),
-        new MidCubeCmd(tiltArm, extendArm, pneumatics));
+    // addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics),
+    //     new ParallelCommandGroup(swerveBase.followPathCmd("goToElement"),
+    //         new SequentialCommandGroup(new WaitCommand(2.5),
+    //             new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics))),
+    //     new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)), new WaitCommand(0.25),
+    //     new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
+    //     swerveBase.followPathCmd("goBackFromElement"), new WaitCommand(1.25),
+    //     new GoToTagCmd(swerveBase, limelight, 0, Constants.Presets.CUBE_LIMELIGHT_FRONT_OFFSET_INCHES - 2),
+    //     new MidCubeCmd(tiltArm, extendArm, pneumatics));
+
+        addCommands(
+          new HighCubeCmd(tiltArm, extendArm, pneumatics),
+          new ParallelCommandGroup(
+            swerveBase.followPathCmd("goToElement"),
+            new SequentialCommandGroup(
+              new WaitCommand(2.5),
+              new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics)
+            )
+          ),
+          new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)),
+          new WaitCommand(0.5),
+          new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
+          swerveBase.followPathCmd("goBackFromElement"),
+          new WaitCommand(1.5),
+          new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT, Constants.Presets.CONE_LIMELIGHT_FRONT_OFFSET_INCHES),
+          new HighConeCmd(tiltArm, extendArm, pneumatics)
+        );
   }
 }
