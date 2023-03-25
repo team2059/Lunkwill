@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.GoToTagCmd;
+import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
+import frc.robot.commands.Arm.PIDTiltArmCmd;
 import frc.robot.commands.Arm.PickUpElementArmPositionCmd;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.ZeroEntireArmTwoElementCmd;
@@ -51,9 +53,9 @@ public class TwoElementAutoLeft extends SequentialCommandGroup {
             pneumatics).andThen(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics)),
             swerveBase.followPathCmd("goToElementLeft")),
         new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
-        new WaitCommand(0.25),
-        new ZeroEntireArmTwoElementCmd(extendArm, tiltArm, pneumatics),
-        swerveBase.followPathCmd("goBackFromElementLeft"),
+        new WaitCommand(0.25), new ParallelCommandGroup(
+            swerveBase.followPathCmd("goBackFromElementLeft"),
+            new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CUBE_ARM_TILT)),
         new HighCubeCmd(tiltArm, extendArm, pneumatics));
   }
 }
