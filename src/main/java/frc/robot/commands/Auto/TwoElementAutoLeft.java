@@ -48,10 +48,18 @@ public class TwoElementAutoLeft extends SequentialCommandGroup {
     // new MidCubeCmd(tiltArm, extendArm, pneumatics));
 
     addCommands(
-        new HighConeCmd(tiltArm, extendArm, pneumatics),
-        new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm,
-            pneumatics).andThen(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics)),
-            swerveBase.followPathCmd("goToElementLeft")),
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT),
+        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.UPPER_CONE_ARM_EXTEND),
+        // new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT_AFTER),
+        new InstantCommand(() -> pneumatics.toggleGripperSolenoid()), new WaitCommand(0.25),
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CONE_ARM_TILT),
+        new ParallelCommandGroup(
+            new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics)
+                .andThen(
+                    new PIDTiltArmCmd(tiltArm, Constants.Presets.PICKUP_TILT),
+                    new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)),
+                    new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.PICKUP_EXTEND)),
+            swerveBase.followPathCmd("goToElementLeft").withTimeout(5)),
         new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
         new WaitCommand(0.25), new ParallelCommandGroup(
             swerveBase.followPathCmd("goBackFromElementLeft"),
