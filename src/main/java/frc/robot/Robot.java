@@ -124,7 +124,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.PI * 2)));
+    // m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new
+    // Rotation2d(Math.PI * 2)));
     // m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new
     // Rotation2d(Units.degreesToRadians(0))));
 

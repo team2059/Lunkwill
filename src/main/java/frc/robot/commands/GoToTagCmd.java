@@ -62,6 +62,9 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         var bestTarget = result.getBestTarget();
 
                         double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
+                        if (Math.abs(yawTheta) >= 172.5) {
+                                yawTheta = Math.signum(yawTheta) * (180);
+                        }
 
                         double xLL = bestTarget.getBestCameraToTarget().getX();
                         double yLL = bestTarget.getBestCameraToTarget().getY();

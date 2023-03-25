@@ -33,6 +33,8 @@ import frc.robot.commands.Arm.Presets.ConePresets.MidConePartTWOCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
+import frc.robot.commands.Auto.TwoElementAutoLeft;
+import frc.robot.commands.Auto.TwoElementAutoRight;
 import frc.robot.commands.Auto.Center.CenterConeTaxi;
 import frc.robot.commands.Auto.Center.CenterConeTaxiBalance;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
@@ -190,6 +192,8 @@ public class RobotContainer {
       autoChooser.addOption("RightConeTaxiBalance",
           "RightConeTaxiBalance");
       autoChooser.addOption("RightConeTaxi", "RightConeTaxi");
+      autoChooser.addOption("TwoElementAutoRight", "TwoElementAutoRight");
+      autoChooser.addOption("TwoElementAutoLeft", "TwoElementAutoLeft");
 
       Shuffleboard.getTab("Autonomous").add(autoChooser);
     } catch (NullPointerException ex) {
@@ -240,6 +244,8 @@ public class RobotContainer {
 
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
     substationGripAndTiltUp.onTrue(new SubstationGripAndTiltUpCmd(tiltArm, extendArm, pneumatics));
+
+    new JoystickButton(controller, 2).onTrue(new TurnToAngleCmd(swerveBase, limelight));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
@@ -316,6 +322,12 @@ public class RobotContainer {
       }
       if (autoChooser.getSelected().equals("RightConeTaxi")) {
         return new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("TwoElementAutoLeft")) {
+        return new TwoElementAutoLeft(swerveBase, tiltArm, extendArm, pneumatics, limelight);
+      }
+      if (autoChooser.getSelected().equals("TwoElementAutoRight")) {
+        return new TwoElementAutoRight(swerveBase, tiltArm, extendArm, pneumatics, limelight);
       }
       return new InstantCommand();
 

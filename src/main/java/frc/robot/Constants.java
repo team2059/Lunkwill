@@ -44,26 +44,26 @@ public final class Constants {
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT = 5;
 
-                public static final double PICKUP_TILT = 0.30; //0.37
+                public static final double PICKUP_TILT = 0.30; // 0.37
                 public static final double PICKUP_EXTEND = 12.5;
 
-                public static final double REST_TILT = 0.25; //0.32
+                public static final double REST_TILT = 0.24; // 0.32
                 public static final double REST_EXTEND = -1.5;
 
-                public static final double LOW_CUBE_ARM_TILT = 0.29; //0.36
+                public static final double LOW_CUBE_ARM_TILT = 0.29; // 0.36
                 public static final double LOW_CUBE_ARM_EXTEND = 7.5;
 
-                public static final double MID_CUBE_ARM_TILT = 0.45; //0.52
+                public static final double MID_CUBE_ARM_TILT = 0.45; // 0.52
                 public static final double MID_CUBE_ARM_EXTEND = 25;
 
-                public static final double UPPER_CUBE_ARM_TILT = 0.48; //0.55
+                public static final double UPPER_CUBE_ARM_TILT = 0.48; // 0.55
                 public static final double UPPER_CUBE_ARM_EXTEND = 50;
 
-                public static final double MID_CONE_ARM_TILT = 0.50; //0.57
+                public static final double MID_CONE_ARM_TILT = 0.48; // 0.57
                 public static final double MID_CONE_ARM_TILT_AFTER = MID_CONE_ARM_TILT - 0.075;
                 public static final double MID_CONE_ARM_EXTEND = 22.5;
 
-                public static final double UPPER_CONE_ARM_TILT = 0.54; //0.59
+                public static final double UPPER_CONE_ARM_TILT = 0.52; // 0.59
                 public static final double UPPER_CONE_ARM_TILT_AFTER = UPPER_CONE_ARM_TILT - 0.05;
                 public static final double UPPER_CONE_ARM_EXTEND = 61;
         }
@@ -125,7 +125,7 @@ public final class Constants {
                 public static final double yCameraOffsetInches = -5.5;
                 // public static final double originToFront = Units.inchesToMeters(18.75 +
                 // 14.625);
-                public static final double originToFrontInches = 27.5;
+                public static final double originToFrontInches = 28.5; // 27.5
 
         }
 
