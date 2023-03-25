@@ -38,7 +38,7 @@ public final class Constants {
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = 23.5;
                 public static final double CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = -23.5;
 
-                public static final double SUBSTATION_TILT = 0.50;
+                public static final double SUBSTATION_TILT = 0.48;
                 public static final double SUBSTATION_EXTEND = 0;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_LEFT = -33;
                 public static final double SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT = 33;
@@ -125,7 +125,7 @@ public final class Constants {
                 public static final double yCameraOffsetInches = -5.5;
                 // public static final double originToFront = Units.inchesToMeters(18.75 +
                 // 14.625);
-                public static final double originToFrontInches = 28.5; // 27.5
+                public static final double originToFrontInches = 27.5; // 27.5
 
         }
 

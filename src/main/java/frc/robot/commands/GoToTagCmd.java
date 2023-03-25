@@ -54,7 +54,7 @@ public class GoToTagCmd extends SequentialCommandGroup {
 
                 var result = limelight.getCamera().getLatestResult();
 
-                if (result.hasTargets() == false) {
+                if (result.hasTargets() == false && result.getBestTarget().getPoseAmbiguity() >= 0.2) {
 
                         return new InstantCommand();
                 } else {
@@ -62,7 +62,7 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         var bestTarget = result.getBestTarget();
 
                         double yawTheta = bestTarget.getBestCameraToTarget().getRotation().getZ();
-                        if (Math.abs(yawTheta) >= 172.5) {
+                        if (Math.abs(yawTheta) >= 177.5) {
                                 yawTheta = Math.signum(yawTheta) * (180);
                         }
 
@@ -118,7 +118,7 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         System.out.println("interiorTwo" + interiorTwo.toString());
                         System.out.println("ENDING = " + endingPose.toString());
 
-                        TrajectoryConfig config = new TrajectoryConfig(3, 1.5);
+                        TrajectoryConfig config = new TrajectoryConfig(3, 1);
                         config.setReversed(false);
 
                         var trajectory = TrajectoryGenerator.generateTrajectory(
@@ -130,12 +130,12 @@ public class GoToTagCmd extends SequentialCommandGroup {
                         swerveBase.resetOdometry(trajectory.getInitialPose());
 
                         // 3. Define PID controllers for tracking trajectory
-                        PIDController xController = new PIDController(0.375, 0,
+                        PIDController xController = new PIDController(0.5, 0,
                                         0);
-                        PIDController yController = new PIDController(0.375, 0,
+                        PIDController yController = new PIDController(0.5, 0,
                                         0);
                         ProfiledPIDController thetaController = new ProfiledPIDController(
-                                        AutoConstants.kPThetaController, 0, 0,
+                                        AutoConstants.kPThetaController+2.5, 0, 0.001,
                                         AutoConstants.kThetaControllerConstraints);
                         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
