@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveBase;
@@ -23,6 +24,8 @@ public class TurnToAngleCmd extends CommandBase {
   PIDController turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   double rotationSpeed;
   boolean pos;
+  boolean hasTarget;
+  double output;
 
   /** Creates a new TurnToAngleCmd. */
   public TurnToAngleCmd(SwerveBase swerveBase, Limelight limelight) {
@@ -35,21 +38,8 @@ public class TurnToAngleCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerveBase.resetOdometry(new Pose2d());
-    turnController.enableContinuousInput(-360, 360);
-    // Vision-alignment mode
-    // Query the latest result from PhotonVision
-    var result = limelight.getCamera().getLatestResult();
 
-    if (result.hasTargets()) {
-
-      yaw = Units.radiansToDegrees(result.getBestTarget().getBestCameraToTarget().getRotation().getZ());
-      pos = yaw > 0;
-      swerveBase.resetOdometry(new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(yaw))));
-
-    }
-
-    System.out.println("odom " + swerveBase.getOdometry().toString());
+    turnController.enableContinuousInput(-180, 180);
 
   }
 
@@ -57,18 +47,41 @@ public class TurnToAngleCmd extends CommandBase {
   @Override
   public void execute() {
 
-    // Calculate angular turn power
-    odometryDegrees = Math.abs(swerveBase.getOdometry().getPoseMeters().getRotation().getDegrees());
+    // Vision-alignment mode
+    // Query the latest result from PhotonVision
+    var result = limelight.getCamera().getLatestResult();
 
-    rotationSpeed = turnController.calculate(odometryDegrees,
-        180);
-    if (Math.abs(rotationSpeed) <= 0.5) {
-      rotationSpeed = Math.signum(rotationSpeed) * 0.6;
+    hasTarget = result.hasTargets();
+
+    if (hasTarget) {
+      double yawRadians = result.getBestTarget().getBestCameraToTarget().getRotation().getZ();
+      yaw = Units.radiansToDegrees(yawRadians);
+      if (Math.abs(yaw) >= 179.9) {
+        this.cancel();
+      }
+      System.out.println("yaw" + yaw);
+      pos = yaw > 0;
+      if (pos) {
+        rotationSpeed = -0.045 * (179.9 - Math.abs(yaw));
+      } else {
+        rotationSpeed = 0.045 * (179.9 - Math.abs(yaw));
+      }
+      if (Math.abs(rotationSpeed) < 0.33) {
+        rotationSpeed = Math.signum(rotationSpeed) * 0.45;
+      }
+      // rotationSpeed = -turnController.calculate(yaw, 180);
+      // if (Math.abs(rotationSpeed) < 0.5) {
+      // rotationSpeed = Math.signum(rotationSpeed) * 0.6;
+
+    } else
+
+    {
+      rotationSpeed = 0;
+      this.cancel();
     }
-    if(pos){
-      rotationSpeed = -rotationSpeed;
-    }
-    System.out.println("ROTATION SPEED " + rotationSpeed);
+
+    System.out.println("ROTATION SPEED" + rotationSpeed);
+    SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
 
     swerveBase.drive(0, 0, rotationSpeed, true);
 
@@ -77,12 +90,15 @@ public class TurnToAngleCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    odometryDegrees = Math.abs(odometryDegrees);
-    return (odometryDegrees >= 179 && odometryDegrees < 181.5);
+    // return Math.abs(rotationSpeed) < 0.1;
+    // yaw = Math.abs(yaw);
+    // return yaw >= 179.;
+    return hasTarget == false || Math.abs(rotationSpeed) < 0.1;
   }
 }

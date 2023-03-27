@@ -245,7 +245,7 @@ public class RobotContainer {
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
     substationGripAndTiltUp.onTrue(new SubstationGripAndTiltUpCmd(tiltArm, extendArm, pneumatics));
 
-    new JoystickButton(controller, 2).onTrue(new TurnToAngleCmd(swerveBase, limelight));
+    new JoystickButton(controller, 2).whileTrue(new TurnToAngleCmd(swerveBase, limelight));
 
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
