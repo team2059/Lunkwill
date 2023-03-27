@@ -16,36 +16,28 @@ import frc.robot.subsystems.SwerveBase;
 public class TurnToAngleCmd extends CommandBase {
   SwerveBase swerveBase;
   Limelight limelight;
-  double angleDegrees;
   final double ANGULAR_P = 0.1;
   final double ANGULAR_D = 0.0;
-  double odometryDegrees;
   double yaw = 0;
   PIDController turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   double rotationSpeed;
-  boolean pos;
   boolean hasTarget;
-  double output;
+  double measurement;
+  double setpoint = -180;
 
   /** Creates a new TurnToAngleCmd. */
   public TurnToAngleCmd(SwerveBase swerveBase, Limelight limelight) {
     this.swerveBase = swerveBase;
     this.limelight = limelight;
     addRequirements(swerveBase, limelight);
+    turnController.enableContinuousInput(-180, 180);
+    turnController.setTolerance(1, 5);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    turnController.enableContinuousInput(-180, 180);
-
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
 
     // Vision-alignment mode
     // Query the latest result from PhotonVision
@@ -56,31 +48,21 @@ public class TurnToAngleCmd extends CommandBase {
     if (hasTarget) {
       double yawRadians = result.getBestTarget().getBestCameraToTarget().getRotation().getZ();
       yaw = Units.radiansToDegrees(yawRadians);
-      if (Math.abs(yaw) >= 179.9) {
-        this.cancel();
-      }
-      System.out.println("yaw" + yaw);
-      pos = yaw > 0;
-      if (pos) {
-        rotationSpeed = -0.045 * (179.9 - Math.abs(yaw));
-      } else {
-        rotationSpeed = 0.045 * (179.9 - Math.abs(yaw));
-      }
-      if (Math.abs(rotationSpeed) < 0.33) {
-        rotationSpeed = Math.signum(rotationSpeed) * 0.45;
-      }
-      // rotationSpeed = -turnController.calculate(yaw, 180);
-      // if (Math.abs(rotationSpeed) < 0.5) {
-      // rotationSpeed = Math.signum(rotationSpeed) * 0.6;
+      swerveBase.getNavX().reset();
 
-    } else
-
-    {
-      rotationSpeed = 0;
+    } else {
       this.cancel();
     }
 
-    System.out.println("ROTATION SPEED" + rotationSpeed);
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    measurement = swerveBase.getHeading().getDegrees() + yaw;
+    SmartDashboard.putNumber("measurement", measurement);
+
+    rotationSpeed = turnController.calculate(measurement, setpoint);
     SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
 
     swerveBase.drive(0, 0, rotationSpeed, true);
@@ -99,6 +81,6 @@ public class TurnToAngleCmd extends CommandBase {
     // return Math.abs(rotationSpeed) < 0.1;
     // yaw = Math.abs(yaw);
     // return yaw >= 179.;
-    return hasTarget == false || Math.abs(rotationSpeed) < 0.1;
+    return Math.abs(rotationSpeed) < 0.1;
   }
 }
