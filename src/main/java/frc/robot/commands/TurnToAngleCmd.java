@@ -16,14 +16,15 @@ import frc.robot.subsystems.SwerveBase;
 public class TurnToAngleCmd extends CommandBase {
   SwerveBase swerveBase;
   Limelight limelight;
-  final double ANGULAR_P = 0.1;
-  final double ANGULAR_D = 0.0;
+  final double ANGULAR_P = 0.15;
+  final double ANGULAR_D = 0.001;
   double yaw = 0;
   PIDController turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   double rotationSpeed;
   boolean hasTarget;
   double measurement;
-  double setpoint = -180;
+  double setpoint;
+  int counter = 0;
 
   /** Creates a new TurnToAngleCmd. */
   public TurnToAngleCmd(SwerveBase swerveBase, Limelight limelight) {
@@ -31,7 +32,7 @@ public class TurnToAngleCmd extends CommandBase {
     this.limelight = limelight;
     addRequirements(swerveBase, limelight);
     turnController.enableContinuousInput(-180, 180);
-    turnController.setTolerance(1, 5);
+    // turnController.setTolerance(0.5, 2.5);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -48,6 +49,7 @@ public class TurnToAngleCmd extends CommandBase {
     if (hasTarget) {
       double yawRadians = result.getBestTarget().getBestCameraToTarget().getRotation().getZ();
       yaw = Units.radiansToDegrees(yawRadians);
+      setpoint = yaw - 180;
       swerveBase.getNavX().reset();
 
     } else {
@@ -59,10 +61,12 @@ public class TurnToAngleCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    measurement = swerveBase.getHeading().getDegrees() + yaw;
+    measurement = swerveBase.getHeading().getDegrees();
     SmartDashboard.putNumber("measurement", measurement);
 
     rotationSpeed = turnController.calculate(measurement, setpoint);
+
+    System.out.println(rotationSpeed);
     SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
 
     swerveBase.drive(0, 0, rotationSpeed, true);
@@ -78,9 +82,7 @@ public class TurnToAngleCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return Math.abs(rotationSpeed) < 0.1;
-    // yaw = Math.abs(yaw);
-    // return yaw >= 179.;
+
     return Math.abs(rotationSpeed) < 0.1;
   }
 }
