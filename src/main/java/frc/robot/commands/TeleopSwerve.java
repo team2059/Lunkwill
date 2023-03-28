@@ -31,6 +31,7 @@ public class TeleopSwerve extends CommandBase {
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
   private final Supplier<Boolean> fieldOrientedFunction;
   private final Supplier<Boolean> inverted;
+  private final Supplier<Boolean> strafeOnly;
 
   public TeleopSwerve(
       SwerveBase subsystem,
@@ -38,7 +39,7 @@ public class TeleopSwerve extends CommandBase {
       DoubleSupplier fwdY,
       DoubleSupplier rot,
       DoubleSupplier slowSlider,
-      Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted) {
+      Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted, Supplier<Boolean> strafeOnly) {
 
     drive = subsystem;
     forwardX = fwdX;
@@ -48,6 +49,7 @@ public class TeleopSwerve extends CommandBase {
 
     this.fieldOrientedFunction = fieldOrientedFunction;
     this.inverted = inverted;
+    this.strafeOnly = strafeOnly;
 
     this.xLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -82,8 +84,8 @@ public class TeleopSwerve extends CommandBase {
     }
 
     // 2. Apply deadband
-    fwdX = Math.abs(fwdX) > 0.1 ? fwdX : 0.0;
-    fwdY = Math.abs(fwdY) > 0.1 ? fwdY : 0.0;
+    fwdX = Math.abs(fwdX) > 0.15 ? fwdX : 0.0;
+    fwdY = Math.abs(fwdY) > 0.15 ? fwdY : 0.0;
     rot = Math.abs(rot) > 0.1 ? rot : 0.0;
 
     // 3. Make the driving smoother
@@ -96,11 +98,21 @@ public class TeleopSwerve extends CommandBase {
 
     // System.out.println("slow val = " + slowVal);
 
-    drive.drive(
-        -2 * fwdX * slowVal,
-        -2 * fwdY * slowVal,
-        -1.5 * rot * slowVal,
-        fieldOrientedFunction.get());
+    if (strafeOnly.get() == true) {
+      drive.drive(
+          -2 * fwdX * slowVal,
+          -2 * fwdY * slowVal,
+          0,
+          fieldOrientedFunction.get());
+
+    } else {
+
+      drive.drive(
+          -2 * fwdX * slowVal,
+          -2 * fwdY * slowVal,
+          -1.5 * rot * slowVal,
+          fieldOrientedFunction.get());
+    }
 
   }
 
