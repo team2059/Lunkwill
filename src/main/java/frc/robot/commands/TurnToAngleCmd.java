@@ -46,14 +46,13 @@ public class TurnToAngleCmd extends CommandBase {
 
     hasTarget = result.hasTargets();
 
-    if (hasTarget) {
+    if (hasTarget == false || result.getBestTarget().getPoseAmbiguity() >= 0.2) {
+      this.cancel();
+    } else {
       double yawRadians = result.getBestTarget().getBestCameraToTarget().getRotation().getZ();
       yaw = Units.radiansToDegrees(yawRadians);
       setpoint = yaw - 180;
       swerveBase.getNavX().reset();
-
-    } else {
-      this.cancel();
     }
 
   }
@@ -62,12 +61,12 @@ public class TurnToAngleCmd extends CommandBase {
   @Override
   public void execute() {
     measurement = swerveBase.getHeading().getDegrees();
-    SmartDashboard.putNumber("measurement", measurement);
+    // SmartDashboard.putNumber("measurement", measurement);
 
     rotationSpeed = turnController.calculate(measurement, setpoint);
 
     System.out.println(rotationSpeed);
-    SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
+    // SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
 
     swerveBase.drive(0, 0, rotationSpeed, true);
 
