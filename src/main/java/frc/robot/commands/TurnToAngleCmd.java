@@ -16,8 +16,8 @@ import frc.robot.subsystems.SwerveBase;
 public class TurnToAngleCmd extends CommandBase {
   SwerveBase swerveBase;
   Limelight limelight;
-  final double ANGULAR_P = 0.15;
-  final double ANGULAR_D = 0.001;
+  final double ANGULAR_P = 0.4;
+  final double ANGULAR_D = 0.01;
   double yaw = 0;
   PIDController turnController = new PIDController(ANGULAR_P, 0.0, ANGULAR_D);
   double rotationSpeed;

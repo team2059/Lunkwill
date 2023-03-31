@@ -119,8 +119,8 @@ public class RobotContainer {
   private final int kLogitechSliderAxis = 3;
   private final int kZeroGyro = 5;
   private final int kFieldOriented = 6;
-  private final int kInverted = 2;
-  private final int kStrafeOnly = 1;
+  private final int kInverted = 1;
+  private final int kStrafeOnly = 2;
   private final JoystickButton zeroGyro = new JoystickButton(logitech, kZeroGyro);
 
   /* Driver Buttons */

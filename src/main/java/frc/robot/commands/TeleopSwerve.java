@@ -76,7 +76,7 @@ public class TeleopSwerve extends CommandBase {
     if (inverted.get() == true) {
       fwdX *= -1;
       fwdY *= -1;
-      rot *= -1;
+      rot *= 1;
     } else {
       fwdX *= 1;
       fwdY *= 1;
@@ -100,8 +100,8 @@ public class TeleopSwerve extends CommandBase {
 
     if (strafeOnly.get() == true) {
       drive.drive(
-          -2 * fwdX * slowVal,
-          -2 * fwdY * slowVal,
+          -2 * fwdX * slowVal * 0.66,
+          -2 * fwdY * slowVal * 0.66,
           0,
           fieldOrientedFunction.get());
 
