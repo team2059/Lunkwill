@@ -129,8 +129,6 @@ public class Robot extends TimedRobot {
     // m_robotContainer.getSwerveBase().resetOdometry(new Pose2d(0, 0, new
     // Rotation2d(Units.degreesToRadians(0))));
 
-    // m_robotContainer.extendArm.setServoAngle(15);
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

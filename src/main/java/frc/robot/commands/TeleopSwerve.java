@@ -32,6 +32,7 @@ public class TeleopSwerve extends CommandBase {
   private final Supplier<Boolean> fieldOrientedFunction;
   private final Supplier<Boolean> inverted;
   private final Supplier<Boolean> strafeOnly;
+  private final Supplier<Boolean> slowAll;
 
   public TeleopSwerve(
       SwerveBase subsystem,
@@ -39,7 +40,8 @@ public class TeleopSwerve extends CommandBase {
       DoubleSupplier fwdY,
       DoubleSupplier rot,
       DoubleSupplier slowSlider,
-      Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted, Supplier<Boolean> strafeOnly) {
+      Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> inverted, Supplier<Boolean> strafeOnly,
+      Supplier<Boolean> slowAll) {
 
     drive = subsystem;
     forwardX = fwdX;
@@ -50,6 +52,7 @@ public class TeleopSwerve extends CommandBase {
     this.fieldOrientedFunction = fieldOrientedFunction;
     this.inverted = inverted;
     this.strafeOnly = strafeOnly;
+    this.slowAll = slowAll;
 
     this.xLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(Swerve.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -73,16 +76,6 @@ public class TeleopSwerve extends CommandBase {
     double fwdY = forwardY.getAsDouble();
     double rot = rotation.getAsDouble();
 
-    if (inverted.get() == true) {
-      fwdX *= -1;
-      fwdY *= -1;
-      rot *= 1;
-    } else {
-      fwdX *= 1;
-      fwdY *= 1;
-      rot *= 1;
-    }
-
     // 2. Apply deadband
     fwdX = Math.abs(fwdX) > 0.15 ? fwdX : 0.0;
     fwdY = Math.abs(fwdY) > 0.15 ? fwdY : 0.0;
@@ -98,21 +91,42 @@ public class TeleopSwerve extends CommandBase {
 
     // System.out.println("slow val = " + slowVal);
 
-    if (strafeOnly.get() == true) {
-      drive.drive(
-          -2 * fwdX * slowVal * 0.66,
-          -2 * fwdY * slowVal * 0.66,
-          0,
-          fieldOrientedFunction.get());
-
+    if (inverted.get() == true) {
+      fwdX *= -1;
+      fwdY *= -1;
+      rot *= 1;
     } else {
+      fwdX *= 1;
+      fwdY *= 1;
+      rot *= 1;
+    }
 
+    if (slowAll.get() == true) {
       drive.drive(
-          -2 * fwdX * slowVal,
-          -2 * fwdY * slowVal,
-          -1.5 * rot * slowVal,
+          fwdX *= slowVal * 0.5,
+          fwdY *= slowVal * 0.5,
+          rot *= slowVal * 0.5,
           fieldOrientedFunction.get());
     }
+
+    if (strafeOnly.get() == true) {
+
+      fwdX *= 2 * slowVal * 0.66;
+      fwdY *= 2 * slowVal * 0.66;
+      rot = 0;
+
+    } else {
+      fwdX *= 2 * slowVal;
+      fwdY *= 2 * slowVal;
+      rot *= 1.5 * slowVal;
+
+    }
+
+    drive.drive(
+        fwdX,
+        fwdY,
+        rot,
+        fieldOrientedFunction.get());
 
   }
 

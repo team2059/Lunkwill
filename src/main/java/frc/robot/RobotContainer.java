@@ -121,6 +121,8 @@ public class RobotContainer {
   private final int kFieldOriented = 6;
   private final int kInverted = 1;
   private final int kStrafeOnly = 2;
+  private final int kSlowEverything = 3;
+
   private final JoystickButton zeroGyro = new JoystickButton(logitech, kZeroGyro);
 
   /* Driver Buttons */
@@ -157,7 +159,8 @@ public class RobotContainer {
         () -> logitech.getRawAxis(kLogitechStrafeAxis), () -> logitech.getRawAxis(kLogitechRotationAxis),
         () -> logitech.getRawAxis(kLogitechSliderAxis),
         () -> !logitech.getRawButton(kFieldOriented),
-        () -> logitech.getRawButton(kInverted), () -> logitech.getRawButton(kStrafeOnly)));
+        () -> logitech.getRawButton(kInverted), () -> logitech.getRawButton(kStrafeOnly),
+        () -> logitech.getRawButton(kSlowEverything)));
 
     extendArm.setDefaultCommand(new JoystickExtendArmCmd(extendArm,
         () -> -controller.getRawAxis(kExtendAxis) * 0.5));
