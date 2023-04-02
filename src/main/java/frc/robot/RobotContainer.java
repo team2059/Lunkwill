@@ -35,6 +35,7 @@ import frc.robot.commands.Arm.Presets.CubePresets.LowCubeCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
 import frc.robot.commands.Auto.TwoElementAutoLeft;
 import frc.robot.commands.Auto.TwoElementAutoRight;
+import frc.robot.commands.Auto.Center.CenterBalance;
 import frc.robot.commands.Auto.Center.CenterConeTaxi;
 import frc.robot.commands.Auto.Center.CenterConeTaxiBalance;
 import frc.robot.commands.Auto.Center.CenterCubeTaxi;
@@ -184,6 +185,8 @@ public class RobotContainer {
       autoChooser.addOption("CenterCubeTaxi", "CenterCubeTaxi");
       autoChooser.addOption("CenterCubeTaxiBalance",
           "CenterCubeTaxiBalance");
+      autoChooser.addOption("CenterBalance",
+          "CenterBalance");
 
       autoChooser.addOption("LeftConeTaxi", "LeftConeTaxi");
       autoChooser.addOption("LeftConeTaxiBalance", "LeftConeTaxiBalance");
@@ -308,6 +311,9 @@ public class RobotContainer {
       }
       if (autoChooser.getSelected().equals("LeftConeTaxiBalance")) {
         return new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+      }
+      if (autoChooser.getSelected().equals("CenterBalance")) {
+        return new CenterBalance(swerveBase, tiltArm, extendArm, pneumatics);
       }
       if (autoChooser.getSelected().equals("LeftCubeTaxiBalance")) {
         return new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);

@@ -18,15 +18,14 @@ import frc.robot.subsystems.TiltArm;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CenterConeTaxiBalance extends SequentialCommandGroup {
+public class CenterBalance extends SequentialCommandGroup {
   /** Creates a new CenterConeTaxiAndBalanceCmd. */
-  public CenterConeTaxiBalance(SwerveBase swerveBase, TiltArm tiltArm, ExtendArm extendArm,
+  public CenterBalance(SwerveBase swerveBase, TiltArm tiltArm, ExtendArm extendArm,
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics).withTimeout(5),
-        new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
-            swerveBase.followPathCmd("CenterTaxiBalance")),
+    addCommands(
+        swerveBase.followPathCmd("CenterTaxiBalance"),
         new AutoBalanceCmd(swerveBase, -1));
   }
 }

@@ -23,7 +23,7 @@ public class CenterCubeTaxiBalance extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics),
+    addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics).withTimeout(5),
         new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
             swerveBase.followPathCmd("CenterTaxiBalance")),
         new AutoBalanceCmd(swerveBase, -1));
