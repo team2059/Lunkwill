@@ -116,8 +116,8 @@ public class TeleopSwerve extends CommandBase {
       rot = 0;
 
     } else {
-      fwdX *= 2 * slowVal;
-      fwdY *= 2 * slowVal;
+      fwdX *= 2.25 * slowVal;
+      fwdY *= 2.25 * slowVal;
       rot *= 1.5 * slowVal;
 
     }
