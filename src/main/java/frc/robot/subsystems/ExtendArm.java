@@ -86,11 +86,12 @@ public class ExtendArm extends SubsystemBase {
 
     isLimitReached = !limitSwitch.get();
 
-    SmartDashboard.putNumber("extension pos", extensionEncoder.getPosition());
+    SmartDashboard.putNumber("relative extension pos", extensionEncoder.getPosition());
+    System.out.println("relative extension pos" + extensionEncoder.getPosition());
     SmartDashboard.putBoolean("limit switch", isLimitReached);
     if (isLimitReached) {
-      // System.out.println("isLimitReached = " + isLimitReached);
-      extensionEncoder.setPosition(0);
+    System.out.println("isLimitReached = " + isLimitReached);
+    extensionEncoder.setPosition(0);
     }
 
   }

@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TiltArm;
 
@@ -23,7 +24,7 @@ public class PIDTiltArmCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // SmartDashboard.putNumber("setPoint cmd", setpoint);
+    SmartDashboard.putNumber("tilt setpoint", setpoint);
 
   }
 
@@ -33,7 +34,8 @@ public class PIDTiltArmCmd extends CommandBase {
     double thruBorePos = tiltArm.getThruBorePosition();
     output = tiltArm.getTiltController().calculate(thruBorePos, setpoint);
     // SmartDashboard.putNumber("thruBorePos", thruBorePos);
-    // SmartDashboard.putNumber("tiltOutput", output);
+    SmartDashboard.putNumber("tiltOutput", output);
+    SmartDashboard.putNumber("realtive tilt", tiltArm.getTiltMotor().getEncoder().getPosition());
 
     System.out.println("tiltOutput" + output);
     tiltArm.getTiltMotor().set(output);

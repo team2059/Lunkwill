@@ -70,7 +70,7 @@ public class RobotContainer {
 
   // private final int kExtendArmToMax = 6;
 
-  private final int kPickUpArmPosition = 5;
+  private final int kPickUpArmPosition = 4;
   private final int kGripperSolenoidToggle = 6;
   private final int kZeroEntireArm = 1;
   private final int kSubstationArm = 4;

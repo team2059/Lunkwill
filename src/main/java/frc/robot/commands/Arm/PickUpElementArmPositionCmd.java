@@ -21,8 +21,6 @@ public class PickUpElementArmPositionCmd extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new PIDTiltArmCmd(tiltArm, Constants.Presets.PICKUP_TILT),
-        new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.PICKUP_EXTEND),
-        new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)));
+        new PIDTiltArmCmd(tiltArm, Constants.Presets.PICKUP_TILT));
   }
 }

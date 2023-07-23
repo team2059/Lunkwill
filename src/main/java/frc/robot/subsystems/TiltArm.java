@@ -67,6 +67,7 @@ public class TiltArm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("relative tilt pos", tiltMotor.getEncoder().getPosition());
 
     // SmartDashboard.putNumber("TILTPERCENT", tiltMotor.getAppliedOutput());
 
