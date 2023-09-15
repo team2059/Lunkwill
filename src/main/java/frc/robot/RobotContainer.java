@@ -248,12 +248,12 @@ public class RobotContainer {
     substationTagRight.onTrue(
         new GoToTagCmd(swerveBase, limelight, Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT,
             Constants.Presets.SUBSTATION_LIMELIGHT_TAG_OFFSET_INCHES_FRONT));
-    /*
+
     substationArm.onTrue(new SubstationPresetCmd(tiltArm, extendArm, pneumatics));
     substationGripAndTiltUp.onTrue(new SubstationGripAndTiltUpCmd(tiltArm, extendArm, pneumatics));
-    */
+
     new JoystickButton(controller, 2).whileTrue(new TurnToAngleCmd(swerveBase, limelight));
-    /*
+
     lowCube.onTrue(new LowCubeCmd(tiltArm, extendArm, pneumatics));
     midCube.onTrue(new MidCubeCmd(tiltArm, extendArm, pneumatics));
     highCube.onTrue(new HighCubeCmd(tiltArm, extendArm, pneumatics));
@@ -268,7 +268,6 @@ public class RobotContainer {
     pickUpArmPosition.onTrue(new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics));
 
     zeroEntireArm.onTrue(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics));
-    */
 
     gripperSolenoidToggle.toggleOnTrue(new InstantCommand(() -> pneumatics.toggleGripperSolenoid()));
 
