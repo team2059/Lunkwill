@@ -17,7 +17,7 @@ public final class Constants {
                 public static final int extendId = 9;
                 // public static final int restServoAngle = 10;
                 // public static final int extendServoAngle = 25;
-                public static final int restServoAngle = 75;
+                public static final int restServoAngle = 85;
                 public static final int extendServoAngle = 0;
                 public static final int thruBoreDIO = 0;
                 public static final double tiltkP = 7.5;

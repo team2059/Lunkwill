@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Arm.ZeroEntireArmCmd;
 import frc.robot.commands.Arm.Presets.CubePresets.HighCubeCmd;
+import frc.robot.commands.Arm.Presets.CubePresets.MidCubeCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.SwerveBase;
@@ -22,7 +23,7 @@ public class LeftCubeTaxi extends SequentialCommandGroup {
       Pneumatics pneumatics) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics), new ParallelCommandGroup(
+    addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics).withTimeout(5), new ParallelCommandGroup(
         new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics), swerveBase.followPathCmd("LeftCubeTaxi")));
   }
 }
