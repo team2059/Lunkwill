@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
+// import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -71,7 +71,7 @@ public class ExtendArm extends SubsystemBase {
      */
 
     extensionMotor.restoreFactoryDefaults();
-    extensionMotor.setIdleMode(IdleMode.kBrake);
+    // extensionMotor.setIdleMode(IdleMode.kBrake);
     extensionMotor.setInverted(false);
     // extensionEncoder.setPosition(0);
 
@@ -87,11 +87,12 @@ public class ExtendArm extends SubsystemBase {
     isLimitReached = !limitSwitch.get();
 
     SmartDashboard.putNumber("relative extension pos", extensionEncoder.getPosition());
-    System.out.println("relative extension pos" + extensionEncoder.getPosition());
+    // System.out.println("relative extension pos" +
+    // extensionEncoder.getPosition());
     SmartDashboard.putBoolean("limit switch", isLimitReached);
     if (isLimitReached) {
-    System.out.println("isLimitReached = " + isLimitReached);
-    extensionEncoder.setPosition(0);
+      // System.out.println("isLimitReached = " + isLimitReached);
+      extensionEncoder.setPosition(0);
     }
 
   }

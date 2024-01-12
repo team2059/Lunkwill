@@ -23,6 +23,6 @@ public class LeftCubeTaxi extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics), new ParallelCommandGroup(
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics), swerveBase.followPathCmd("LeftCubeTaxi")));
+        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics)));//, swerveBase.followPathCmd("LeftCubeTaxi")));
   }
 }

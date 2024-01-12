@@ -24,7 +24,7 @@ public class CenterCubeTaxi extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics).withTimeout(5),
-        new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
-            swerveBase.followPathCmd("CenterTaxi")));
+        new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics)));
+        //    swerveBase.followPathCmd("CenterTaxi")));
   }
 }

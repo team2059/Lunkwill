@@ -49,15 +49,15 @@ public class TwoElementAutoRight extends SequentialCommandGroup {
         // new HighCubeAutoCmd(tiltArm, extendArm, pneumatics),
         // new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm,
         // pneumatics),
-        new ParallelCommandGroup(swerveBase.followPathCmd("goToElementRight"),
-            new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics)),
-        new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
-        new WaitCommand(0.5),
-        new ZeroEntireArmTwoElementCmd(extendArm, tiltArm, pneumatics),
-        swerveBase.followPathCmd("goBackFromElementRight"),
-        new WaitCommand(1.5),
-        new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT,
-            Constants.Presets.CONE_LIMELIGHT_FRONT_OFFSET_INCHES),
-        new HighConeCmd(tiltArm, extendArm, pneumatics));
+        new ParallelCommandGroup(// swerveBase.followPathCmd("goToElementRight"),
+            new PickUpElementArmPositionCmd(tiltArm, extendArm, pneumatics),
+            new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
+            new WaitCommand(0.5),
+            new ZeroEntireArmTwoElementCmd(extendArm, tiltArm, pneumatics),
+            // swerveBase.followPathCmd("goBackFromElementRight"),
+            new WaitCommand(1.5),
+            new GoToTagCmd(swerveBase, limelight, Constants.Presets.CONE_LIMELIGHT_TAG_OFFSET_INCHES_RIGHT,
+                Constants.Presets.CONE_LIMELIGHT_FRONT_OFFSET_INCHES),
+            new HighConeCmd(tiltArm, extendArm, pneumatics)));
   }
 }

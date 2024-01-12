@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Swerve;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+// import com.pathplanner.lib.PathConstraints;
+// import com.pathplanner.lib.PathPlanner;
+// import com.pathplanner.lib.PathPlannerTrajectory;
+// import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+// import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -305,55 +305,58 @@ public class SwerveBase extends SubsystemBase {
     rearLeft.stop();
   }
 
-  public SequentialCommandGroup followPathCmd(String pathName) {
+  // public SequentialCommandGroup followPathCmd(String pathName) {
 
-    PathPlannerTrajectory trajectory = getPathPlannerTrajectory(pathName);
-    PathPlannerState state = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(),
-        DriverStation.getAlliance());
+  // PathPlannerTrajectory trajectory = getPathPlannerTrajectory(pathName);
+  // PathPlannerState state =
+  // PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(),
+  // DriverStation.getAlliance());
 
-    Command ppCommand = getPathPlannerCommand(trajectory);
+  // Command ppCommand = getPathPlannerCommand(trajectory);
 
-    return new SequentialCommandGroup(
+  // return new SequentialCommandGroup(
 
-        new InstantCommand(
-            () -> this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(), state.holonomicRotation))),
-        ppCommand,
-        new InstantCommand(() -> this.stopModules()));
-  }
+  // new InstantCommand(
+  // () -> this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(),
+  // state.holonomicRotation))),
+  // ppCommand,
+  // new InstantCommand(() -> this.stopModules()));
+  // }
 
-  public PathPlannerTrajectory getPathPlannerTrajectory(String pathName) {
+  // public PathPlannerTrajectory getPathPlannerTrajectory(String pathName) {
 
-    PathConstraints constraints = PathPlanner.getConstraintsFromPath(pathName);
-    PathPlannerTrajectory ppTrajectory = PathPlanner.loadPath(pathName, constraints, false);
-    return ppTrajectory;
+  // PathConstraints constraints = PathPlanner.getConstraintsFromPath(pathName);
+  // PathPlannerTrajectory ppTrajectory = PathPlanner.loadPath(pathName,
+  // constraints, false);
+  // return ppTrajectory;
 
-  }
+  // }
 
-  public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
+  // public Command getPathPlannerCommand(PathPlannerTrajectory trajectory) {
 
-    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory,
-        DriverStation.getAlliance());
+  // trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory,
+  // DriverStation.getAlliance());
 
-    // System.out.println("GET ALLIANCE: " +
-    // DriverStation.getAlliance().toString());
+  // // System.out.println("GET ALLIANCE: " +
+  // // DriverStation.getAlliance().toString());
 
-    PIDController xController = new PIDController(3, 0, 0);
-    PIDController yController = new PIDController(3, 0, 0);
-    PIDController thetaController = new PIDController(
-        1, 0.0, 0.0);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+  // PIDController xController = new PIDController(3, 0, 0);
+  // PIDController yController = new PIDController(3, 0, 0);
+  // PIDController thetaController = new PIDController(
+  // 1, 0.0, 0.0);
+  // thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
-        trajectory,
-        this::getPose,
-        Swerve.kinematics,
-        xController,
-        yController,
-        thetaController,
-        this::setModuleStates,
-        this);
+  // PPSwerveControllerCommand command = new PPSwerveControllerCommand(
+  // trajectory,
+  // this::getPose,
+  // Swerve.kinematics,
+  // xController,
+  // yController,
+  // thetaController,
+  // this::setModuleStates,
+  // this);
 
-    return command;
-  }
+  // return command;
+  // }
 
 }

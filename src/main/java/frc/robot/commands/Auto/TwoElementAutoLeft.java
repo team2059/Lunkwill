@@ -59,11 +59,11 @@ public class TwoElementAutoLeft extends SequentialCommandGroup {
                     new PIDTiltArmCmd(tiltArm, Constants.Presets.PICKUP_TILT),
                     new InstantCommand(() -> pneumatics.setGripperState(Value.kForward)),
                     new ExtendToSetpointSequenceCmd(extendArm, Constants.Presets.PICKUP_EXTEND)),
-            swerveBase.followPathCmd("goToElementLeft").withTimeout(5)),
+           // swerveBase.followPathCmd("goToElementLeft").withTimeout(5)),
         new InstantCommand(() -> pneumatics.setGripperState(Value.kReverse)),
         new WaitCommand(0.25), new ParallelCommandGroup(
-            swerveBase.followPathCmd("goBackFromElementLeft"),
+           // swerveBase.followPathCmd("goBackFromElementLeft"),
             new PIDTiltArmCmd(tiltArm, Constants.Presets.UPPER_CUBE_ARM_TILT)),
-        new HighCubeCmd(tiltArm, extendArm, pneumatics));
+        new HighCubeCmd(tiltArm, extendArm, pneumatics)));
   }
 }

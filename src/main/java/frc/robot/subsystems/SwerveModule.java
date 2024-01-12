@@ -5,7 +5,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.IdleMode;
+//import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -71,8 +71,8 @@ public class SwerveModule extends SubsystemBase {
 
     offset = new Rotation2d(measuredOffsetRadians);
 
-    driveMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.setIdleMode(IdleMode.kBrake);
+    // driveMotor.setIdleMode(IdleMode.kBrake);
+    // rotationMotor.setIdleMode(IdleMode.kBrake);
 
     driveController = driveMotor.getPIDController();
 

@@ -25,7 +25,7 @@ public class CenterBalance extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        swerveBase.followPathCmd("CenterTaxiBalance"),
+        //swerveBase.followPathCmd("CenterTaxiBalance"),
         new AutoBalanceCmd(swerveBase, -1));
   }
 }

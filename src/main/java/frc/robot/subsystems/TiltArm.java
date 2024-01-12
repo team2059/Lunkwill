@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+//import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -58,7 +58,7 @@ public class TiltArm extends SubsystemBase {
      * parameters will not persist between power cycles
      */
     tiltMotor.restoreFactoryDefaults();
-    tiltMotor.setIdleMode(IdleMode.kBrake);
+    // tiltMotor.setIdleMode(IdleMode.kBrake);
     tiltMotor.setInverted(false);
 
     // extensionEncoder.setPosition(0);

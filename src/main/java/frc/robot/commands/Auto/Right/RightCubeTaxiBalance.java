@@ -25,7 +25,7 @@ public class RightCubeTaxiBalance extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new HighCubeCmd(tiltArm, extendArm, pneumatics),
         new ParallelCommandGroup(new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics),
-            swerveBase.followPathCmd("RightCubeTaxiBalance")),
-        new AutoBalanceCmd(swerveBase, -1));
+          //  swerveBase.followPathCmd("RightCubeTaxiBalance")),
+        new AutoBalanceCmd(swerveBase, -1)));
   }
 }

@@ -23,6 +23,6 @@ public class RightConeTaxi extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new HighConeCmd(tiltArm, extendArm, pneumatics), new ParallelCommandGroup(
-        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics), swerveBase.followPathCmd("RightConeTaxi")));
+        new ZeroEntireArmCmd(extendArm, tiltArm, pneumatics)));//, swerveBase.followPathCmd("RightConeTaxi")));
   }
 }
