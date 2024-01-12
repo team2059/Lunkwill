@@ -2,9 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
 //import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -51,7 +54,7 @@ public class SwerveModule extends SubsystemBase {
   // absolute offset for the CANCoder so that the wheels can be aligned when the
   // robot is turned on
   private final Rotation2d offset;
-  private final SparkMaxPIDController driveController;
+  private final SparkPIDController driveController;
 
   public SwerveModule(
       int driveMotorId,
@@ -59,8 +62,8 @@ public class SwerveModule extends SubsystemBase {
       int canCoderId,
       double measuredOffsetRadians) {
 
-    driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
-    rotationMotor = new CANSparkMax(rotationMotorId, MotorType.kBrushless);
+    driveMotor = new CANSparkMax(driveMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+    rotationMotor = new CANSparkMax(rotationMotorId, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
 
     driveEncoder = driveMotor.getEncoder();
     rotationEncoder = rotationMotor.getEncoder();
@@ -71,8 +74,8 @@ public class SwerveModule extends SubsystemBase {
 
     offset = new Rotation2d(measuredOffsetRadians);
 
-    // driveMotor.setIdleMode(IdleMode.kBrake);
-    // rotationMotor.setIdleMode(IdleMode.kBrake);
+    driveMotor.setIdleMode(IdleMode.kBrake);
+    rotationMotor.setIdleMode(IdleMode.kBrake);
 
     driveController = driveMotor.getPIDController();
 
@@ -242,12 +245,12 @@ public class SwerveModule extends SubsystemBase {
     double angularVelolictySetpoint = optimizedDesiredState.speedMetersPerSecond /
         (Swerve.wheelDiameter / 2.0);
     // if (RobotState.isAutonomous() || isAutoBalancing == true) {
-    //   driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
+    // driveMotor.setVoltage(Swerve.driveFF.calculate(angularVelolictySetpoint));
 
     // } else {
 
-      driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
-    //}
+    driveMotor.set(optimizedDesiredState.speedMetersPerSecond / Swerve.maxSpeed);
+    // }
   }
 
   public void resetEncoders() {
