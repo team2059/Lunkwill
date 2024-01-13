@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -180,6 +181,8 @@ public class RobotContainer {
 
     // autoChooser.addOption("test", AutoBuilder.buildAuto("straightAuto"));
     // getSwerveBase().configureAutoBuilder();
+    NamedCommands.registerCommand("arm", new PIDTiltArmCmd(tiltArm, 0.65));
+
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", autoChooser);

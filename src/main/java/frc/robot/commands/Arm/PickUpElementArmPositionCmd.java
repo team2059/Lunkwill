@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.PIDTiltArmCmd;
 import frc.robot.subsystems.ExtendArm;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.TiltArm;

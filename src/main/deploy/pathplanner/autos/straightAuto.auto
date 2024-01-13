@@ -12,9 +12,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "straightPath"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "straightPath"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "arm"
+                }
+              }
+            ]
           }
         }
       ]

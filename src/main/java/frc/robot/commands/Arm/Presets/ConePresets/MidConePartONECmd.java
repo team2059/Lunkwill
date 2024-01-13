@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
 import frc.robot.commands.Arm.ExtendToSetpointSequenceCmd;
-import frc.robot.commands.Arm.PIDTiltArmCmd;
+import frc.robot.commands.PIDTiltArmCmd;
 
 import frc.robot.subsystems.TiltArm;
 import frc.robot.subsystems.ExtendArm;
