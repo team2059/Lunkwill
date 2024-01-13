@@ -4,12 +4,19 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -145,7 +152,7 @@ public class RobotContainer {
   // private final PowerDistributionPanel powerDistributionPanel = new
   // PowerDistributionPanel();
 
-  SendableChooser<String> autoChooser = new SendableChooser<>();
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /* Commands */
   // InstantCommand toggleExtenderSolenoidCmd = new InstantCommand(() ->
@@ -171,42 +178,48 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    try
+    // autoChooser.addOption("test", AutoBuilder.buildAuto("straightAuto"));
+    // getSwerveBase().configureAutoBuilder();
+    autoChooser = AutoBuilder.buildAutoChooser();
 
-    {
-      // autoChooser.setDefaultOption("auto",
-      // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // try
 
-      // autoChooser.setDefaultOption("nothing",
-      // new InstantCommand());
+    // {
+    // // autoChooser.setDefaultOption("auto",
+    // // new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics));
 
-      autoChooser.setDefaultOption("CenterConeTaxi", "CenterConeTaxi");
-      autoChooser.addOption("CenterConeTaxiBalance", "CenterConeTaxiBalance");
-      autoChooser.addOption("CenterCubeTaxi", "CenterCubeTaxi");
-      autoChooser.addOption("CenterCubeTaxiBalance",
-          "CenterCubeTaxiBalance");
-      autoChooser.addOption("CenterBalance",
-          "CenterBalance");
+    // // autoChooser.setDefaultOption("nothing",
+    // // new InstantCommand());
 
-      autoChooser.addOption("LeftConeTaxi", "LeftConeTaxi");
-      autoChooser.addOption("LeftConeTaxiBalance", "LeftConeTaxiBalance");
-      autoChooser.addOption("LeftCubeTaxiBalance", "LeftCubeTaxiBalance");
-      autoChooser.addOption("LeftCubeTaxi", "LeftCubeTaxi");
+    // autoChooser.setDefaultOption("CenterConeTaxi", "CenterConeTaxi");
+    // autoChooser.addOption("CenterConeTaxiBalance", "CenterConeTaxiBalance");
+    // autoChooser.addOption("CenterCubeTaxi", "CenterCubeTaxi");
+    // autoChooser.addOption("CenterCubeTaxiBalance",
+    // "CenterCubeTaxiBalance");
+    // autoChooser.addOption("CenterBalance",
+    // "CenterBalance");
 
-      autoChooser.addOption("RightCubeTaxi", "RightCubeTaxi");
-      autoChooser.addOption("RightCubeTaxiBalance",
-          "RightCubeTaxiBalance");
-      autoChooser.addOption("RightConeTaxiBalance",
-          "RightConeTaxiBalance");
-      autoChooser.addOption("RightConeTaxi", "RightConeTaxi");
-      autoChooser.addOption("TwoElementAutoRight", "TwoElementAutoRight");
-      autoChooser.addOption("TwoElementAutoLeft", "TwoElementAutoLeft");
+    // autoChooser.addOption("LeftConeTaxi", "LeftConeTaxi");
+    // autoChooser.addOption("LeftConeTaxiBalance", "LeftConeTaxiBalance");
+    // autoChooser.addOption("LeftCubeTaxiBalance", "LeftCubeTaxiBalance");
+    // autoChooser.addOption("LeftCubeTaxi", "LeftCubeTaxi");
 
-      Shuffleboard.getTab("Autonomous").add(autoChooser);
-    } catch (NullPointerException ex) {
-      autoChooser.setDefaultOption("NULL nothing", "nothing");
-      DriverStation.reportError("auto choose NULL somewhere in RobotContainer.java", null);
-    }
+    // autoChooser.addOption("RightCubeTaxi", "RightCubeTaxi");
+    // autoChooser.addOption("RightCubeTaxiBalance",
+    // "RightCubeTaxiBalance");
+    // autoChooser.addOption("RightConeTaxiBalance",
+    // "RightConeTaxiBalance");
+    // autoChooser.addOption("RightConeTaxi", "RightConeTaxi");
+    // autoChooser.addOption("TwoElementAutoRight", "TwoElementAutoRight");
+    // autoChooser.addOption("TwoElementAutoLeft", "TwoElementAutoLeft");
+
+    // Shuffleboard.getTab("Autonomous").add(autoChooser);
+    // } catch (NullPointerException ex) {
+    // autoChooser.setDefaultOption("NULL nothing", "nothing");
+    // DriverStation.reportError("auto choose NULL somewhere in
+    // RobotContainer.java", null);
+    // }
   }
 
   public Pneumatics getPneumatics() {
@@ -293,58 +306,62 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    try {
-      if (autoChooser.getSelected().equals("CenterConeTaxi")) {
-        return new CenterConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("CenterConeTaxiBalance")) {
-        return new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("CenterCubeTaxi")) {
-        return new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("CenterCubeTaxiBalance")) {
-        return new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("LeftConeTaxi")) {
-        return new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("LeftConeTaxiBalance")) {
-        return new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("CenterBalance")) {
-        return new CenterBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("LeftCubeTaxiBalance")) {
-        return new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("LeftCubeTaxi")) {
-        return new LeftCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("RightCubeTaxi")) {
-        return new RightCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("RightCubeTaxiBalance")) {
-        return new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("RightConeTaxiBalance")) {
-        return new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("RightConeTaxi")) {
-        return new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
-      }
-      if (autoChooser.getSelected().equals("TwoElementAutoLeft")) {
-        return new TwoElementAutoLeft(swerveBase, tiltArm, extendArm, pneumatics, limelight);
-      }
-      if (autoChooser.getSelected().equals("TwoElementAutoRight")) {
-        return new TwoElementAutoRight(swerveBase, tiltArm, extendArm, pneumatics, limelight);
-      }
-      return new InstantCommand();
+    return autoChooser.getSelected();
+    // try {
+    // if (autoChooser.getSelected().equals("CenterConeTaxi")) {
+    // return new CenterConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("CenterConeTaxiBalance")) {
+    // return new CenterConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("CenterCubeTaxi")) {
+    // return new CenterCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("CenterCubeTaxiBalance")) {
+    // return new CenterCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("LeftConeTaxi")) {
+    // return new LeftConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("LeftConeTaxiBalance")) {
+    // return new LeftConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("CenterBalance")) {
+    // return new CenterBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("LeftCubeTaxiBalance")) {
+    // return new LeftCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("LeftCubeTaxi")) {
+    // return new LeftCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("RightCubeTaxi")) {
+    // return new RightCubeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("RightCubeTaxiBalance")) {
+    // return new RightCubeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("RightConeTaxiBalance")) {
+    // return new RightConeTaxiBalance(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("RightConeTaxi")) {
+    // return new RightConeTaxi(swerveBase, tiltArm, extendArm, pneumatics);
+    // }
+    // if (autoChooser.getSelected().equals("TwoElementAutoLeft")) {
+    // return new TwoElementAutoLeft(swerveBase, tiltArm, extendArm, pneumatics,
+    // limelight);
+    // }
+    // if (autoChooser.getSelected().equals("TwoElementAutoRight")) {
+    // return new TwoElementAutoRight(swerveBase, tiltArm, extendArm, pneumatics,
+    // limelight);
+    // }
+    // return new InstantCommand();
 
-    } catch (NullPointerException ex) {
-      DriverStation.reportError("auto choose NULL somewhere in getAutonomousCommand in RobotContainer.java", null);
-      return new InstantCommand();
-    }
+    // } catch (NullPointerException ex) {
+    // DriverStation.reportError("auto choose NULL somewhere in getAutonomousCommand
+    // in RobotContainer.java", null);
+    // return new InstantCommand();
+    // }
   }
 
   public ExtendArm getExtendArm() {

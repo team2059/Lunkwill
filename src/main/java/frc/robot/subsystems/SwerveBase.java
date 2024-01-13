@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -12,10 +13,15 @@ import com.kauailabs.navx.frc.AHRS;
 // import com.pathplanner.lib.PathPlannerTrajectory;
 // import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 // import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -61,13 +67,13 @@ public class SwerveBase extends SubsystemBase {
    * measured CANCoder offset
    */
 
-  private final SwerveModule frontLeft = new SwerveModule(
+  private final SwerveModule frontLeft = new SwerveModule(0,
       Swerve.frontLeftDriveMotorId,
       Swerve.frontLeftRotationMotorId,
       Swerve.frontLeftRotationEncoderId,
       frontLeftAngleOffset);
 
-  private final SwerveModule frontRight = new SwerveModule(
+  private final SwerveModule frontRight = new SwerveModule(1,
       Swerve.frontRightDriveMotorId,
       Swerve.frontRightRotationMotorId,
       Swerve.frontRightRotationEncoderId,
@@ -77,17 +83,19 @@ public class SwerveBase extends SubsystemBase {
     return frontRight;
   }
 
-  private final SwerveModule rearLeft = new SwerveModule(
+  private final SwerveModule rearLeft = new SwerveModule(2,
       Swerve.rearLeftDriveMotorId,
       Swerve.rearLeftRotationMotorId,
       Swerve.rearLeftRotationEncoderId,
       rearLeftAngleOffset);
 
-  private final SwerveModule rearRight = new SwerveModule(
+  private final SwerveModule rearRight = new SwerveModule(3,
       Swerve.rearRightDriveMotorId,
       Swerve.rearRightRotationMotorId,
       Swerve.rearRightRotationEncoderId,
       rearRightAngleOffset);
+
+  private final SwerveModule[] modules = new SwerveModule[] { frontLeft, frontRight, rearLeft, rearRight };
 
   private final AHRS navX;
 
@@ -138,6 +146,8 @@ public class SwerveBase extends SubsystemBase {
     frontRight.getRotationMotor().setInverted(true);
     frontLeft.getRotationMotor().setInverted(true);
 
+    configureAutoBuilder();
+
   }
 
   @Override
@@ -157,8 +167,63 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("pitch",
         navX.getPitch());
 
+    SmartDashboard.putString("rearRight angle", getStates()[3].angle.toString());
+    SmartDashboard.putNumber("rearRight speed", getStates()[3].speedMetersPerSecond);
+
     // System.out.println("pitch = " + navX.getPitch());
 
+  }
+
+  public void configureAutoBuilder() {
+    // Configure the AutoBuilder last
+    AutoBuilder.configureHolonomic(
+        this::getPose, // Robot pose supplier
+        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+            3.5, // Max module speed, in m/s
+            0.3, // Drive base radius in meters. Distance from robot center to furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this);
+
+  }
+
+  /**
+   * Drives the robot robot-relative according to provided {@link ChassisSpeeds}.
+   * 
+   * @param chassisSpeeds The desired ChassisSpeeds. Should be robot relative.
+   */
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
+    SwerveModuleState[] newStates = Constants.Swerve.kinematics.toSwerveModuleStates(discreteSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(newStates, Constants.Swerve.maxSpeed);
+    setModuleStates(newStates);
+  }
+
+  /**
+   * Gets robot relative ChassisSpeeds.
+   * 
+   * @return The robot-relative {@link ChassisSpeeds}.
+   */
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return ChassisSpeeds.fromFieldRelativeSpeeds(Constants.Swerve.kinematics.toChassisSpeeds(getStates()),
+        getHeading());
   }
 
   /**
@@ -243,6 +308,20 @@ public class SwerveBase extends SubsystemBase {
     rearLeft.setDesiredStateClosedLoop(moduleStates[2], isAutoBalancing);
     rearRight.setDesiredStateClosedLoop(moduleStates[3], isAutoBalancing);
 
+  }
+
+  /**
+   * Gets states of the four swerve modules.
+   * 
+   * @return The states of the four swerve modules in a {@link SwerveModuleState}
+   *         array.
+   */
+  public SwerveModuleState[] getStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (SwerveModule module : modules) {
+      states[module.getModuleID()] = module.getState();
+    }
+    return states;
   }
 
   // returns an array of SwerveModulePositions

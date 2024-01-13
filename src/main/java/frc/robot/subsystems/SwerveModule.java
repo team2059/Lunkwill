@@ -29,6 +29,7 @@ public class SwerveModule extends SubsystemBase {
    */
 
   public PIDController rotationController;
+  private final int moduleID;
 
   private static final double rotationkP = 0.5;
   private static final double rotationkD = 0.0;
@@ -56,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
   private final Rotation2d offset;
   private final SparkPIDController driveController;
 
-  public SwerveModule(
+  public SwerveModule(int moduleID,
       int driveMotorId,
       int rotationMotorId,
       int canCoderId,
@@ -81,6 +82,7 @@ public class SwerveModule extends SubsystemBase {
 
     rotationController.setP(rotationkP);
     rotationController.setD(rotationkD);
+    this.moduleID = moduleID;
 
     driveController.setP(drivekP);
 
@@ -106,6 +108,11 @@ public class SwerveModule extends SubsystemBase {
 
     driveEncoder.setPosition(0.0);
 
+  }
+
+  /** Returns the module state (turn angle and drive velocity). */
+  public SwerveModuleState getState() {
+    return new SwerveModuleState(getCurrentVelocityMetersPerSecond(), getCanCoderAngle());
   }
 
   public double getDriveDistanceRadians() {
@@ -162,6 +169,15 @@ public class SwerveModule extends SubsystemBase {
 
     return wrappedAngle;
 
+  }
+
+  /**
+   * Returns the module ID.
+   *
+   * @return The ID number of the module (0-3).
+   */
+  public int getModuleID() {
+    return moduleID;
   }
 
   // initialize the integrated NEO encoder to the offset (relative to home
