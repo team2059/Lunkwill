@@ -172,17 +172,70 @@ public class SwerveModule extends SubsystemBase {
   }
 
   // unwraps a target angle to be [0,2π]
-  public static double placeInAppropriate0To360Scope(double unwrappedAngle) {
+  // public static double placeInAppropriate0To360Scope(double unwrappedAngle) {
 
-    double modAngle = unwrappedAngle % (2.0 * Math.PI);
+  // double modAngle = unwrappedAngle % (2.0 * Math.PI);
 
-    if (modAngle < 0.0)
-      modAngle += 2.0 * Math.PI;
+  // if (modAngle < 0.0)
+  // modAngle += 2.0 * Math.PI;
 
-    double wrappedAngle = modAngle;
+  // double wrappedAngle = modAngle;
 
-    return wrappedAngle;
+  // return wrappedAngle;
 
+  // }
+
+  public static double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
+    double lowerBound;
+    double upperBound;
+    double lowerOffset = scopeReference % (2.0 * Math.PI);
+    if (lowerOffset >= 0) {
+      lowerBound = scopeReference - lowerOffset;
+      upperBound = scopeReference + ((2.0 * Math.PI) - lowerOffset);
+    } else {
+      upperBound = scopeReference - lowerOffset;
+      lowerBound = scopeReference - ((2.0 * Math.PI) + lowerOffset);
+    }
+    while (newAngle < lowerBound) {
+      newAngle += (2.0 * Math.PI);
+    }
+    while (newAngle > upperBound) {
+      newAngle -= (2.0 * Math.PI);
+    }
+    if (newAngle - scopeReference > (Math.PI)) {
+      newAngle -= (2.0 * Math.PI);
+    } else if (newAngle - scopeReference < -(Math.PI)) {
+      newAngle += (2.0 * Math.PI);
+    }
+    return newAngle;
+  }
+
+  /**
+   * Minimize the change in heading the desired swerve module state would require
+   * by potentially
+   * reversing the direction the wheel spins. Customized from WPILib's version to
+   * include placing in
+   * appropriate scope for CTRE and REV onboard control as both controllers as of
+   * writing don't have
+   * support for continuous input.
+   *
+   * @param desiredState The desired state.
+   * @param currentAngle The current module angle.
+   */
+  public static SwerveModuleState optimize(
+      SwerveModuleState desiredState, Rotation2d currentAngle) {
+
+    // double targetAngle =
+    // placeInAppropriate0To360Scope(desiredState.angle.getRadians());
+    double targetAngle = placeInAppropriate0To360Scope(currentAngle.getRadians(), desiredState.angle.getRadians());
+
+    double targetSpeed = desiredState.speedMetersPerSecond;
+    double delta = (targetAngle - currentAngle.getRadians());
+    if (Math.abs(delta) > (Math.PI / 2)) {
+      targetSpeed = -targetSpeed;
+      targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
+    }
+    return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
   }
 
   /**
@@ -204,32 +257,6 @@ public class SwerveModule extends SubsystemBase {
   }
 
   /**
-   * Minimize the change in heading the desired swerve module state would require
-   * by potentially
-   * reversing the direction the wheel spins. Customized from WPILib's version to
-   * include placing in
-   * appropriate scope for CTRE and REV onboard control as both controllers as of
-   * writing don't have
-   * support for continuous input.
-   *
-   * @param desiredState The desired state.
-   * @param currentAngle The current module angle.
-   */
-  public static SwerveModuleState optimize(
-      SwerveModuleState desiredState, Rotation2d currentAngle) {
-
-    double targetAngle = placeInAppropriate0To360Scope(desiredState.angle.getRadians());
-
-    double targetSpeed = desiredState.speedMetersPerSecond;
-    double delta = (targetAngle - currentAngle.getRadians());
-    if (Math.abs(delta) > (Math.PI / 2)) {
-      targetSpeed = -targetSpeed;
-      targetAngle = delta > Math.PI / 2 ? (targetAngle -= Math.PI) : (targetAngle += Math.PI);
-    }
-    return new SwerveModuleState(targetSpeed, new Rotation2d(targetAngle));
-  }
-
-  /**
    * Method to set the desired state of the swerve module
    * Parameter:
    * SwerveModuleState object that holds a desired linear and rotational setpoint
@@ -244,7 +271,7 @@ public class SwerveModule extends SubsystemBase {
     SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
 
     double angularSetPoint = placeInAppropriate0To360Scope(
-        optimizedDesiredState.angle.getRadians());
+        optimizedDesiredState.angle.getRadians(), optimizedDesiredState.angle.getRadians());
 
     rotationMotor.set(rotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
 
@@ -268,7 +295,7 @@ public class SwerveModule extends SubsystemBase {
     SwerveModuleState optimizedDesiredState = optimize(unoptimizedDesiredState, getIntegratedAngle());
 
     double angularSetPoint = placeInAppropriate0To360Scope(
-        optimizedDesiredState.angle.getRadians());
+        optimizedDesiredState.angle.getRadians(), optimizedDesiredState.angle.getRadians());
 
     rotationMotor.set(rotationController.calculate(getIntegratedAngle().getRadians(), angularSetPoint));
 
