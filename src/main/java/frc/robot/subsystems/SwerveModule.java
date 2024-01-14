@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -17,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 
 public class SwerveModule extends SubsystemBase {
@@ -50,7 +54,7 @@ public class SwerveModule extends SubsystemBase {
   private final RelativeEncoder driveEncoder;
   private final RelativeEncoder rotationEncoder;
 
-  private final CANCoder canCoder;
+  private final CANcoder canCoder;
 
   // absolute offset for the CANCoder so that the wheels can be aligned when the
   // robot is turned on
@@ -71,12 +75,12 @@ public class SwerveModule extends SubsystemBase {
     rotationController = new PIDController(0.5, 0, 0.0);
     rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
-    canCoder = new CANCoder(canCoderId);
+    canCoder = new CANcoder(canCoderId);
 
     offset = new Rotation2d(measuredOffsetRadians);
 
     driveMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.setIdleMode(IdleMode.kBrake);
+    rotationMotor.setIdleMode(IdleMode.kCoast);
 
     driveController = driveMotor.getPIDController();
 
@@ -100,7 +104,12 @@ public class SwerveModule extends SubsystemBase {
 
     // configure the CANCoder to output in unsigned (wrap around from 360 to 0
     // degrees)
-    canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+    // canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+    CANcoderConfiguration config = new CANcoderConfiguration();
+    config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+    config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    // config.MagnetSensor.MagnetOffset = offset.getRotations();
+    canCoder.getConfigurator().apply(config);
 
   }
 
@@ -123,8 +132,14 @@ public class SwerveModule extends SubsystemBase {
 
   public Rotation2d getCanCoderAngle() {
 
-    double unsignedAngle = (Units.degreesToRadians(canCoder.getAbsolutePosition()) - offset.getRadians())
-        % (2 * Math.PI);
+    // double unsignedAngle =
+    // (Units.degreesToRadians(canCoder.getAbsolutePosition()) -
+    // offset.getRadians())
+    // % (2 * Math.PI);
+
+    double unsignedAngle = (Math.PI * 2 *
+        canCoder.getAbsolutePosition().getValueAsDouble()) - offset.getRadians()
+            % (2 * Math.PI);
 
     return new Rotation2d(unsignedAngle);
 

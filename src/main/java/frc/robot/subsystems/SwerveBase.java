@@ -167,8 +167,7 @@ public class SwerveBase extends SubsystemBase {
     SmartDashboard.putNumber("pitch",
         navX.getPitch());
 
-    SmartDashboard.putString("rearRight angle", getStates()[3].angle.toString());
-    SmartDashboard.putNumber("rearRight speed", getStates()[3].speedMetersPerSecond);
+    SmartDashboard.putNumber("frontLeft angle rotations", frontLeft.getCanCoderAngle().getRotations());
 
     // System.out.println("pitch = " + navX.getPitch());
 
