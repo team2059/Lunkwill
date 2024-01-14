@@ -77,7 +77,7 @@ public final class Constants {
                 public static final double wheelBase = Units.inchesToMeters(24.5);
 
                 // nominal (real) divided by fudge factor
-                public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.04085);
+                public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.01085);
                 public static final double wheelCircumference = wheelDiameter * Math.PI;
 
                 public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
