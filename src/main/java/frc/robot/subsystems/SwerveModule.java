@@ -80,7 +80,7 @@ public class SwerveModule extends SubsystemBase {
     offset = new Rotation2d(measuredOffsetRadians);
 
     driveMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.setIdleMode(IdleMode.kCoast);
+    rotationMotor.setIdleMode(IdleMode.kBrake);
 
     driveController = driveMotor.getPIDController();
 
@@ -108,7 +108,6 @@ public class SwerveModule extends SubsystemBase {
     CANcoderConfiguration config = new CANcoderConfiguration();
     config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
     config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    // config.MagnetSensor.MagnetOffset = offset.getRotations();
     canCoder.getConfigurator().apply(config);
 
   }
