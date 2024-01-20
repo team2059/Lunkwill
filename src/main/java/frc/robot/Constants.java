@@ -14,7 +14,7 @@ public final class Constants {
         public static final class ArmConstants {
 
                 public static final int tiltId = 16;
-                public static final int extendId = 9;
+                public static final int extendId = 99;
                 // public static final int restServoAngle = 10;
                 // public static final int extendServoAngle = 25;
                 public static final int restServoAngle = 75;

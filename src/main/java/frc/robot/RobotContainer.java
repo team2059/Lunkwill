@@ -121,7 +121,7 @@ public class RobotContainer {
   private final JoystickButton coneLED = new JoystickButton(buttonBoxTwo, 12);
 
   /* LOGITECH */
-  public final Joystick logitech = new Joystick(3);
+  public final static Joystick logitech = new Joystick(3);
   private final int kLogitechTranslationAxis = 1;
   private final int kLogitechStrafeAxis = 0;
   private final int kLogitechRotationAxis = 2;
@@ -143,6 +143,8 @@ public class RobotContainer {
 
   /* Subsystems */
   private final SwerveBase swerveBase = new SwerveBase();
+
+  private final ShooterTest shooterTest = new ShooterTest();
 
   private final Limelight limelight = new Limelight();
   private final TiltArm tiltArm = new TiltArm();
