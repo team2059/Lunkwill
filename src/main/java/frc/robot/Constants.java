@@ -63,8 +63,7 @@ public final class Constants {
 
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 
-    // TODO: fix this. the larger the value is, the slower the max speed is.
-    public static final double maxMetersPerSecond = 5;
+    public static final double maxMetersPerSecond = 3.5;
 
     // Swerve Modules: CAN IDs and offsets for the CANcoders.
       // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians
@@ -88,7 +87,7 @@ public final class Constants {
     public static final int backRightRotationMotorId = 2;
     public static final int backRightCanCoderId = 14;
     public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
-    public static final double kTeleDriveMaxAcceleration = 15;
+    public static final double kTeleDriveMaxAcceleration = 4;
     public static final double kTeleDriveMaxAngularAcceleration = 5;
   }
 }
