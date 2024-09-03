@@ -11,8 +11,12 @@ import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Shooter;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,6 +31,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
+  SendableChooser<Boolean> allianceChooser = new SendableChooser<>();
+  SendableChooser<Command> autoChooser;
+
   public static boolean fieldRelativeStatus = true;
 
   // Create swerve subsystem
@@ -38,6 +45,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    allianceChooser.addOption("RED", true);
+    allianceChooser.setDefaultOption("BLUE", false);
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Alliance Chooser", allianceChooser);
 
     // Send axes & buttons from joystick to SwerveJoystickCommand,
       // which will govern the SwerveSubsystem
@@ -81,6 +95,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    return autoChooser.getSelected();
   }
 }
