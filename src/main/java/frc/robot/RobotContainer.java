@@ -40,7 +40,7 @@ public class RobotContainer {
   
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.driveMotorId);
 
-  private final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
+  public final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,8 +64,8 @@ public class RobotContainer {
     
     shooter.setDefaultCommand(new NoteControl(
       shooter, 
-      () -> xboxController.getRightTriggerAxis(), 
-      () -> xboxController.getLeftTriggerAxis(),
+      () -> xboxController.getRightBumper(), 
+      () -> xboxController.getLeftBumper(),
       () -> xboxController.getBButton()
     ));
 

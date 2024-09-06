@@ -8,7 +8,10 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -42,6 +45,7 @@ public class SwerveJoystickCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     // get joystick input as x, y, and rotation
     double xSpeed = forwardX.getAsDouble();
     double ySpeed = -forwardY.getAsDouble();
@@ -51,6 +55,15 @@ public class SwerveJoystickCommand extends Command {
     xSpeed = Math.abs(xSpeed) > 0.25 ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > 0.33 ? ySpeed : 0.0;
     rot = Math.abs(rot) > 0.4 ? rot : 0.0;
+
+    // get distance from center of joystick, scale to 0-1 value, rumble xbox controller
+    // z^2 = x^2 + y^2
+    RobotContainer.xboxController.setRumble(
+      RumbleType.kBothRumble, 
+      0.7 * Math.sqrt(Math.pow(Math.abs(xSpeed), 2) + Math.pow(Math.abs(ySpeed), 2))
+    );
+
+    //RobotContainer.xboxController.setRumble(RumbleType.kBothRumble, Math.abs(xSpeed));
 
     // Apply rate limits
     // double sliderLimit = -((slider.getAsDouble() - 1) / 2);

@@ -13,14 +13,13 @@ import frc.robot.subsystems.Shooter;
 public class NoteControl extends Command {
 
   private final Shooter shooter;
-  DoubleSupplier indexerSpeed, driveSpeed;
-  BooleanSupplier inverted;
+  BooleanSupplier inverted, indexerOn, driveOn;
 
   /** Creates a new NoteControl. */
-  public NoteControl(Shooter shooter, DoubleSupplier indexerSpeed, DoubleSupplier driveSpeed, BooleanSupplier inverted) {
+  public NoteControl(Shooter shooter, BooleanSupplier indexerOn, BooleanSupplier driveOn, BooleanSupplier inverted) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.driveSpeed = driveSpeed;
-    this.indexerSpeed = indexerSpeed;
+    this.driveOn = driveOn;
+    this.indexerOn = indexerOn;
     this.shooter = shooter;
     this.inverted = inverted;
 
@@ -35,10 +34,18 @@ public class NoteControl extends Command {
   @Override
   public void execute() {
     if (inverted.getAsBoolean()) {
-      shooter.setBothMotorsSpeed(-0.4);
+      shooter.setBothMotorsSpeed(-0.3);
     } else {
-      shooter.setDriveMotorSpeed(driveSpeed.getAsDouble());
-      shooter.setIndexerMotorSpeed(indexerSpeed.getAsDouble());
+      if (driveOn.getAsBoolean()) {
+        shooter.setDriveMotorSpeed(1);
+      } else {
+        shooter.setDriveMotorSpeed(0);
+      }
+      if (indexerOn.getAsBoolean()) {
+        shooter.setIndexerMotorSpeed(1);
+      } else {
+        shooter.setIndexerMotorSpeed(0);
+      }
     }
   }
 
