@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
@@ -13,15 +12,15 @@ import frc.robot.subsystems.Shooter;
 public class NoteControl extends Command {
 
   private final Shooter shooter;
-  BooleanSupplier inverted, indexerOn, driveOn;
+  BooleanSupplier loadNote, indexerOn, driveOn;
 
   /** Creates a new NoteControl. */
-  public NoteControl(Shooter shooter, BooleanSupplier indexerOn, BooleanSupplier driveOn, BooleanSupplier inverted) {
+  public NoteControl(Shooter shooter, BooleanSupplier indexerOn, BooleanSupplier driveOn, BooleanSupplier loadNote) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveOn = driveOn;
     this.indexerOn = indexerOn;
     this.shooter = shooter;
-    this.inverted = inverted;
+    this.loadNote = loadNote;
 
     addRequirements(shooter);
   }
@@ -33,17 +32,22 @@ public class NoteControl extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (inverted.getAsBoolean()) {
+    if (loadNote.getAsBoolean()) {
+      /* LOAD NOTE */
       shooter.setBothMotorsSpeed(-0.3);
     } else {
       if (driveOn.getAsBoolean()) {
+        /* LEFT BUMPER PRESSED */
         shooter.setDriveMotorSpeed(1);
       } else {
+        /* LEFT BUMPER DEPRESSED */
         shooter.setDriveMotorSpeed(0);
       }
       if (indexerOn.getAsBoolean()) {
+        /* RIGHT BUMPER PRESSED */
         shooter.setIndexerMotorSpeed(1);
       } else {
+        /* RIGHT BUMPER DEPRESSED */
         shooter.setIndexerMotorSpeed(0);
       }
     }
