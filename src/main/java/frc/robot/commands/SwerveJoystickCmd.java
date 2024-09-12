@@ -9,20 +9,21 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveBase;
 
-public class SwerveJoystickCommand extends Command {
+public class SwerveJoystickCmd extends Command {
 
-  private final SwerveSubsystem swerveSubsystem;
+  private final SwerveBase swerveSubsystem;
   private final DoubleSupplier forwardX, forwardY, rotation;
   private final Supplier<Boolean> robotRelative;
   private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
 
   /** Creates a new SwerveJoystickCommand. */
-  public SwerveJoystickCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, Supplier<Boolean> robotRelative) {
+  public SwerveJoystickCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, Supplier<Boolean> robotRelative) {
     this.swerveSubsystem = swerveSubsystem;
     this.forwardX = forwardX;
     this.forwardY = forwardY;
@@ -44,10 +45,34 @@ public class SwerveJoystickCommand extends Command {
   @Override
   public void execute() {
 
+    switch(RobotContainer.xboxController.getPOV()) {
+      case 0:
+        // Up pressed
+        RobotContainer.currentSpeedFactor += 0.01;
+        break;
+
+      case 180:
+        // Down pressed
+        RobotContainer.currentSpeedFactor -= 0.01;
+        break;
+
+      default:
+        // Everything else (do nothing)
+
+    }
+
+    if (RobotContainer.currentSpeedFactor <= 0) {
+      RobotContainer.currentSpeedFactor = 0.1;
+    } else if (RobotContainer.currentSpeedFactor > 1.0) {
+      RobotContainer.currentSpeedFactor = 1.0;
+    }
+
+    SmartDashboard.putNumber("Speed Limit", RobotContainer.currentSpeedFactor);
+
     // get joystick input as x, y, and rotation
-    double xSpeed = forwardX.getAsDouble();
-    double ySpeed = -forwardY.getAsDouble();
-    double rot = rotation.getAsDouble();
+    double xSpeed = forwardX.getAsDouble() * RobotContainer.currentSpeedFactor;
+    double ySpeed = -forwardY.getAsDouble() * RobotContainer.currentSpeedFactor;
+    double rot = rotation.getAsDouble() * RobotContainer.currentSpeedFactor;
 
     // Apply deadband
     xSpeed = Math.abs(xSpeed) > 0.25 ? xSpeed : 0.0;
@@ -89,6 +114,7 @@ public class SwerveJoystickCommand extends Command {
     // SwerveModuleState[] moduleStates = SwerveConstants.kinematics.toSwerveModuleStates(speeds);
   
     // swerveSubsystem.setModuleStates(moduleStates);
+
   }
 
   // Called once the command ends or is interrupted.

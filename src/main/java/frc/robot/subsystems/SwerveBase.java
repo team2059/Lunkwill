@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 
-public class SwerveSubsystem extends SubsystemBase {
+public class SwerveBase extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
 
   // Create 4 SwerveModule objects using given constants.
@@ -57,7 +57,7 @@ public class SwerveSubsystem extends SubsystemBase {
   // Create swerve drive odometry engine, used to track robot on field
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Constants.SwerveConstants.kinematics, new Rotation2d(), getModulePositions());
 
-  public SwerveSubsystem() {
+  public SwerveBase() {
 
     // NavX may need an extra second to start...
     navX = new AHRS(SPI.Port.kMXP);

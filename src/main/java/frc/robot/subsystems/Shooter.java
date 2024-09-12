@@ -7,45 +7,39 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
 
   private final VictorSPX indexerMotor;
-  private final CANSparkFlex driveMotor;
+  private final CANSparkFlex topDriveMotor, bottomDriveMotor;
 
   /** Creates a new Shooter. */
-  public Shooter(int indexerMotorId, int driveMotorId) {
+  public Shooter(int indexerMotorId, int topDriveMotorId, int bottomDriveMotorId) {
     indexerMotor = new VictorSPX(indexerMotorId);
-    driveMotor = new CANSparkFlex(driveMotorId, MotorType.kBrushless);
+
+    topDriveMotor = new CANSparkFlex(topDriveMotorId, MotorType.kBrushless);
+    bottomDriveMotor = new CANSparkFlex(bottomDriveMotorId, MotorType.kBrushless);
+
+    // topDriveMotor.setIdleMode(IdleMode.kBrake);
+    // bottomDriveMotor.setIdleMode(IdleMode.kBrake);
+
+    topDriveMotor.follow(bottomDriveMotor);
   }
 
-  public void setBothMotorsSpeed(double speed) {
-    driveMotor.set(speed);
-    indexerMotor.set(VictorSPXControlMode.PercentOutput, speed);
-
-  }
-
-  public void setDriveMotorSpeed(double speed) {
-    driveMotor.set(speed);
+  public void setDriveMotorsSpeed(double speed) {
+    bottomDriveMotor.set(speed);
   }
 
   public void setIndexerMotorSpeed(double speed) {
     indexerMotor.set(VictorSPXControlMode.PercentOutput, speed);
   }
 
-  public void stopIndexMotor() {
-    indexerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-  }
-
-  public void stopDriveMotor() {
-    driveMotor.set(0);
-  }
-
   public void stopAllMotors() {
+    bottomDriveMotor.set(0);
     indexerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-    driveMotor.set(0);
   }
 
   @Override

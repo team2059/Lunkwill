@@ -34,7 +34,8 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int driveMotorId = 16;
+    public static final int topDriveMotorId = 16;
+    public static final int bottomDriveMotorId = 17;
     public static final int indexerMotorId = 15;
   }
 
@@ -63,7 +64,7 @@ public final class Constants {
 
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 
-    public static final double maxMetersPerSecond = 3.5;
+    public static final double maxMetersPerSecond = 1;
 
     // Swerve Modules: CAN IDs and offsets for the CANcoders.
       // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians
@@ -87,7 +88,7 @@ public final class Constants {
     public static final int backRightRotationMotorId = 2;
     public static final int backRightCanCoderId = 14;
     public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
-    public static final double kTeleDriveMaxAcceleration = 4;
-    public static final double kTeleDriveMaxAngularAcceleration = 5;
+    public static final double kTeleDriveMaxAcceleration = 10;
+    public static final double kTeleDriveMaxAngularAcceleration = 10;
   }
 }

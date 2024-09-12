@@ -6,9 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.NoteControl;
-import frc.robot.commands.SwerveJoystickCommand;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.commands.IntakeNoteCmd;
+import frc.robot.commands.SpinUpShooterMotorsCmd;
+import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.SwerveBase;
 import frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -35,10 +36,12 @@ public class RobotContainer {
 
   public static boolean fieldRelativeStatus = true;
 
+  public static double currentSpeedFactor = 0.5;
+
   // Create swerve subsystem
-  private static final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private static final SwerveBase swerveSubsystem = new SwerveBase();
   
-  private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.driveMotorId);
+  private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.topDriveMotorId, ShooterConstants.bottomDriveMotorId);
 
   public final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
 
@@ -54,19 +57,12 @@ public class RobotContainer {
 
     // Send axes & buttons from joystick to SwerveJoystickCommand,
       // which will govern the SwerveSubsystem
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickCommand(
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
       swerveSubsystem, 
       () -> xboxController.getLeftY(),
       () -> -xboxController.getLeftX(), 
       () -> xboxController.getRightX(),
       () -> xboxController.getXButton()
-    ));
-    
-    shooter.setDefaultCommand(new NoteControl(
-      shooter, 
-      () -> xboxController.getRightBumper(), 
-      () -> xboxController.getLeftBumper(),
-      () -> xboxController.getBButton()
     ));
 
     configureBindings();
@@ -84,8 +80,21 @@ public class RobotContainer {
   private void configureBindings() {
 
     /* WINDOW: RESET NAVX HEADING */
-    new JoystickButton(xboxController, 7).onTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
+    new JoystickButton(xboxController, 7)
+      .whileTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
 
+    /* X - INTAKE NOTE */
+    new JoystickButton(xboxController, 3)
+      .whileTrue(new IntakeNoteCmd(shooter, 0.2));
+
+    /* LEFT BUMPER: SPIN SHOOTER MOTORS */
+    new JoystickButton(xboxController, 5)
+      .whileTrue(new SpinUpShooterMotorsCmd(shooter, 1));
+
+    /* RIGHT BUMPER: EJECT NOTE */
+    new JoystickButton(xboxController, 6)
+      .onTrue(new InstantCommand(() -> shooter.setIndexerMotorSpeed(1)))
+      .onFalse(new InstantCommand(() -> shooter.setIndexerMotorSpeed(0)));
   }
 
   /**
