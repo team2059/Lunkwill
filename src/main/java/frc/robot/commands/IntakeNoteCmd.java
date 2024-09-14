@@ -28,6 +28,8 @@ public class IntakeNoteCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooter.setDriveMotorsMode(true);
+
     shooter.setDriveMotorsSpeed(-intakeSpeed);
     shooter.setIndexerMotorSpeed(-intakeSpeed);
   }
@@ -36,6 +38,7 @@ public class IntakeNoteCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAllMotors();
+    shooter.setDriveMotorsMode(false);
   }
 
   // Returns true when the command should end.

@@ -61,8 +61,8 @@ public class SwerveJoystickCmd extends Command {
 
     }
 
-    if (RobotContainer.currentSpeedFactor <= 0) {
-      RobotContainer.currentSpeedFactor = 0.1;
+    if (RobotContainer.currentSpeedFactor < 0.11) {
+      RobotContainer.currentSpeedFactor = 0.11;
     } else if (RobotContainer.currentSpeedFactor > 1.0) {
       RobotContainer.currentSpeedFactor = 1.0;
     }
@@ -74,10 +74,12 @@ public class SwerveJoystickCmd extends Command {
     double ySpeed = -forwardY.getAsDouble() * RobotContainer.currentSpeedFactor;
     double rot = rotation.getAsDouble() * RobotContainer.currentSpeedFactor;
 
+    SmartDashboard.putNumber("ROT", rot);
+
     // Apply deadband
-    xSpeed = Math.abs(xSpeed) > 0.25 ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > 0.33 ? ySpeed : 0.0;
-    rot = Math.abs(rot) > 0.4 ? rot : 0.0;
+    xSpeed = Math.abs(xSpeed) > 0.1 ? xSpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > 0.1 ? ySpeed : 0.0;
+    rot = Math.abs(rot) > 0.1 ? rot : 0.0;
 
     // get distance from center of joystick, scale to 0-1 value, rumble xbox controller
     // z^2 = x^2 + y^2

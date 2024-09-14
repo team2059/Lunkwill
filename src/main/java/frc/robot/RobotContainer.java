@@ -7,18 +7,23 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.IntakeNoteCmd;
+import frc.robot.commands.RunIndexerCmd;
 import frc.robot.commands.SpinUpShooterMotorsCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveBase;
 import frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -48,6 +53,16 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    NamedCommands.registerCommand(
+      "ShootAndExitAuto",
+      new ParallelCommandGroup(
+        new SpinUpShooterMotorsCmd(shooter, 1),
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new RunIndexerCmd(shooter)
+        )
+      ).withTimeout(3)
+    );
     autoChooser = AutoBuilder.buildAutoChooser();
     allianceChooser.addOption("RED", true);
     allianceChooser.setDefaultOption("BLUE", false);
@@ -83,8 +98,8 @@ public class RobotContainer {
     new JoystickButton(xboxController, 7)
       .whileTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
 
-    /* X - INTAKE NOTE */
-    new JoystickButton(xboxController, 3)
+    /* B - INTAKE NOTE */
+    new JoystickButton(xboxController, 2)
       .whileTrue(new IntakeNoteCmd(shooter, 0.2));
 
     /* LEFT BUMPER: SPIN SHOOTER MOTORS */
@@ -93,8 +108,7 @@ public class RobotContainer {
 
     /* RIGHT BUMPER: EJECT NOTE */
     new JoystickButton(xboxController, 6)
-      .onTrue(new InstantCommand(() -> shooter.setIndexerMotorSpeed(1)))
-      .onFalse(new InstantCommand(() -> shooter.setIndexerMotorSpeed(0)));
+      .whileTrue(new RunIndexerCmd(shooter));
   }
 
   /**

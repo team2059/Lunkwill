@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -16,15 +18,13 @@ public class Shooter extends SubsystemBase {
   private final VictorSPX indexerMotor;
   private final CANSparkFlex topDriveMotor, bottomDriveMotor;
 
+
   /** Creates a new Shooter. */
   public Shooter(int indexerMotorId, int topDriveMotorId, int bottomDriveMotorId) {
     indexerMotor = new VictorSPX(indexerMotorId);
 
     topDriveMotor = new CANSparkFlex(topDriveMotorId, MotorType.kBrushless);
     bottomDriveMotor = new CANSparkFlex(bottomDriveMotorId, MotorType.kBrushless);
-
-    // topDriveMotor.setIdleMode(IdleMode.kBrake);
-    // bottomDriveMotor.setIdleMode(IdleMode.kBrake);
 
     topDriveMotor.follow(bottomDriveMotor);
   }
@@ -42,8 +42,17 @@ public class Shooter extends SubsystemBase {
     indexerMotor.set(VictorSPXControlMode.PercentOutput, 0);
   }
 
+  public void setDriveMotorsMode(boolean brake) {
+    if (brake) {
+      bottomDriveMotor.setIdleMode(IdleMode.kBrake);
+      topDriveMotor.setIdleMode(IdleMode.kBrake);
+    } else {
+      bottomDriveMotor.setIdleMode(IdleMode.kCoast);
+      topDriveMotor.setIdleMode(IdleMode.kCoast);
+    }
+  }
+
   @Override
   public void periodic() {
-
   }
 }

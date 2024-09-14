@@ -7,36 +7,30 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class SpinUpShooterMotorsCmd extends Command {
+public class RunIndexerCmd extends Command {
+  private Shooter shooter;
 
-  private final Shooter shooter;
-  double desiredSpeed;
-
-  /** Creates a new SpinUpShooterMotorsCmd. */
-  public SpinUpShooterMotorsCmd(Shooter shooter, double desiredSpeed) {
-
-
-    this.desiredSpeed = desiredSpeed;
+  /** Creates a new RunIndexerCmd. */
+  public RunIndexerCmd(Shooter shooter) {
     this.shooter = shooter;
+    // Use addRequirements() here to declare subsystem dependencies.
     //addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setDriveMotorsSpeed(desiredSpeed);
+    shooter.setIndexerMotorSpeed(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopAllMotors();
-
+    shooter.setIndexerMotorSpeed(0);
   }
 
   // Returns true when the command should end.
