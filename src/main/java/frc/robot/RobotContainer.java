@@ -41,7 +41,7 @@ public class RobotContainer {
 
   public static boolean fieldRelativeStatus = true;
 
-  public static double currentSpeedFactor = 0.5;
+  
 
   // Create swerve subsystem
   private static final SwerveBase swerveSubsystem = new SwerveBase();
@@ -54,11 +54,11 @@ public class RobotContainer {
   public RobotContainer() {
 
     NamedCommands.registerCommand(
-      "ShootAndExitAuto",
+      "ShootAuto",
       new ParallelCommandGroup(
         new SpinUpShooterMotorsCmd(shooter, 1),
         new SequentialCommandGroup(
-          new WaitCommand(1),
+          new WaitCommand(1.5),
           new RunIndexerCmd(shooter)
         )
       ).withTimeout(3)
@@ -76,8 +76,7 @@ public class RobotContainer {
       swerveSubsystem, 
       () -> xboxController.getLeftY(),
       () -> -xboxController.getLeftX(), 
-      () -> xboxController.getRightX(),
-      () -> xboxController.getXButton()
+      () -> xboxController.getRightX()
     ));
 
     configureBindings();
@@ -109,7 +108,10 @@ public class RobotContainer {
     /* RIGHT BUMPER: EJECT NOTE */
     new JoystickButton(xboxController, 6)
       .whileTrue(new RunIndexerCmd(shooter));
+
+    new JoystickButton(xboxController, 3).whileTrue(new InstantCommand(() -> swerveSubsystem.setFieldRelativity()));
   }
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

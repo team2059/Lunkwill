@@ -8,27 +8,31 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveBase;
 
 public class SwerveJoystickCmd extends Command {
 
+  private final Timer timer;
+
   private final SwerveBase swerveSubsystem;
   private final DoubleSupplier forwardX, forwardY, rotation;
-  private final Supplier<Boolean> robotRelative;
   private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
 
   /** Creates a new SwerveJoystickCommand. */
-  public SwerveJoystickCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, Supplier<Boolean> robotRelative) {
+  public SwerveJoystickCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation) {
+    timer = new Timer();
+
     this.swerveSubsystem = swerveSubsystem;
     this.forwardX = forwardX;
     this.forwardY = forwardY;
     this.rotation = rotation;
-    this.robotRelative = robotRelative;
 
     this.forwardXSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
     this.forwardYSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
@@ -39,7 +43,10 @@ public class SwerveJoystickCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.reset();
+    timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -48,12 +55,12 @@ public class SwerveJoystickCmd extends Command {
     switch(RobotContainer.xboxController.getPOV()) {
       case 0:
         // Up pressed
-        RobotContainer.currentSpeedFactor += 0.01;
+        Constants.SwerveConstants.currentSpeedFactor += 0.01;
         break;
 
       case 180:
         // Down pressed
-        RobotContainer.currentSpeedFactor -= 0.01;
+        Constants.SwerveConstants.currentSpeedFactor -= 0.01;
         break;
 
       default:
@@ -61,18 +68,18 @@ public class SwerveJoystickCmd extends Command {
 
     }
 
-    if (RobotContainer.currentSpeedFactor < 0.11) {
-      RobotContainer.currentSpeedFactor = 0.11;
-    } else if (RobotContainer.currentSpeedFactor > 1.0) {
-      RobotContainer.currentSpeedFactor = 1.0;
+    if (Constants.SwerveConstants.currentSpeedFactor < 0.11) {
+      Constants.SwerveConstants.currentSpeedFactor = 0.11;
+    } else if (Constants.SwerveConstants.currentSpeedFactor > 1.0) {
+      Constants.SwerveConstants.currentSpeedFactor = 1.0;
     }
 
-    SmartDashboard.putNumber("Speed Limit", RobotContainer.currentSpeedFactor);
+    SmartDashboard.putNumber("Speed Limit", Constants.SwerveConstants.currentSpeedFactor);
 
     // get joystick input as x, y, and rotation
-    double xSpeed = forwardX.getAsDouble() * RobotContainer.currentSpeedFactor;
-    double ySpeed = -forwardY.getAsDouble() * RobotContainer.currentSpeedFactor;
-    double rot = rotation.getAsDouble() * RobotContainer.currentSpeedFactor;
+    double xSpeed = forwardX.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
+    double ySpeed = -forwardY.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
+    double rot = rotation.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
 
     SmartDashboard.putNumber("ROT", rot);
 
@@ -100,13 +107,7 @@ public class SwerveJoystickCmd extends Command {
     xSpeed = forwardXSlewRateLimiter.calculate(xSpeed);
     ySpeed = forwardYSlewRateLimiter.calculate(ySpeed);
     rot = rotationSlewRateLimiter.calculate(rot);
-
-    if (robotRelative.get() && RobotContainer.fieldRelativeStatus) {
-      RobotContainer.fieldRelativeStatus = false;
-    } else if (robotRelative.get() && !RobotContainer.fieldRelativeStatus) {
-      RobotContainer.fieldRelativeStatus = true;
-    }
-
+    
     swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, RobotContainer.fieldRelativeStatus);
 
     // // Create chassisSpeeds to set to states

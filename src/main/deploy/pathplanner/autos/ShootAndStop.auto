@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.531951735199767
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -15,18 +15,6 @@
           "type": "named",
           "data": {
             "name": "ShootAuto"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Exit"
           }
         }
       ]

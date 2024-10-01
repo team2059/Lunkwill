@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveBase extends SubsystemBase {
@@ -219,6 +220,14 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
+  public void setFieldRelativity() {
+    if (RobotContainer.fieldRelativeStatus) {
+      RobotContainer.fieldRelativeStatus = false;
+    } else {
+      RobotContainer.fieldRelativeStatus = true;
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -232,5 +241,7 @@ public class SwerveBase extends SubsystemBase {
 
     Logger.recordOutput("Real States", getStates());
     Logger.recordOutput("Pose", getPose());
+
+    SmartDashboard.putBoolean("FIELD-RELATIVE?", RobotContainer.fieldRelativeStatus);
   }
 }

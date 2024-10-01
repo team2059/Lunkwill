@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.531951735199767
+      "x": 0.73,
+      "y": 6.74
     },
-    "rotation": 0
+    "rotation": 59.38586025892801
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 8.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Exit"
+            "pathName": "Right Side Path"
           }
         }
       ]

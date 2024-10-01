@@ -40,6 +40,7 @@ public final class Constants {
   }
 
   public static class SwerveConstants {
+    public static double currentSpeedFactor = 1;
 
     // flipped because originally there was too much slipping
     public static final double trackWidth = Units.inchesToMeters(24.5);
