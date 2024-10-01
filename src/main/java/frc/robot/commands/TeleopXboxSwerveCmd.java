@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,7 +16,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveBase;
 
-public class SwerveJoystickCmd extends Command {
+public class TeleopXboxSwerveCmd extends Command {
 
   private final Timer timer;
 
@@ -26,7 +25,7 @@ public class SwerveJoystickCmd extends Command {
   private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
 
   /** Creates a new SwerveJoystickCommand. */
-  public SwerveJoystickCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation) {
+  public TeleopXboxSwerveCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation) {
     timer = new Timer();
 
     this.swerveSubsystem = swerveSubsystem;
