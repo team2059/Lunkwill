@@ -9,7 +9,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.IntakeNoteCmd;
 import frc.robot.commands.RunIndexerCmd;
 import frc.robot.commands.SpinUpShooterMotorsCmd;
-import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.TeleopXboxSwerveCmd;
 import frc.robot.subsystems.SwerveBase;
 import frc.robot.subsystems.Shooter;
 
@@ -41,13 +41,11 @@ public class RobotContainer {
 
   public static boolean fieldRelativeStatus = true;
 
-  
-
-  // Create swerve subsystem
+  /* SUBSYSTEMS */
   private static final SwerveBase swerveSubsystem = new SwerveBase();
-  
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.topDriveMotorId, ShooterConstants.bottomDriveMotorId);
 
+  /* CONTROLLERS */
   public final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -72,7 +70,7 @@ public class RobotContainer {
 
     // Send axes & buttons from joystick to SwerveJoystickCommand,
       // which will govern the SwerveSubsystem
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+    swerveSubsystem.setDefaultCommand(new TeleopXboxSwerveCmd(
       swerveSubsystem, 
       () -> xboxController.getLeftY(),
       () -> -xboxController.getLeftX(), 

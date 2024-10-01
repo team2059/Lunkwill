@@ -40,14 +40,14 @@ public final class Constants {
   }
 
   public static class SwerveConstants {
-    public static double currentSpeedFactor = 1;
+    public static double currentSpeedFactor = 0.5;
 
     // flipped because originally there was too much slipping
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double wheelBase = Units.inchesToMeters(18.5);
 
     // nominal (real) divided by fudge factor
-    public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.04085);
+    public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.0);
     public static final double wheelCircumference = 2.0 * wheelDiameter * Math.PI;
 
     // Kinematics gets each module relative to center. X is forward/backward and Y is left/right, left is positive
