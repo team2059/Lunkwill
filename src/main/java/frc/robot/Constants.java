@@ -46,7 +46,9 @@ public final class Constants {
     public static final double trackWidth = Units.inchesToMeters(24.5);
     public static final double wheelBase = Units.inchesToMeters(18.5);
 
+    // nominal (real) divided by fudge factor
     public static final double wheelDiameter = Units.inchesToMeters(4.0 / 1.0);
+    public static final double wheelCircumference = 2.0 * wheelDiameter * Math.PI;
 
     // Kinematics gets each module relative to center. X is forward/backward and Y is left/right, left is positive
     public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -60,17 +62,6 @@ public final class Constants {
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
     public static final double rotationGearRatio = (150.0 / 7.0);
-
-    /* CONVERSION FACTORS */
-
-    // Given Motor Rotations, convert to Meters traveled
-    public static final double driveEncoderPositionConversionFactor = (Math.PI * Units.inchesToMeters(wheelDiameter)) / (driveGearRatio);
-    // Given Motor Rotations, convert to Meters/second
-    public static final double driveEncoderVelocityConversionFactor = driveEncoderPositionConversionFactor / 60.0;
-    // Given Motor Rotations, convert to Radians
-    public static final double rotationEncoderPositionConversionFactor = (14.0 * Math.PI) / 150;
-    // Given Motor Rotations, convert to Radians/second
-    public static final double rotationEncoderVelocityConversionFactor = rotationEncoderPositionConversionFactor / 60;
 
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 

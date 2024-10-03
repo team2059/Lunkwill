@@ -33,61 +33,36 @@ public class SwerveModule extends SubsystemBase {
         int canCoderId,
         double canCoderOffsetRadians
     ) {
-        // Instantiate motor controller objects
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         rotationMotor = new CANSparkMax(rotationMotorId, MotorType.kBrushless);
 
-        // Set brake mode as default idle mode
         driveMotor.setIdleMode(IdleMode.kBrake);
         driveMotor.setIdleMode(IdleMode.kBrake);
 
-        // Set encoder objects to appropriate motor's encoders
         driveEncoder = driveMotor.getEncoder();
+        driveEncoder.setPositionConversionFactor(2.0 * Math.PI / SwerveConstants.driveGearRatio);
+        driveEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60 / SwerveConstants.driveGearRatio);
         rotationEncoder = rotationMotor.getEncoder();
+        rotationEncoder.setPositionConversionFactor(2.0 * Math.PI / SwerveConstants.rotationGearRatio);
+        rotationEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60 / SwerveConstants.rotationGearRatio);
 
-        /*
-         * Set conversion factors for drive encoder.
-         * Ensures that output is in meters (linear position) or meters/sec (linear velocity)
-         */
-        driveEncoder.setPositionConversionFactor(SwerveConstants.driveEncoderPositionConversionFactor);
-        driveEncoder.setVelocityConversionFactor(SwerveConstants.driveEncoderVelocityConversionFactor);
-
-        /*
-         * Set conversion factors for rotation encoder.
-         * Ensures that output is in radians (angular position) or radians/sec (angular velocity)
-         */
-        rotationEncoder.setPositionConversionFactor(SwerveConstants.rotationEncoderPositionConversionFactor);
-        rotationEncoder.setVelocityConversionFactor(SwerveConstants.rotationEncoderVelocityConversionFactor);
-
-        // Instantiate rotation PID controller, for smoother and more accurate rotation
         rotationPidController = new PIDController(SwerveConstants.kPTurning, 0, 0);
-
-        // tells pidcontroller that -pi is the same as +pi, can calculate shorter path to setpoint from either sign
+        // tells pidcontroller that -pi is the same as +pi
+        // can calculate shorter path to setpoint
         rotationPidController.enableContinuousInput(-Math.PI, Math.PI);        
 
-        // Instantiate new CANcoder and respective offset, set configuration
         canCoder = new CANcoder(canCoderId);
         offset = new Rotation2d(canCoderOffsetRadians);
-
-        configureCanCoder();
-
-        // Write settings to motor
-        driveMotor.burnFlash();
-        rotationMotor.burnFlash();
-    }
-
-    public void configureCanCoder() {
-        // Create the new configuration
-        CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
-
         // Makes the range of the sensor 0-1 so that radians can be calculated
+        CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
         canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-
         // Makes turning ccw positive
         canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-
         // Apply cancoder configuration
         canCoder.getConfigurator().apply(canCoderConfig);
+
+        driveMotor.burnFlash();
+        rotationMotor.burnFlash();
     }
 
     public void initRotationOffset() {
