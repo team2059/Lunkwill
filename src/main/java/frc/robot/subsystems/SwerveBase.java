@@ -84,10 +84,10 @@ public class SwerveBase extends SubsystemBase {
     backRight.getDriveMotor().setInverted(false);
 
     // rotation motor inversions -- all or nothing situation
-    frontLeft.getRotationMotor().setInverted(false);
-    frontRight.getRotationMotor().setInverted(false);
-    backLeft.getRotationMotor().setInverted(false);
-    backRight.getRotationMotor().setInverted(false);
+    frontLeft.getRotationMotor().setInverted(true);
+    frontRight.getRotationMotor().setInverted(true);
+    backLeft.getRotationMotor().setInverted(true);
+    backRight.getRotationMotor().setInverted(true);
 
     // reset encoders upon each start
     frontLeft.resetEncoders();
