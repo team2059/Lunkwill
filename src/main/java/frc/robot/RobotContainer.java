@@ -39,8 +39,6 @@ public class RobotContainer {
   SendableChooser<Boolean> allianceChooser = new SendableChooser<>();
   SendableChooser<Command> autoChooser;
 
-  public static boolean fieldRelativeStatus = true;
-
   /* SUBSYSTEMS */
   private static final SwerveBase swerveSubsystem = new SwerveBase();
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.topDriveMotorId, ShooterConstants.bottomDriveMotorId);
@@ -73,8 +71,9 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new TeleopXboxSwerveCmd(
       swerveSubsystem, 
       () -> xboxController.getLeftY(),
-      () -> -xboxController.getLeftX(), 
-      () -> xboxController.getRightX()
+      () -> xboxController.getLeftX(), 
+      () -> xboxController.getRightX(),
+      () -> xboxController.getPOV()
     ));
 
     configureBindings();

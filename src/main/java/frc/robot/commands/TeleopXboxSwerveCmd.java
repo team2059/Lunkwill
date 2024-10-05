@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveBase;
@@ -22,16 +22,20 @@ public class TeleopXboxSwerveCmd extends Command {
 
   private final SwerveBase swerveSubsystem;
   private final DoubleSupplier forwardX, forwardY, rotation;
+  private final IntSupplier pov;
   private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
 
+  public static double speedFactor = 0.5;
+
   /** Creates a new SwerveJoystickCommand. */
-  public TeleopXboxSwerveCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation) {
+  public TeleopXboxSwerveCmd(SwerveBase swerveSubsystem, DoubleSupplier forwardX, DoubleSupplier forwardY, DoubleSupplier rotation, IntSupplier pov) {
     timer = new Timer();
 
     this.swerveSubsystem = swerveSubsystem;
     this.forwardX = forwardX;
     this.forwardY = forwardY;
     this.rotation = rotation;
+    this.pov = pov;
 
     this.forwardXSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
     this.forwardYSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
@@ -51,15 +55,15 @@ public class TeleopXboxSwerveCmd extends Command {
   @Override
   public void execute() {
 
-    switch(RobotContainer.xboxController.getPOV()) {
+    switch(pov.getAsInt()) {
       case 0:
         // Up pressed
-        Constants.SwerveConstants.currentSpeedFactor += 0.01;
+        speedFactor += 0.01;
         break;
 
       case 180:
         // Down pressed
-        Constants.SwerveConstants.currentSpeedFactor -= 0.01;
+        speedFactor -= 0.01;
         break;
 
       default:
@@ -67,25 +71,28 @@ public class TeleopXboxSwerveCmd extends Command {
 
     }
 
-    if (Constants.SwerveConstants.currentSpeedFactor < 0.11) {
-      Constants.SwerveConstants.currentSpeedFactor = 0.11;
-    } else if (Constants.SwerveConstants.currentSpeedFactor > 1.0) {
-      Constants.SwerveConstants.currentSpeedFactor = 1.0;
+    if (speedFactor < 0.11) {
+      speedFactor = 0.11;
+    } else if (speedFactor > 1.0) {
+      speedFactor = 1.0;
     }
 
-    SmartDashboard.putNumber("Speed Limit", Constants.SwerveConstants.currentSpeedFactor);
+    SmartDashboard.putNumber("Speed Limit", speedFactor);
 
     // get joystick input as x, y, and rotation
-    double xSpeed = forwardX.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
-    double ySpeed = -forwardY.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
-    double rot = rotation.getAsDouble() * Constants.SwerveConstants.currentSpeedFactor;
-
-    SmartDashboard.putNumber("ROT", rot);
+    double xSpeed = forwardX.getAsDouble();
+    double ySpeed = forwardY.getAsDouble();
+    double rot = rotation.getAsDouble();
 
     // Apply deadband
-    xSpeed = Math.abs(xSpeed) > 0.1 ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > 0.1 ? ySpeed : 0.0;
+    xSpeed = Math.abs(xSpeed) > 0.14 ? xSpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > 0.14 ? ySpeed : 0.0;
     rot = Math.abs(rot) > 0.1 ? rot : 0.0;
+
+    // Apply speed limit
+    xSpeed *= speedFactor;
+    ySpeed *= speedFactor;
+    rot *= speedFactor;
 
     // get distance from center of joystick, scale to 0-1 value, rumble xbox controller
     // z^2 = x^2 + y^2
@@ -93,8 +100,6 @@ public class TeleopXboxSwerveCmd extends Command {
       RumbleType.kBothRumble, 
       0.7 * Math.sqrt(Math.pow(Math.abs(xSpeed), 2) + Math.pow(Math.abs(ySpeed), 2))
     );
-
-    //RobotContainer.xboxController.setRumble(RumbleType.kBothRumble, Math.abs(xSpeed));
 
     // Apply rate limits
     // double sliderLimit = -((slider.getAsDouble() - 1) / 2);
@@ -107,16 +112,7 @@ public class TeleopXboxSwerveCmd extends Command {
     ySpeed = forwardYSlewRateLimiter.calculate(ySpeed);
     rot = rotationSlewRateLimiter.calculate(rot);
     
-    swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, RobotContainer.fieldRelativeStatus);
-
-    // // Create chassisSpeeds to set to states
-    // ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rot * 1.5);
-
-    // // Create the modulestates
-    // SwerveModuleState[] moduleStates = SwerveConstants.kinematics.toSwerveModuleStates(speeds);
-  
-    // swerveSubsystem.setModuleStates(moduleStates);
-
+    swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, SwerveBase.fieldRelativeStatus);
   }
 
   // Called once the command ends or is interrupted.

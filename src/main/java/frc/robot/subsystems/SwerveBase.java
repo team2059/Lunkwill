@@ -24,11 +24,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveBase extends SubsystemBase {
-  /** Creates a new SwerveSubsystem. */
+
+  public static boolean fieldRelativeStatus = true;
 
   // Create 4 SwerveModule objects using given constants.
   private final SwerveModule frontLeft = new SwerveModule(
@@ -200,10 +200,10 @@ public class SwerveBase extends SubsystemBase {
   }
 
   public void setFieldRelativity() {
-    if (RobotContainer.fieldRelativeStatus) {
-      RobotContainer.fieldRelativeStatus = false;
+    if (fieldRelativeStatus) {
+      fieldRelativeStatus = false;
     } else {
-      RobotContainer.fieldRelativeStatus = true;
+      fieldRelativeStatus = true;
     }
   }
 
@@ -249,6 +249,6 @@ public class SwerveBase extends SubsystemBase {
     Logger.recordOutput("Real States", getStates());
     Logger.recordOutput("Pose", getPose());
 
-    SmartDashboard.putBoolean("FIELD-RELATIVE?", RobotContainer.fieldRelativeStatus);
+    SmartDashboard.putBoolean("FIELD-RELATIVE?", fieldRelativeStatus);
   }
 }
