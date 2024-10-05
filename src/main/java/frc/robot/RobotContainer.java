@@ -9,14 +9,14 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.IntakeNoteCmd;
 import frc.robot.commands.RunIndexerCmd;
 import frc.robot.commands.SpinUpShooterMotorsCmd;
-import frc.robot.commands.TeleopXboxSwerveCmd;
+import frc.robot.commands.TeleopLogitechExtreme3DSwerveCmd;
 import frc.robot.subsystems.SwerveBase;
 import frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,7 +44,8 @@ public class RobotContainer {
   private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.topDriveMotorId, ShooterConstants.bottomDriveMotorId);
 
   /* CONTROLLERS */
-  public final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
+  public final static Joystick logitech = new Joystick(OperatorConstants.LogitechControllerPort);
+  //public final static XboxController xboxController = new XboxController(OperatorConstants.XboxControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,13 +69,24 @@ public class RobotContainer {
 
     // Send axes & buttons from joystick to SwerveJoystickCommand,
       // which will govern the SwerveSubsystem
-    swerveSubsystem.setDefaultCommand(new TeleopXboxSwerveCmd(
+    
+    // FOR A LOGITECH FLIGHT CONTROLLER (EXTREME 3D)...
+    swerveSubsystem.setDefaultCommand(new TeleopLogitechExtreme3DSwerveCmd(
       swerveSubsystem, 
-      () -> xboxController.getLeftY(),
-      () -> xboxController.getLeftX(), 
-      () -> xboxController.getRightX(),
-      () -> xboxController.getPOV()
+      () -> logitech.getRawAxis(1), // forwardX
+      () -> logitech.getRawAxis(0), // forwardY
+      () -> logitech.getRawAxis(2), // rotation
+      () -> logitech.getRawAxis(3) // slider
     ));
+
+    // FOR AN XBOX CONTROLLER...
+    // swerveSubsystem.setDefaultCommand(new TeleopXboxSwerveCmd(
+    //   swerveSubsystem, 
+    //   () -> xboxController.getLeftY(),
+    //   () -> xboxController.getLeftX(), 
+    //   () -> xboxController.getRightX(),
+    //   () -> xboxController.getPOV()
+    // ));
 
     configureBindings();
   }
@@ -91,22 +103,22 @@ public class RobotContainer {
   private void configureBindings() {
 
     /* WINDOW: RESET NAVX HEADING */
-    new JoystickButton(xboxController, 7)
+    new JoystickButton(logitech, 5)
       .whileTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
 
     /* B - INTAKE NOTE */
-    new JoystickButton(xboxController, 2)
+    new JoystickButton(logitech, 2)
       .whileTrue(new IntakeNoteCmd(shooter, 0.2));
 
     /* LEFT BUMPER: SPIN SHOOTER MOTORS */
-    new JoystickButton(xboxController, 5)
+    new JoystickButton(logitech, 11)
       .whileTrue(new SpinUpShooterMotorsCmd(shooter, 1));
 
     /* RIGHT BUMPER: EJECT NOTE */
-    new JoystickButton(xboxController, 6)
+    new JoystickButton(logitech, 12)
       .whileTrue(new RunIndexerCmd(shooter));
 
-    new JoystickButton(xboxController, 3).whileTrue(new InstantCommand(() -> swerveSubsystem.setFieldRelativity()));
+    new JoystickButton(logitech, 3).whileTrue(new InstantCommand(() -> swerveSubsystem.setFieldRelativity()));
   }
   
 

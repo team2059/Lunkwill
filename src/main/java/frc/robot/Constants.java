@@ -21,6 +21,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int JoystickPort = 1;
     public static final int XboxControllerPort = 0;
+    public static final int LogitechControllerPort = 0;
 
     // Axes
     public static final int JoystickTranslationAxis = 1;
@@ -97,13 +98,13 @@ public final class Constants {
     public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
 
     public static final double maxVelocity = 4.5; // meters/sec
-    public static final double maxAcceleration = 3.0; // meters/sec^2
+    public static final double maxAcceleration = 10; // meters/sec^2
     public static final double maxAngularVelocity = 2 * Math.PI; // rad/sec
     public static final double maxAngularAcceleration = 4 * Math.PI; // rad/sec^2
 
     // Teleop swerve max speeds
     public static final double kTeleDriveMaxSpeed = 7.5 / 4.0;
-    public static final double kTeleDriveMaxAngularSpeed = 2.5;
+    public static final double kTeleDriveMaxAngularSpeed = 3;
 
     public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.2, 2.5, 0.0);
   }

@@ -114,10 +114,10 @@ public class TeleopXboxSwerveCmd extends Command {
 
     // Rumble xbox controller
     // z^2 = x^2 + y^2
-    RobotContainer.xboxController.setRumble(
-      RumbleType.kBothRumble, 
-      0.7 * Math.sqrt(Math.pow(Math.abs(xSpeed), 2) + Math.pow(Math.abs(ySpeed), 2))
-    );
+    // RobotContainer.xboxController.setRumble(
+    //   RumbleType.kBothRumble, 
+    //   0.7 * Math.sqrt(Math.pow(Math.abs(xSpeed), 2) + Math.pow(Math.abs(ySpeed), 2))
+    // );
   }
 
   // Called once the command ends or is interrupted.
