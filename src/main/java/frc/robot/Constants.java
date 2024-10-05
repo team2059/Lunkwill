@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -72,8 +73,6 @@ public final class Constants {
 
     public static final double driveBaseRadius = Units.inchesToMeters(18.5);
 
-    public static final double maxMetersPerSecond = 1;
-
     // Swerve Modules: CAN IDs and offsets for the CANcoders.
       // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians
     // front left
@@ -96,7 +95,16 @@ public final class Constants {
     public static final int backRightRotationMotorId = 2;
     public static final int backRightCanCoderId = 14;
     public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
-    public static final double kTeleDriveMaxAcceleration = 10;
-    public static final double kTeleDriveMaxAngularAcceleration = 10;
+
+    public static final double maxVelocity = 4.5; // meters/sec
+    public static final double maxAcceleration = 3.0; // meters/sec^2
+    public static final double maxAngularVelocity = 2 * Math.PI; // rad/sec
+    public static final double maxAngularAcceleration = 4 * Math.PI; // rad/sec^2
+
+    // Teleop swerve max speeds
+    public static final double kTeleDriveMaxSpeed = 7.5 / 4.0;
+    public static final double kTeleDriveMaxAngularSpeed = 2.5;
+
+    public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.2, 2.5, 0.0);
   }
 }

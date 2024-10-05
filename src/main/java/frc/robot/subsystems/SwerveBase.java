@@ -138,7 +138,7 @@ public class SwerveBase extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     SwerveModuleState[] newStates = Constants.SwerveConstants.kinematics.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(newStates, Constants.SwerveConstants.maxMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(newStates, Constants.SwerveConstants.maxVelocity);
     setModuleStates(newStates);
   }
 
@@ -146,7 +146,7 @@ public class SwerveBase extends SubsystemBase {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     discreteSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(discreteSpeeds, getHeading());
     SwerveModuleState[] newStates = Constants.SwerveConstants.kinematics.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(newStates, Constants.SwerveConstants.maxMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(newStates, Constants.SwerveConstants.maxVelocity);
     setModuleStates(newStates);
   }
 
@@ -162,12 +162,12 @@ public class SwerveBase extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     // makes it never go above 5 m/s
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxVelocity);
     // Sets the speed and rotation of each module
-    frontLeft.setDesiredStates(desiredStates[0]);
-    frontRight.setDesiredStates(desiredStates[1]);
-    backLeft.setDesiredStates(desiredStates[2]);
-    backRight.setDesiredStates(desiredStates[3]);
+    frontLeft.setDesiredStateClosedLoop(desiredStates[0]);
+    frontRight.setDesiredStateClosedLoop(desiredStates[1]);
+    backLeft.setDesiredStateClosedLoop(desiredStates[2]);
+    backRight.setDesiredStateClosedLoop(desiredStates[3]);
 
     Logger.recordOutput("Target States", desiredStates);
   }
@@ -193,7 +193,7 @@ public class SwerveBase extends SubsystemBase {
     // individual module states
     SwerveModuleState[] states = SwerveConstants.kinematics.toSwerveModuleStates(speeds);
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.maxMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.maxVelocity);
 
     setModuleStates(states);
 
@@ -216,7 +216,7 @@ public class SwerveBase extends SubsystemBase {
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
         new PIDConstants(0, 0, 0), // Translation PID constants
         new PIDConstants(0, 0, 0), // Rotation PID constants
-        SwerveConstants.maxMetersPerSecond, // Max module speed in m/s
+        SwerveConstants.maxVelocity, // Max module speed in m/s
         SwerveConstants.driveBaseRadius, // drive base radius in meters, distance from robot center to furthest module
         new ReplanningConfig()// Default path replanning config, see the API for options
       ),
@@ -242,10 +242,6 @@ public class SwerveBase extends SubsystemBase {
 
     SmartDashboard.putNumber("NavX Angle", navX.getAngle());
     
-    SmartDashboard.putNumber("YAW", navX.getYaw());
-
-    SmartDashboard.putNumber("HEADING", getHeading().getDegrees());
-
     Logger.recordOutput("Real States", getStates());
     Logger.recordOutput("Pose", getPose());
 

@@ -71,7 +71,7 @@ public class SwerveModule extends SubsystemBase {
 
         configureCanCoder();
 
-        // Write settings to motor
+        // Write settings to motors
         driveMotor.burnFlash();
         rotationMotor.burnFlash();
     }
@@ -202,10 +202,36 @@ public class SwerveModule extends SubsystemBase {
         // Optimize finds the closest angle to the target
         state = optimize(state, getRotationEncoderPosition());
 
-        driveMotor.set(state.speedMetersPerSecond / SwerveConstants.maxMetersPerSecond);
+        driveMotor.set(state.speedMetersPerSecond / SwerveConstants.maxVelocity);
 
         // use PID for turning to avoid overshooting
         rotationMotor.set(rotationPidController.calculate(getRotationEncoderPosition().getRadians(), state.angle.getRadians()));
+    }
+
+    /**
+     * Method to set the desired state of a swerve module,
+     * using PID and feedforward to control the output
+     * 
+     * @param desiredState SwerveModuleState object that holds desired linear and rotational setpoint
+     */
+    public void setDesiredStateClosedLoop(SwerveModuleState desiredState) {
+        // Deadband
+        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+
+        // Create optimized state to work with
+        SwerveModuleState optimizedState = optimize(desiredState, getIntegratedAngle());
+
+        // Set outputs (PID for rotation, FF for drive)
+        rotationMotor.set(rotationPidController.calculate(
+            getIntegratedAngle().getRadians(), // current angle
+            optimizedState.angle.getRadians() // target angle
+        ));
+        driveMotor.setVoltage(SwerveConstants.driveFF.calculate(
+            optimizedState.speedMetersPerSecond // target speed
+        ));
     }
 
     public double getCurrentDistanceMetersPerSecond() {
@@ -221,6 +247,11 @@ public class SwerveModule extends SubsystemBase {
     
         return new Rotation2d(unsignedAngle);
     
+    }
+
+    public void stop() {
+        driveMotor.set(0);
+        rotationMotor.set(0);
     }
 
     @Override

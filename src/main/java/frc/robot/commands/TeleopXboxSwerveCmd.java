@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -23,7 +24,7 @@ public class TeleopXboxSwerveCmd extends Command {
   private final SwerveBase swerveSubsystem;
   private final DoubleSupplier forwardX, forwardY, rotation;
   private final IntSupplier pov;
-  private final SlewRateLimiter forwardXSlewRateLimiter, forwardYSlewRateLimiter, rotationSlewRateLimiter;
+  private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
 
   public static double speedFactor = 0.5;
 
@@ -37,9 +38,9 @@ public class TeleopXboxSwerveCmd extends Command {
     this.rotation = rotation;
     this.pov = pov;
 
-    this.forwardXSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
-    this.forwardYSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAcceleration);
-    this.rotationSlewRateLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAngularAcceleration);
+    this.xLimiter = new SlewRateLimiter(SwerveConstants.maxAcceleration);
+    this.yLimiter = new SlewRateLimiter(SwerveConstants.maxAcceleration);
+    this.rotLimiter = new SlewRateLimiter(SwerveConstants.maxAngularAcceleration);
 
     addRequirements(swerveSubsystem);
   }
@@ -55,6 +56,7 @@ public class TeleopXboxSwerveCmd extends Command {
   @Override
   public void execute() {
 
+    // Account for speed factor (POV up/down buttons)
     switch(pov.getAsInt()) {
       case 0:
         // Up pressed
@@ -70,14 +72,19 @@ public class TeleopXboxSwerveCmd extends Command {
         // Everything else (do nothing)
 
     }
-
     if (speedFactor < 0.11) {
       speedFactor = 0.11;
     } else if (speedFactor > 1.0) {
       speedFactor = 1.0;
     }
-
     SmartDashboard.putNumber("Speed Limit", speedFactor);
+
+    /**
+     * Units are given in meters per second radians per second
+     * Since joysticks give output from -1 to 1, we multiply the outputs by the max
+     * speed
+     * Otherwise, our max speed would be 1 meter per second and 1 radian per second
+     */
 
     // get joystick input as x, y, and rotation
     double xSpeed = forwardX.getAsDouble();
@@ -89,30 +96,28 @@ public class TeleopXboxSwerveCmd extends Command {
     ySpeed = Math.abs(ySpeed) > 0.14 ? ySpeed : 0.0;
     rot = Math.abs(rot) > 0.1 ? rot : 0.0;
 
-    // Apply speed limit
+    // Make the driving smoother
+    xSpeed = xLimiter.calculate(xSpeed) * SwerveConstants.kTeleDriveMaxSpeed;
+    ySpeed = yLimiter.calculate(ySpeed) * SwerveConstants.kTeleDriveMaxSpeed;
+    rot = rotLimiter.calculate(rot) * SwerveConstants.kTeleDriveMaxAngularSpeed;
+
     xSpeed *= speedFactor;
     ySpeed *= speedFactor;
     rot *= speedFactor;
+    
+    swerveSubsystem.drive(
+      MathUtil.applyDeadband(xSpeed, 0.1, 0.75),
+      MathUtil.applyDeadband(ySpeed, 0.3, 0.75), 
+      MathUtil.applyDeadband(rot, 0.3, 0.75), 
+      SwerveBase.fieldRelativeStatus
+    );
 
-    // get distance from center of joystick, scale to 0-1 value, rumble xbox controller
+    // Rumble xbox controller
     // z^2 = x^2 + y^2
     RobotContainer.xboxController.setRumble(
       RumbleType.kBothRumble, 
       0.7 * Math.sqrt(Math.pow(Math.abs(xSpeed), 2) + Math.pow(Math.abs(ySpeed), 2))
     );
-
-    // Apply rate limits
-    // double sliderLimit = -((slider.getAsDouble() - 1) / 2);
-    // if (sliderLimit < 0.2) sliderLimit = 0.2;
-    // xSpeed = forwardXSlewRateLimiter.calculate(xSpeed) * sliderLimit;
-    // ySpeed = forwardYSlewRateLimiter.calculate(ySpeed) * sliderLimit;
-    // rot = rotationSlewRateLimiter.calculate(rot) * sliderLimit;
-
-    xSpeed = forwardXSlewRateLimiter.calculate(xSpeed);
-    ySpeed = forwardYSlewRateLimiter.calculate(ySpeed);
-    rot = rotationSlewRateLimiter.calculate(rot);
-    
-    swerveSubsystem.drive(xSpeed, ySpeed, rot * 1.5, SwerveBase.fieldRelativeStatus);
   }
 
   // Called once the command ends or is interrupted.
