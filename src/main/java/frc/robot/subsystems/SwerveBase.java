@@ -121,9 +121,6 @@ public class SwerveBase extends SubsystemBase {
   }
 
   public Rotation2d getHeading() {
-    // still not sure why I had to add the +90... needed to properly orient
-      // when field-relative
-    // return Rotation2d.fromDegrees(-navX.getYaw() + 90);
     return Rotation2d.fromDegrees(-navX.getYaw());
   }
 
@@ -164,8 +161,6 @@ public class SwerveBase extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    Logger.recordOutput("Target States", desiredStates);
-
     // makes it never go above 5 m/s
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxMetersPerSecond);
     // Sets the speed and rotation of each module
@@ -173,6 +168,8 @@ public class SwerveBase extends SubsystemBase {
     frontRight.setDesiredStates(desiredStates[1]);
     backLeft.setDesiredStates(desiredStates[2]);
     backRight.setDesiredStates(desiredStates[3]);
+
+    Logger.recordOutput("Target States", desiredStates);
   }
   
   public void drive(double forward, double strafe, double rotation, boolean isFieldRelative) {

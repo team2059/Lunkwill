@@ -68,7 +68,7 @@ public final class Constants {
     // Given Motor Rotations, convert to Meters/second
     public static final double driveEncoderVelocityConversionFactor = driveEncoderPositionConversionFactor / 60.0;
     // Given Motor Rotations, convert to Radians
-    public static final double rotationEncoderPositionConversionFactor = (14.0 * Math.PI) / 150;
+    public static final double rotationEncoderPositionConversionFactor = (14.0 * Math.PI) / 150.0;
     // Given Motor Rotations, convert to Radians/second
     public static final double rotationEncoderVelocityConversionFactor = rotationEncoderPositionConversionFactor / 60;
 
