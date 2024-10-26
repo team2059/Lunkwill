@@ -6,12 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.IntakeNoteCmd;
-import frc.robot.commands.RunIndexerCmd;
-import frc.robot.commands.SpinUpShooterMotorsCmd;
 import frc.robot.commands.TeleopLogitechExtreme3DSwerveCmd;
 import frc.robot.subsystems.SwerveBase;
-import frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -41,7 +37,6 @@ public class RobotContainer {
 
   /* SUBSYSTEMS */
   private static final SwerveBase swerveSubsystem = new SwerveBase();
-  private static final Shooter shooter = new Shooter(ShooterConstants.indexerMotorId, ShooterConstants.topDriveMotorId, ShooterConstants.bottomDriveMotorId);
 
   /* CONTROLLERS */
   public final static Joystick logitech = new Joystick(OperatorConstants.LogitechControllerPort);
@@ -50,16 +45,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    NamedCommands.registerCommand(
-      "ShootAuto",
-      new ParallelCommandGroup(
-        new SpinUpShooterMotorsCmd(shooter, 1),
-        new SequentialCommandGroup(
-          new WaitCommand(1.5),
-          new RunIndexerCmd(shooter)
-        )
-      ).withTimeout(3)
-    );
     autoChooser = AutoBuilder.buildAutoChooser();
     allianceChooser.addOption("RED", true);
     allianceChooser.setDefaultOption("BLUE", false);
@@ -102,21 +87,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    /* WINDOW: RESET NAVX HEADING */
+    /* RESET NAVX HEADING */
     new JoystickButton(logitech, 5)
       .whileTrue(new InstantCommand(() -> swerveSubsystem.getNavX().zeroYaw()));
-
-    /* B - INTAKE NOTE */
-    new JoystickButton(logitech, 2)
-      .whileTrue(new IntakeNoteCmd(shooter, 0.2));
-
-    /* LEFT BUMPER: SPIN SHOOTER MOTORS */
-    new JoystickButton(logitech, 11)
-      .whileTrue(new SpinUpShooterMotorsCmd(shooter, 1));
-
-    /* RIGHT BUMPER: EJECT NOTE */
-    new JoystickButton(logitech, 12)
-      .whileTrue(new RunIndexerCmd(shooter));
 
     new JoystickButton(logitech, 3).whileTrue(new InstantCommand(() -> swerveSubsystem.setFieldRelativity()));
   }
