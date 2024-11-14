@@ -5,21 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.TeleopLogitechExtreme3DSwerveCmd;
 import frc.robot.subsystems.SwerveBase;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -94,7 +89,6 @@ public class RobotContainer {
     new JoystickButton(logitech, 3).whileTrue(new InstantCommand(() -> swerveSubsystem.setFieldRelativity()));
   }
   
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

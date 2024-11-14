@@ -56,7 +56,7 @@ public final class Constants {
       new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // back right
     );
 
-    public static final double kPTurning = 0.25;
+    public static final double kPTurning = 0.5;
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
     public static final double rotationGearRatio = (150.0 / 7.0);
@@ -79,23 +79,23 @@ public final class Constants {
     // front left
     public static final int frontLeftDriveMotorId = 7;
     public static final int frontLeftRotationMotorId = 8;
-    public static final int frontLeftCanCoderId = 12;
-    public static final double frontLeftOffsetRad = 0.287842 * 2 * Math.PI;
+    public static final int frontLeftCanCoderId = 11;
+    public static final double frontLeftOffsetRad = 0.863037 * 2 * Math.PI;
     // front right
     public static final int frontRightDriveMotorId = 5;
     public static final int frontRightRotationMotorId = 6;
-    public static final int frontRightCanCoderId = 11;
-    public static final double frontRightOffsetRad = 0.617676 * 2 * Math.PI;
+    public static final int frontRightCanCoderId = 12;
+    public static final double frontRightOffsetRad = 0.539307 * 2 * Math.PI;
     // back left
     public static final int backLeftDriveMotorId = 3;
     public static final int backLeftRotationMotorId = 4;
-    public static final int backLeftCanCoderId = 13;
-    public static final double backLeftOffsetRad = 0.899658 * 2 * Math.PI;
+    public static final int backLeftCanCoderId = 14;
+    public static final double backLeftOffsetRad = 0.735840 * 2 * Math.PI;
     // back right
     public static final int backRightDriveMotorId = 1;
     public static final int backRightRotationMotorId = 2;
-    public static final int backRightCanCoderId = 14;
-    public static final double backRightOffsetRad = 0.496826 * 2 * Math.PI;
+    public static final int backRightCanCoderId = 13;
+    public static final double backRightOffsetRad = 3.028;
 
     public static final double maxVelocity = 4.5; // meters/sec
     public static final double maxAcceleration = 10; // meters/sec^2

@@ -71,11 +71,11 @@ public class SwerveBase extends SubsystemBase {
       }
     }).start();
 
-    // initialize CANcoder offsets
-    frontLeft.initRotationOffset();
-    frontRight.initRotationOffset();
-    backLeft.initRotationOffset();
-    backRight.initRotationOffset();
+    // reset encoders upon each start
+    frontLeft.resetEncoders();
+    frontRight.resetEncoders();
+    backLeft.resetEncoders();
+    backRight.resetEncoders();
 
     // drive motor inversions -- offsets mess with these sometimes
     frontLeft.getDriveMotor().setInverted(true);
@@ -88,12 +88,6 @@ public class SwerveBase extends SubsystemBase {
     frontRight.getRotationMotor().setInverted(true);
     backLeft.getRotationMotor().setInverted(true);
     backRight.getRotationMotor().setInverted(true);
-
-    // reset encoders upon each start
-    frontLeft.resetEncoders();
-    frontRight.resetEncoders();
-    backLeft.resetEncoders();
-    backRight.resetEncoders();
 
     configureAutoBuilder();
   }

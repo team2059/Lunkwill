@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule extends SubsystemBase {
-    private final CANSparkMax driveMotor;
-    private final CANSparkMax rotationMotor;
+    private final CANSparkFlex driveMotor;
+    private final CANSparkFlex rotationMotor;
 
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder rotationEncoder;
@@ -34,12 +34,12 @@ public class SwerveModule extends SubsystemBase {
         double canCoderOffsetRadians
     ) {
         // Instantiate motor controller objects
-        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
-        rotationMotor = new CANSparkMax(rotationMotorId, MotorType.kBrushless);
+        driveMotor = new CANSparkFlex(driveMotorId, MotorType.kBrushless);
+        rotationMotor = new CANSparkFlex(rotationMotorId, MotorType.kBrushless);
 
         // Set brake mode as default idle mode
         driveMotor.setIdleMode(IdleMode.kBrake);
-        driveMotor.setIdleMode(IdleMode.kBrake);
+        rotationMotor.setIdleMode(IdleMode.kBrake);
 
         // Set encoder objects to appropriate motor's encoders
         driveEncoder = driveMotor.getEncoder();
@@ -90,10 +90,6 @@ public class SwerveModule extends SubsystemBase {
         canCoder.getConfigurator().apply(canCoderConfig);
     }
 
-    public void initRotationOffset() {
-        rotationEncoder.setPosition(getCANcoderRad().getRadians());
-    }
-
     public double getDriveEncoderPosition() {
         return driveEncoder.getPosition();
     }
@@ -118,11 +114,11 @@ public class SwerveModule extends SubsystemBase {
         return rotationEncoder.getVelocity();
     }
 
-    public CANSparkMax getDriveMotor() {
+    public CANSparkFlex getDriveMotor() {
         return driveMotor;
     }
 
-    public CANSparkMax getRotationMotor() {
+    public CANSparkFlex getRotationMotor() {
         return rotationMotor;
     }
 
@@ -136,8 +132,8 @@ public class SwerveModule extends SubsystemBase {
     // Resets encoders and makes the rotation motor equal to the offset
     // so that we account for the offset
     public void resetEncoders() {
-        driveEncoder.setPosition(0);
         rotationEncoder.setPosition(getCANcoderRad().getRadians());
+        driveEncoder.setPosition(0.0);
     }
 
     // Takes in velocity and angle which calculates how much it needs to turn and apply forward motion.
