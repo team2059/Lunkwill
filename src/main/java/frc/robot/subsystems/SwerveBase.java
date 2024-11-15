@@ -120,10 +120,10 @@ public class SwerveBase extends SubsystemBase {
 
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = {
-      new SwerveModulePosition(-frontLeft.getCurrentDistanceMetersPerSecond(), frontLeft.getRotationEncoderPosition()),
-      new SwerveModulePosition(-frontRight.getCurrentDistanceMetersPerSecond(), frontRight.getRotationEncoderPosition()),
-      new SwerveModulePosition(-backLeft.getCurrentDistanceMetersPerSecond(), backLeft.getRotationEncoderPosition()),
-      new SwerveModulePosition(-backRight.getCurrentDistanceMetersPerSecond(), backRight.getRotationEncoderPosition())
+      new SwerveModulePosition(-frontLeft.getCurrentDistanceMetersPerSecond(), frontLeft.getCANcoderRad()),
+      new SwerveModulePosition(-frontRight.getCurrentDistanceMetersPerSecond(), frontRight.getCANcoderRad()),
+      new SwerveModulePosition(-backLeft.getCurrentDistanceMetersPerSecond(), backLeft.getCANcoderRad()),
+      new SwerveModulePosition(-backRight.getCurrentDistanceMetersPerSecond(), backRight.getCANcoderRad())
     };
 
     return positions;
