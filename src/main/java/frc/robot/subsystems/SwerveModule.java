@@ -36,7 +36,7 @@ public class SwerveModule extends SubsystemBase {
         // Instantiate motor controller objects
         driveMotor = new CANSparkFlex(driveMotorId, MotorType.kBrushless);
         rotationMotor = new CANSparkFlex(rotationMotorId, MotorType.kBrushless);
-
+        
         // Set brake mode as default idle mode
         driveMotor.setIdleMode(IdleMode.kBrake);
         rotationMotor.setIdleMode(IdleMode.kBrake);
@@ -196,12 +196,12 @@ public class SwerveModule extends SubsystemBase {
     // Actually applies a SwerveModuleState, but uses scaling rather than PID for the drive motor
     public void setDesiredStates(SwerveModuleState state) {
         // Optimize finds the closest angle to the target
-        state = optimize(state, getRotationEncoderPosition());
+        state = optimize(state, getCANcoderRad());
 
         driveMotor.set(state.speedMetersPerSecond / SwerveConstants.maxVelocity);
 
         // use PID for turning to avoid overshooting
-        rotationMotor.set(rotationPidController.calculate(getRotationEncoderPosition().getRadians(), state.angle.getRadians()));
+        rotationMotor.set(rotationPidController.calculate(getCANcoderRad().getRadians(), state.angle.getRadians()));
     }
 
     /**

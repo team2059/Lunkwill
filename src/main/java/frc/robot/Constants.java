@@ -19,8 +19,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int JoystickPort = 1;
-    public static final int XboxControllerPort = 0;
+    public static final int XboxControllerPort = 1;
     public static final int LogitechControllerPort = 0;
 
     // Axes
@@ -80,22 +79,22 @@ public final class Constants {
     public static final int frontLeftDriveMotorId = 7;
     public static final int frontLeftRotationMotorId = 8;
     public static final int frontLeftCanCoderId = 11;
-    public static final double frontLeftOffsetRad = 0.863037 * 2 * Math.PI;
+    public static final double frontLeftOffsetRad = 0.859 * 2 * Math.PI; 
     // front right
     public static final int frontRightDriveMotorId = 5;
     public static final int frontRightRotationMotorId = 6;
     public static final int frontRightCanCoderId = 12;
-    public static final double frontRightOffsetRad = 0.539307 * 2 * Math.PI;
+    public static final double frontRightOffsetRad = 0.039 * 2 * Math.PI;
     // back left
     public static final int backLeftDriveMotorId = 3;
     public static final int backLeftRotationMotorId = 4;
     public static final int backLeftCanCoderId = 14;
-    public static final double backLeftOffsetRad = 0.735840 * 2 * Math.PI;
+    public static final double backLeftOffsetRad = 0.658 * 2 * Math.PI;
     // back right
     public static final int backRightDriveMotorId = 1;
     public static final int backRightRotationMotorId = 2;
     public static final int backRightCanCoderId = 13;
-    public static final double backRightOffsetRad = 3.028;
+    public static final double backRightOffsetRad = 0.658 * 2 * Math.PI; // .479
 
     public static final double maxVelocity = 4.5; // meters/sec
     public static final double maxAcceleration = 10; // meters/sec^2
