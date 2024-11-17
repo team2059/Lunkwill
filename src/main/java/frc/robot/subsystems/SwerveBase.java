@@ -79,8 +79,8 @@ public class SwerveBase extends SubsystemBase {
 
     // drive motor inversions -- offsets mess with these sometimes
     frontLeft.getDriveMotor().setInverted(true);
-    frontRight.getDriveMotor().setInverted(false);
-    backLeft.getDriveMotor().setInverted(false);
+    frontRight.getDriveMotor().setInverted(true);
+    backLeft.getDriveMotor().setInverted(true);
     backRight.getDriveMotor().setInverted(false);
 
     // rotation motor inversions -- all or nothing situation

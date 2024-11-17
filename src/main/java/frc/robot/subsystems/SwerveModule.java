@@ -132,7 +132,7 @@ public class SwerveModule extends SubsystemBase {
     // Resets encoders and makes the rotation motor equal to the offset
     // so that we account for the offset
     public void resetEncoders() {
-        rotationEncoder.setPosition(getCANcoderRad().getRadians());
+        rotationEncoder.setPosition(offset.getRadians());
         driveEncoder.setPosition(0.0);
     }
 
@@ -218,11 +218,11 @@ public class SwerveModule extends SubsystemBase {
         }
 
         // Create optimized state to work with
-        SwerveModuleState optimizedState = optimize(desiredState, getIntegratedAngle());
+        SwerveModuleState optimizedState = optimize(desiredState, getCANcoderRad());
 
         // Set outputs (PID for rotation, FF for drive)
         rotationMotor.set(rotationPidController.calculate(
-            getIntegratedAngle().getRadians(), // current angle
+            getCANcoderRad().getRadians(), // current angle
             optimizedState.angle.getRadians() // target angle
         ));
         driveMotor.setVoltage(SwerveConstants.driveFF.calculate(
@@ -232,17 +232,6 @@ public class SwerveModule extends SubsystemBase {
 
     public double getCurrentDistanceMetersPerSecond() {
         return driveEncoder.getPosition() * (SwerveConstants.wheelDiameter / 2.0);
-    }
-
-    public Rotation2d getIntegratedAngle() {
-
-        double unsignedAngle = rotationEncoder.getPosition() % (2 * Math.PI);
-    
-        if (unsignedAngle < 0)
-          unsignedAngle += 2 * Math.PI;
-    
-        return new Rotation2d(unsignedAngle);
-    
     }
 
     public void stop() {
