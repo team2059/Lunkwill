@@ -55,7 +55,7 @@ public final class Constants {
       new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0) // back right
     );
 
-    public static final double kPTurning = 0.5;
+    public static final double rotationkP = 0.25;
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
     public static final double rotationGearRatio = (150.0 / 7.0);
