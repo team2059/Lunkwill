@@ -4,6 +4,5 @@
 | ------ | ------- |
 | 5 | Reset NavX Heading (RoboRIO is Front) |
 | 3 | Switch between Field-Relative and Robot-Relative modes (Click ONCE to switch) |
-| 2 | Intake Note (runs both Indexer and Shooter Motors in reverse) |
-| 11 | Spin-up Shooter Motor |
-| 12 | Spin Indexer Motor |
+
+A script in the root repository must be run in order to clear the auto chooser list when writing new autos.
