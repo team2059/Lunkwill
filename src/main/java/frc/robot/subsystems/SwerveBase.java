@@ -21,7 +21,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
@@ -71,19 +70,20 @@ public class SwerveBase extends SubsystemBase {
       }
     }).start();
 
-    // reset encoders upon each start
+    // Reset encoders upon each start
     frontLeft.resetEncoders();
     frontRight.resetEncoders();
     backLeft.resetEncoders();
     backRight.resetEncoders();
 
-    // drive motor inversions -- offsets mess with these sometimes
+    // Drive motor inversions
+    // Offsets can mess with these sometimes
     frontLeft.getDriveMotor().setInverted(true);
-    frontRight.getDriveMotor().setInverted(false);
-    backLeft.getDriveMotor().setInverted(false);
+    frontRight.getDriveMotor().setInverted(true);
+    backLeft.getDriveMotor().setInverted(true);
     backRight.getDriveMotor().setInverted(false);
 
-    // rotation motor inversions -- all or nothing situation
+    // Rotation motor inversions -- all or nothing situation
     frontLeft.getRotationMotor().setInverted(true);
     frontRight.getRotationMotor().setInverted(true);
     backLeft.getRotationMotor().setInverted(true);
@@ -92,43 +92,72 @@ public class SwerveBase extends SubsystemBase {
     configureAutoBuilder();
   }
 
+  /**
+   * Get current robot pose
+   * @return current Pose2d in meters
+   */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
+  /**
+   * Get AHRS object (navX gyro)
+   * @return AHRS navX object
+   */
   public AHRS getNavX() {
     return navX;
   }
 
+  /**
+   * Set odometry to specified pose, with current heading and module positions
+   * @param pose the specified Pose2d
+   */
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(getHeading(), getModulePositions(), pose);
   }
 
+  /**
+   * @return ChassisSpeeds relative to the robot
+   */
   public ChassisSpeeds getRobotRelativeSpeeds() {
     ChassisSpeeds chassisSpeeds = SwerveConstants.kinematics.toChassisSpeeds(getStates());
 
     return chassisSpeeds;
   }
 
+  /**
+   * Resets heading (yaw) of the navX to zero
+   */
   public void zeroHeading() {
     navX.reset();
   }
 
+  /**
+   * @return Rotation2d of current robot heading
+   */
   public Rotation2d getHeading() {
     return Rotation2d.fromDegrees(-navX.getYaw());
   }
 
+  /**
+   * @return SwerveModulePosition[] current positions of all four modules
+   * [fl, fr, bl, br]
+   */
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = {
-      new SwerveModulePosition(-frontLeft.getCurrentDistanceMetersPerSecond(), frontLeft.getCANcoderRad()),
-      new SwerveModulePosition(-frontRight.getCurrentDistanceMetersPerSecond(), frontRight.getCANcoderRad()),
-      new SwerveModulePosition(-backLeft.getCurrentDistanceMetersPerSecond(), backLeft.getCANcoderRad()),
-      new SwerveModulePosition(-backRight.getCurrentDistanceMetersPerSecond(), backRight.getCANcoderRad())
+      new SwerveModulePosition(-frontLeft.getCurrentDistanceMeters(), frontLeft.getCANcoderRad()),
+      new SwerveModulePosition(-frontRight.getCurrentDistanceMeters(), frontRight.getCANcoderRad()),
+      new SwerveModulePosition(-backLeft.getCurrentDistanceMeters(), backLeft.getCANcoderRad()),
+      new SwerveModulePosition(-backRight.getCurrentDistanceMeters(), backRight.getCANcoderRad())
     };
 
     return positions;
   }
 
+  /**
+   * Drive in robot-relative mode
+   * @param chassisSpeeds target ChassisSpeeds
+   */
   public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     SwerveModuleState[] newStates = Constants.SwerveConstants.kinematics.toSwerveModuleStates(discreteSpeeds);
@@ -136,6 +165,10 @@ public class SwerveBase extends SubsystemBase {
     setModuleStates(newStates);
   }
 
+  /**
+   * Drive in field-relative mode
+   * @param chassisSpeeds target ChassisSpeeds
+   */
   public void driveFieldRelative(ChassisSpeeds chassisSpeeds) {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     discreteSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(discreteSpeeds, getHeading());
@@ -144,6 +177,10 @@ public class SwerveBase extends SubsystemBase {
     setModuleStates(newStates);
   }
 
+  /**
+   * @return SwerveModuleState[] states of all four modules (contains speed & angle of each module)
+   *  [fl, fr, bl, br]
+   */
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     states[0] = frontLeft.getState();
@@ -154,18 +191,29 @@ public class SwerveBase extends SubsystemBase {
     return states;
   }
 
+  /**
+   * Set the state of all modules
+   * @param desiredStates SwerveModuleStates[] to set
+   */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     // makes it never go above 5 m/s
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.maxVelocity);
     // Sets the speed and rotation of each module
-    frontLeft.setDesiredStateClosedLoop(desiredStates[0]);
-    frontRight.setDesiredStateClosedLoop(desiredStates[1]);
-    backLeft.setDesiredStateClosedLoop(desiredStates[2]);
-    backRight.setDesiredStateClosedLoop(desiredStates[3]);
+    frontLeft.setDesiredStateFF(desiredStates[0]);
+    frontRight.setDesiredStateFF(desiredStates[1]);
+    backLeft.setDesiredStateFF(desiredStates[2]);
+    backRight.setDesiredStateFF(desiredStates[3]);
 
     Logger.recordOutput("Target States", desiredStates);
   }
   
+  /**
+   * Drive the robot (combines driveFieldRelative and driveRobotRelative methods)
+   * @param forward linear y-axis input [-1,1]
+   * @param strafe linear x-axis input [-1,1]
+   * @param rotation z-axis input [-1,1]
+   * @param isFieldRelative boolean field relativity switch
+   */
   public void drive(double forward, double strafe, double rotation, boolean isFieldRelative) {
 
     /**
@@ -193,6 +241,10 @@ public class SwerveBase extends SubsystemBase {
 
   }
 
+  /**
+   * Set field relativity
+   * When called, it flips the current value
+   */
   public void setFieldRelativity() {
     if (fieldRelativeStatus) {
       fieldRelativeStatus = false;
@@ -201,6 +253,9 @@ public class SwerveBase extends SubsystemBase {
     }
   }
 
+  /**
+   * Method to configure AutoBuilder, used for auto routines
+   */
   public void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
       this::getPose, // robot pose supplier
@@ -229,16 +284,20 @@ public class SwerveBase extends SubsystemBase {
     );
   }
 
+  /*
+   * This method is automatically run approximately every 20ms
+   */
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
+    // Update robot position on the field
     odometry.update(getHeading(), getModulePositions());
 
-    SmartDashboard.putNumber("NavX Angle", navX.getAngle());
-    
+    // Logger - for various dashboards
+    Logger.recordOutput("NavX Angle", navX.getAngle());
     Logger.recordOutput("Real States", getStates());
     Logger.recordOutput("Pose", getPose());
+    Logger.recordOutput("FIELD-RELATIVE?", fieldRelativeStatus);
 
-    SmartDashboard.putBoolean("FIELD-RELATIVE?", fieldRelativeStatus);
   }
 }
