@@ -76,23 +76,23 @@ public final class Constants {
     // Swerve Modules: CAN IDs and offsets for the CANcoders.
       // CANcoder offsets provided by Tuner X are scaled 0-1, must convert to radians
     // front left
-    public static final int frontLeftDriveMotorId = 7;
-    public static final int frontLeftRotationMotorId = 8;
+    public static final int frontLeftDriveMotorId = 1;
+    public static final int frontLeftRotationMotorId = 2;
     public static final int frontLeftCanCoderId = 11;
     public static final double frontLeftOffsetRad = 0.869141 * 2 * Math.PI; 
     // front right
-    public static final int frontRightDriveMotorId = 5;
-    public static final int frontRightRotationMotorId = 6;
+    public static final int frontRightDriveMotorId = 8;
+    public static final int frontRightRotationMotorId = 7;
     public static final int frontRightCanCoderId = 12;
     public static final double frontRightOffsetRad = 0.531250 * 2 * Math.PI;
     // back left
-    public static final int backLeftDriveMotorId = 3;
-    public static final int backLeftRotationMotorId = 4;
+    public static final int backLeftDriveMotorId = 5;
+    public static final int backLeftRotationMotorId = 6;
     public static final int backLeftCanCoderId = 14;
     public static final double backLeftOffsetRad = 0.235840 * 2 * Math.PI;
     // back right
-    public static final int backRightDriveMotorId = 1;
-    public static final int backRightRotationMotorId = 2;
+    public static final int backRightDriveMotorId = 4;
+    public static final int backRightRotationMotorId = 3;
     public static final int backRightCanCoderId = 13;
     public static final double backRightOffsetRad = 0.481689 * 2 * Math.PI; // .479
 
