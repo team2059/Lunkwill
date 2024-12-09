@@ -54,7 +54,7 @@ public class TeleopLogitechExtreme3DSwerveCmd extends Command {
 
     // Apply deadband
     xSpeed = Math.abs(xSpeed) > 0.25 ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > 0.33 ? ySpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > 0.25 ? ySpeed : 0.0;
     rot = Math.abs(rot) > 0.4 ? rot : 0.0;
 
     // Make the driving smoother
